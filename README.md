@@ -1,14 +1,13 @@
-# mcv-m5
+# Scene Understanding for Autonomous Vehicles with deep neural networks
 Master in Computer Vision - M5 Visual recognition
 
-## Fork this project
-Fork this project to start your group project. Add dvazquezcvc and lluisgomez as contributors.
-
 ## Project description
-Download the [Overleaf document](https://www.overleaf.com/read/qrjbtzwtjhmx)
+The goal of this project is to learn the basic concepts, techniques, tricks and libraries to develop deep neural networks. Deep learning is the workhorse of many computer vision tasks, among them three central ones: object detection, segmentation and recognition. This project focuses on state-of-the art deep learning networks and techniques for these three problems. They will be applied to a hot topic these days, that of scene understanding for autonomous vehicles, whereby the classes of interest with regard the three tasks will be pedestrians, vehiches, road, roadside, etc.
+
+Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
 
 ## Project slides
-- Google slides for [Week 1](https://docs.google.com/presentation/d/1A6hgbNn8N-Iq8MhSa_RPIyf87DBL6PCtoDzy1zqS5Xs/edit?usp=sharing)
+- Google slides for [Week 1](https://docs.google.com/presentation/d/1jiS8scHFZGNVeYUV8wJpG2AjLw9J-iSCpzYKUXmoAWQ/edit?usp=sharing)
 - Google slides for Week 2 (T.B.A.)
 - Google slides for Week 3 (T.B.A.)
 - Google slides for Week 4 (T.B.A.)
@@ -16,53 +15,9 @@ Download the [Overleaf document](https://www.overleaf.com/read/qrjbtzwtjhmx)
 - Google slides for Week 6 (T.B.A.)
 - Google slides for Week 7 (T.B.A.)
 
-## Peer review
-- Intra-group evaluation form for Week 2 (T.B.A.)
-- Intra-group evaluation form for Week 4 (T.B.A.)
-- Intra-group evaluation form for Week 6 (T.B.A.)
-- Intra-group evaluation form for Week 7 (T.B.A.)
-
-## News
- - Improve your GitHub account following [this document](https://docs.google.com/document/d/14oxSKWBbMajIB5Bn2CM-DNb-vychY1f393qYfsHNJfY/edit?usp=sharing)
-
 ## Groups
- - [Group 1:](https://github.com/santipuch590/vr-project)
-  - Belén Luque
-  - Anna Martí
-  - Santi Puch
-  - Arantxa Casanova
- - [Group 2:](https://github.com/vcampmany/mcv-m5)
-  - Victor Campmany
-  - Pau Cebrián
-  - Arnau Baró
-  - Guillem Cuanull
- - [Group 3:](https://github.com/XeniaSalinas/mcv-m5)
-  - Lidia Garrucho
-  - Cristina Bustos
-  - Xian López
-  - Xènia Salina
- - [Group 4:](https://github.com/acasadevall/VR-Team4)
-  - Arnau Casadevall
-  - Adrián Salvador
-  - Antoni Pérez
-  - Sergio Castro
- - [Group 5:](https://github.com/idoiaruiz/mcv-m5)
-  - Roque Rodríguez
-  - Idoia Ruíz
-  - Onofre Martorel
-  - Lidia Talavera
  - [Group 6:](https://github.com/LLebronC/mcv-m5)
   - Jose Luis Gómez
   - Luís Lebron
   - Axel Barroso
- - [Group 7:](https://github.com/vsegura93/mcv-m5)
-  - Gonzalo Benito
-  - Víctor Segura
-  - Marc Grau
-  - Marc Carné
- - [Group 8:](https://github.com/hprop/mcv-m5)
-  - Jordi Puyoles
-  - Ignasi Mas
-  - Hugo Prol
- - [Group 9:](https://github.com/carlosb1/mcv-m5)
-  - Carlos Baez
+  - Hassan Ahmed
