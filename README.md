@@ -26,22 +26,23 @@ Download the [Overleaf document](https://www.overleaf.com/read/qrjbtzwtjhmx)
  - Improve your GitHub account following [this document](https://docs.google.com/document/d/14oxSKWBbMajIB5Bn2CM-DNb-vychY1f393qYfsHNJfY/edit?usp=sharing)
 
 ## Groups
- - [Group 1:]()
+ - [Group 1:](https://github.com/santipuch590/vr-project)
   - Belén Luque
   - Anna Martí
   - Santi Puch
+  - Arantxa Casanova
  - [Group 2:](https://github.com/vcampmany/mcv-m5)
   - Victor Campmany
   - Pau Cebrián
   - Arnau Baró
   - Guillem Cuanull
- - Group 3:
+ - [Group 3:](https://github.com/XeniaSalinas/mcv-m5)
   - Lidia Garrucho
   - Cristina Bustos
   - Xian López
   - Xènia Salina
- - Group 4:
-  - Arnau Casaderull
+ - [Group 4:](https://github.com/acasadevall/VR-Team4)
+  - Arnau Casadevall
   - Adrián Salvador
   - Antoni Pérez
   - Sergio Castro
@@ -59,7 +60,9 @@ Download the [Overleaf document](https://www.overleaf.com/read/qrjbtzwtjhmx)
   - Víctor Segura
   - Marc Grau
   - Marc Carné
- - Group 8:
+ - [Group 8:](https://github.com/hprop/mcv-m5)
   - Jordi Puyoles
   - Ignasi Mas
   - Hugo Prol
+ - [Group 9:](https://github.com/carlosb1/mcv-m5)
+  - Carlos Baez
