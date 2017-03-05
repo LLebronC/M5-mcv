@@ -21,6 +21,7 @@ Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
   - Luís Lebron
   - Axel Barroso
   - Hassan Ahmed
+  
 ## Reference
 Simonyan, K., & Zisserman, A. (2014). Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556. [Summary](Summaries\VGG.txt)
 
