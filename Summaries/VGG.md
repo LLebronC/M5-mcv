@@ -1,11 +1,18 @@
 ##VERY DEEP CONVOLUTIONAL NETWORKS FOR LARGE-SCALE IMAGE RECOGNITION
 
 The aim of this paper is to study the effect of using small receptive windows size and stride of the first convolutional layer. They also study the training and testing of networks using the image or scales of this one. To test it they focus more in ConvNet architecture design its depth but using more small convolutional layers. The resulting network achieve a state of the art accuracy for the ILSVRC and it also works well in other classification problems.
+
 The architecture has as input image of 224x224 RGB, the only preprocessing use is subtracting the mean RGB computed in the train. The net consists in a stack of convolutional layers of size 3x3 and 1x1 to codify a linear transformation. The padding preserve the spatial resolution of the input and the default stride is 1. To reduce the size of the filters five max-poling are use, which use a window of 2x2 and stride of 2. Then the result pass through three Fully-Connected layers to result in a soft-max of 1000 channels, one for each class. All hidden layers use ReLU.
+
 One of the important aspects of the configuration is that using multiple small receptive fields reduce the number parameters compare to the use of one big receptive field. Another important part of the configuration is the use of convolutional layers of size 1x1 to increase the non-linearity of the model. They use a linear projection with a rectification function to add this non-linearity.    
+
 In the train, the nets use multinomial logistic regression objective using mini-batch gradient descent with batch of size 254. Weight decay and dropout regularizations are used in the first two FC. The net required less epochs to converge compare to Krizhevsky et al.,2012 because their use regularization, smaller convolutional filters and pre-initialization of some layers. The initialization of the weights was done training few layers at the same time and freeze the others. They mention that Glorot & Bengio could be used as the initialization. Two scale approaches were use, one using a single scale and a multi-scale using random sampling from a range of scales.
+
 The test consists in first rescale the image to a size, it didn’t need to be the same as the one in train. Then this image is passed through the convolutional layers, the FC are replaced for a 7x7 and a 1x1 convolutional layer. The result is a feature map with size the number of class and using sum-pooled to get the class score. Data augmentation is use to get more images. Multi-crop evaluation is complementary to dense evaluation when the network is applied over all the image.
+
 The model is implemented in C++ Caffe and train using multiple GPU They use model and data parallelism to speed the training.
+
 The conclusions are the following. The local response normalization doesn’t improve the basic model, so it isn’t use in the other models. The result shows that a depth network with small filters improve the performance compare to shallow net with larger filters. Respect the samples, training with different scales is better than training only with one scale. Also, the use of data augmentation improves the result. In a multi-scale evaluation is better than the single scale approach. Also, there are an improvement when the model was train with small side scales. Respect the multi-crop get a better evaluation than the dense evaluation, and the use of both outperforms each of them. The combination of multiple model to generate a single result get the best performance of all the models. 
+
 Finally compare two the previous ILSVRC competition, they get a better result than their wining model but it loss to the GoogleNet of the same year although it gets a similar result.
 
