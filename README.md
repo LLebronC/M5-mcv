@@ -2,7 +2,7 @@
 Master in Computer Vision - M5 Visual recognition
 
 ## Project description
-The goal of this project is to learn the basic concepts, techniques, tricks and libraries to develop deep neural networks. Deep learning is the workhorse of many computer vision tasks, among them three central ones: object detection, segmentation and recognition. This project focuses on state-of-the art deep learning networks and techniques for these three problems. They will be applied to a hot topic these days, that of scene understanding for autonomous vehicles, whereby the classes of interest with regard the three tasks will be pedestrians, vehiches, road, roadside, etc.
+The goal of this project is to study the use of deep learning to semantically segment images and extract some knowledge of the scene. To do it we will use different types of neural networks.
 
 Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
 
@@ -21,3 +21,9 @@ Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
   - Luís Lebron
   - Axel Barroso
   - Hassan Ahmed
+## Reference
+Simonyan, K., & Zisserman, A. (2014). Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556. [Summary](Summaries\VGG.txt)
+
+He, K., Zhang, X., Ren, S., & Sun, J. (2016). Deep residual learning for image recognition. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (pp. 770-778). 
+
+Szegedy, C., Vanhoucke, V., Ioffe, S., Shlens, J., & Wojna, Z. (2016). Rethinking the inception architecture for computer vision. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (pp. 2818-2826). [Summary](Summaries\InceptionV3.txt)
