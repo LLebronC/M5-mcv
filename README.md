@@ -18,7 +18,7 @@ Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
 ## Groups
  - [Group 6:](https://github.com/LLebronC/mcv-m5)
   - Jose Luis Gómez
-  - Luís Lebron
+  - Luís Lebron(luis.lebron@e-campus.uab.cat)
   - Axel Barroso
   - Hassan Ahmed
   
