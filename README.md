@@ -8,7 +8,7 @@ Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
 
 ## Project slides
 - Google slides for [Week 1](https://docs.google.com/presentation/d/1jiS8scHFZGNVeYUV8wJpG2AjLw9J-iSCpzYKUXmoAWQ/edit?usp=sharing)
-- Google slides for Week 2 (T.B.A.)
+- Google slides for [Week 2](https://docs.google.com/presentation/d/10zmaSSAL-29dpJZ-WZNhcl8yIUSg30iNnNcKlxDesTc/edit?usp=sharing)
 - Google slides for Week 3 (T.B.A.)
 - Google slides for Week 4 (T.B.A.)
 - Google slides for Week 5 (T.B.A.)
