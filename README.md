@@ -6,7 +6,7 @@ The goal of this project is to study the use of deep learning to semantically se
 
 Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
 
-## Code Modification
+## Code Changes
 
 - Modified Optimizer_factory from Tools folder, added learning rate parameter to the Adam and SGD optimizers in order to be useful.
 - Added new CNN models for classification: Resnet50 and InceptionV3. Using the Keras implementation are available in the configuration file in the parameter "model_name".
