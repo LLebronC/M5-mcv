@@ -28,7 +28,7 @@ This repo contains the code to train and evaluate state of the art classificatio
 
 ## Installation
 You need to install :
-- [Theano](https://github.com/Theano/Theano) and [TensorFlow](https://github.com/Theano/Theano). Preferably the last version
+- [Theano](https://github.com/Theano/Theano) and [TensorFlow](https://www.tensorflow.org/install/install_linux). Preferably the last version
 - [Keras](https://github.com/fchollet/keras)
 
 ## Run experiments

@@ -8,6 +8,7 @@ Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
 
 ## Code Changes
 
+- Small change. Modified TensorFlow dowload link in the code/README.m file, from https://github.com/Theano/Theano to https://www.tensorflow.org/install/install_linux.
 - Modified Optimizer_factory from Tools folder, added learning rate parameter to the Adam and SGD optimizers in order to be useful.
 - Added new CNN models for classification: Resnet50 and InceptionV3. Using the Keras implementation are available in the configuration file in the parameter "model_name".
 - Support for Weight decay integrated for this Models: VGG16, VGG19, Resnet50 and InceptionV3. The Weight Decay use L2 normalization and is activated when the value of the parameter "weight_decay" of the configuration file is higher than 0.
@@ -38,7 +39,7 @@ Tested the Weight normalization behaviour in the models trying a weight decay va
  - [Group 6:](https://github.com/LLebronC/mcv-m5)
   - Jose Luis Gómez (joseluis-master@hotmail.com)
   - Luís Lebron(luis.lebron@e-campus.uab.cat)
-  - Axel Barroso
+  - Axel Barroso (axel.barroso@e-campus.uab.cat)
   - Hassan Ahmed
   
 ## Reference
