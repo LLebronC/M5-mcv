@@ -174,9 +174,11 @@ class Model_Factory():
 
         # Load pretrained weights
         if cf.load_pretrained:
-            print('   loading model weights from: ' + cf.weights_file + '...')
+            print('   loading model weights from: ' + cf.weights_file + ' (last layer will be replaced, no weights load)...')
+            old_name=model.layers[-2].name
+            model.layers[-2].name=model.layers[-2].name+'_replaced'
             model.load_weights(cf.weights_file, by_name=True)
-
+            model.layers[-2].name=old_name
         # Compile model
         model.compile(loss=loss, metrics=metrics, optimizer=optimizer)
 

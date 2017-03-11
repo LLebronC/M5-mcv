@@ -83,7 +83,13 @@ class Configuration():
         path, _ = os.path.split(cf.weights_file)
         if path == '':
             cf.weights_file = os.path.join(cf.savepath, cf.weights_file)
-
+        # Get testing weights file name
+        try:
+            path_test, _ = os.path.split(cf.weights_test_file)
+            if path_test == '':
+                cf.weights_test_file = os.path.join(cf.savepath, cf.weights_test_file)
+        except:
+            cf.weights_test_file = os.path.join(cf.savepath, 'weights.hdf5')
         # Plot metrics
         if cf.dataset.class_mode == 'segmentation':
             cf.train_metrics = ['loss', 'acc', 'jaccard']
