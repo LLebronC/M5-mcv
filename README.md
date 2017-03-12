@@ -76,6 +76,24 @@ Tested the Weight normalization behaviour in the models trying a weight decay va
 
 Ranking best result of the models on TT100K daset: https://drive.google.com/open?id=1DPU7IIxMk3xZAEAY_5cH4X0YRmexPwH_1sK1yAKgDQs
 
+##### VGG16 Keras
+![VGG16 plot](figures/plotVGG16.png?raw=true "VGG16 Keras Experiment")
+
+##### VGG19 Keras
+![VGG19 plot](figures/plotVGG19.png?raw=true "VGG19 Keras Experiment")
+
+##### ResNet 50 Keras
+![ResNet 50 Keras plot](figures/plotResnet50Keras.png?raw=true "ResNet 50 Keras Experiment")
+
+##### ResNet 152
+![ResNet 152 plot](figures/plotResnet152.png?raw=true "ResNet 152 Experiment")
+
+##### InceptionV3 Keras
+![InceptionV3 plot](figures/plotVGG19.png?raw=true "InceptionV3 Keras Experiment")
+
+##### DenseNet 40 
+![DenseNet plot](figures/plotDenseNet.png?raw=true "DenseNet 40 Experiment")
+
 #### INRIA pedestrians
 
 #### Daimler
