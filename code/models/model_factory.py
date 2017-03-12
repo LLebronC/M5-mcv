@@ -12,6 +12,7 @@ from models.vgg import build_vgg
 from models.resnet50 import build_resnet50
 from models.resnet import ResnetBuilder
 from models.inceptionV3 import build_inceptionV3
+from models.densenet import build_densenet
 
 # Detection models
 from models.yolo import build_yolo
@@ -81,13 +82,12 @@ class Model_Factory():
         if cf.model_name in ['lenet', 'alexNet', 'vgg16', 'vgg19', 'resnet50',
                              'InceptionV3', 'fcn8', 'unet', 'segnet',
                              'segnet_basic', 'resnetFCN', 'yolo', 'resnet50Keras',
-                             'resnet18','resnet34','resnet50','resnet101','resnet152']:
+                             'resnet18','resnet34','resnet50','resnet101','resnet152', 'densenet']:
             if optimizer is None:
                 raise ValueError('optimizer can not be None')
 
             in_shape, loss, metrics = self.basic_model_properties(cf, True)
-            model = self.make_one_net_model(cf, in_shape, loss, metrics,
-                                            optimizer)
+            model = self.make_one_net_model(cf, in_shape, loss, metrics, optimizer)
 
         elif cf.model_name == 'adversarial_semseg':
             if optimizer is None:
@@ -164,11 +164,16 @@ class Model_Factory():
                                       cf.weight_decay,
                                       load_pretrained=cf.load_imageNet,
                                       freeze_layers_from=cf.freeze_layers_from)
+        elif cf.model_name == 'densenet':
+            model = build_densenet(in_shape, cf.dataset.n_classes, cf.weight_decay)
+
+            
         elif cf.model_name == 'yolo':
             model = build_yolo(in_shape, cf.dataset.n_classes,
                                cf.dataset.n_priors,
                                load_pretrained=cf.load_imageNet,
                                freeze_layers_from=cf.freeze_layers_from)
+            
         else:
             raise ValueError('Unknown model')
 

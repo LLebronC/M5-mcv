@@ -8,6 +8,7 @@ Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
 
 ## Code Changes
 
+- Added the densenet model using the implementation from: https://github.com/titu1994/DenseNet, now the denset net 40 is available. For using this model, please set densenet into the config file (model_name).
 - Small change. Modified TensorFlow dowload link in the code/README.m file, from https://github.com/Theano/Theano to https://www.tensorflow.org/install/install_linux.
 - Modified Optimizer_factory from Tools folder, added learning rate parameter to the Adam and SGD optimizers in order to be useful.
 - Added new CNN models for classification: Resnet50 and InceptionV3. Using the Keras implementation are available in the configuration file in the parameter "model_name".
@@ -16,6 +17,7 @@ Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
 
 ## Configuration Hints
 
+- Densenet is really heavy, it goes out of memory very easily in our GPU. The minimum size is 32x32, 64x64 images work fine. 40 is the default depth of the net, this parameter can be changed into model_factory.py as an input parameter for the method build_densenet(..., depth = 'x').
 - Resize dataset: remember that Resnet50 and inceptionV3 need a resize for the dataset in order to process the input image properly and work. Minimum input size [139,139] for InceptionV3 and [199,199] for Resnet50. When the dataset is smaller than this size like TT100K, use the reasize parameter close to the minimum in order to penalize minimally the computation time for epoch only in the models with this requeriments.
 - TensorFlow try to allocate memory on the GPU even if don't fit firstly, if you use batch sizes inapropiate or resize the image to higher dimensions you can experiment a drastical increment in the epoch calculation time, so it's improtant to take into account.
 - Use weight decay with lower values (exponent -4 or -5), high values penalyze the weight and allows less variations needing more time to train and higher loss values, still the CNN will learn, but not appropriately.
