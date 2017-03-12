@@ -46,6 +46,7 @@ The steps to add a new model to the framework are:
 - Added new CNN models for classification: Resnet50 and InceptionV3. Using the Keras implementation are available in the configuration file in the parameter "model_name".
 - Support for Weight decay integrated for this Models: VGG16, VGG19, Resnet50 and InceptionV3. The Weight Decay use L2 normalization and is activated when the value of the parameter "weight_decay" of the configuration file is higher than 0.
 - Added the different resnet models using the implementation from: https://github.com/raghakot/keras-resnet, now the resnet 18, 34, 50, 101 and 152 are available, using resnetXX in the config file, the resnet50 from Keras is called using resnet50Keras.
+- Added support for transfer learning from different datasets (different number of class) and different input weights and output weights.
 
 ## Configuration Hints
 
@@ -85,8 +86,13 @@ If we compare with the ResNet 50 from scratch just bellow this one, there aren't
 We use transfer learning using VGG16 from the TT100K dataset to the BelgiumTSC dataset. 
 
 - train VGG16 in the BelgiumTSC from scratch 
+
 ![VGG16 Scratch plot](figures/plotVGG16_BTS_scratch.png?raw=true "VGG16 BelgiumTSC Scratch Experiment")
+
+- train VGG16 in the BelgiumTSC with pretrain weights 
+
 ![VGG16 Pretrain plot](figures/plotVGG16_BTS_pretrain.png?raw=true "VGG16 BelgiumTSC Pretrain Experiment")
+
 ### Analysing data augmentation
 
 ### Practical differences between Adam and RMSProp
