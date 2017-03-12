@@ -15,13 +15,30 @@ This second week goal is prepare an object recognition classifier using the stat
 
 A framework in Python is provided to prepare easily the models, read automatically the provided Dataset, splitting in Train, Validation and Test, where with a configuration file we can manage all the parameters needed to train the CNN. The framework use Keras library and supports Theano and TensorFlow, making easy the compatibilily of both libraries and the creation or integration of models.
 
+
+### Modules used
+
+The following modules are being used for this week to understand properly the code and fix minor problems:
+- Main file train.py: where we can see the calls of the different modules and the arguments to use when we run it.
+- Configuration: module where a configuration file is read in order to automatize the preparation of the experiments.
+- Models: model factory implementation to add easily new models to the framework
+- Tools: where we can find the optimizer factory to use the diferent optimizers integrated to use in the CNN, also the dataset loader and related files.
+- Callbacks: callback factory to personalize the callback to use when a experiment is running.
+
 ### Run an experiment
 
 To run an experiment using TensorFlow we use the next command with optional parameters as input in []: CUDA_VISIBLE_DEVICES=1 python test.py -c config/TT100k_classfier.py -e ExperimentName [-s SharedPath (default:/data)] [-l localPath (defaut: /datatmp).
 We can also define by default this input parameters in the train.py in the lines 81 to 88. This command read the Dataset from the shared path specified, make a local copy on the local path especified, read the configuration file and names the experiment.
 Automatically the execution creates a Experiments folder on the local path and stores information relevant about this experiment, like wieghts of the model, results, log files, etc. The configuration file especified in the command is the main tool to configurate and parametrize the differetns experiments to do, selecting the CNN, Dataset, training configuration and data preparation.
 
-## Code Changes
+### Integrate a new model
+
+The steps to add a new model to the framework are:
+- Define the model in Keras language and store it in /models.
+- Go to the model_factory.py file import your model or main function that creates your model (ex: from models.resnet import ResnetBuilder), add the name of the model that you want to use in the configuration file to call it in the make function, add the name inside the if of the line 82.
+- Define the call of your model, adding in the function make_one_net_model the entry needed, follow the other nets already implemented as example.
+
+## Code changes and additions
 
 - Added the densenet model using the implementation from: https://github.com/titu1994/DenseNet, now the denset net 40 is available. For using this model, please set densenet into the config file (model_name).
 - Small change. Modified TensorFlow dowload link in the code/README.m file, from https://github.com/Theano/Theano to https://www.tensorflow.org/install/install_linux.
