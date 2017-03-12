@@ -113,11 +113,21 @@ Ranking best result of the models on TT100K daset: https://drive.google.com/open
 
 #### INRIA pedestrians
 
-#### Daimler
+##### InceptionV3 Keras
+![InceptionV3 plot](figures/plotInceptionINRIA.png?raw=true "InceptionV3 Keras Experiment")
+
+##### VGG19 Keras
+![VGG19 plot](figures/plotVGG19INRIA.png?raw=true "VGG19 Keras Experiment")
 
 #### Belgium traffic signs (TBSC)
 
+##### ResNet 50 Keras
+![ResNet 50 Keras plot](figures/plotResnet50BTSC.png?raw=true "ResNet 50 Keras Experiment")
+
 #### KITTI
+
+##### ResNet 50 Keras
+![ResNet 50 Keras plot](figures/plotResnet50KITTI.png?raw=true "ResNet 50 Keras Experiment")
 
 ## Project slides
 - Google slides for [Week 1](https://docs.google.com/presentation/d/1jiS8scHFZGNVeYUV8wJpG2AjLw9J-iSCpzYKUXmoAWQ/edit?usp=sharing)
