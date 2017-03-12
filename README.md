@@ -82,7 +82,11 @@ If we compare with the ResNet 50 from scratch just bellow this one, there aren't
 ### Analysing different pre-processings
 
 ### Transfer learning to another dataset
+We use transfer learning using VGG16 from the TT100K dataset to the BelgiumTSC dataset. 
 
+- train VGG16 in the BelgiumTSC from scratch 
+![VGG16 Scratch plot](figures/plotVGG16_BTS_scratch.png?raw=true "VGG16 BelgiumTSC Scratch Experiment")
+![VGG16 Pretrain plot](figures/plotVGG16_BTS_pretrain.png?raw=true "VGG16 BelgiumTSC Pretrain Experiment")
 ### Analysing data augmentation
 
 ### Practical differences between Adam and RMSProp
@@ -141,7 +145,7 @@ Ranking best result of the models on TT100K daset: https://drive.google.com/open
 
 ## Project slides
 - Google slides for [Week 1](https://docs.google.com/presentation/d/1jiS8scHFZGNVeYUV8wJpG2AjLw9J-iSCpzYKUXmoAWQ/edit?usp=sharing)
-- Google slides for [Week 2](https://docs.google.com/presentation/d/10zmaSSAL-29dpJZ-WZNhcl8yIUSg30iNnNcKlxDesTc/edit?usp=sharing)
+- Google slides for [Week 2](https://docs.google.com/presentation/d/1AHFAFCaj7uQkiXKEfW8QbdqtRUyyvBKobA6NQJt4pjs/edit?usp=sharing)
 - Google slides for Week 3 (T.B.A.)
 - Google slides for Week 4 (T.B.A.)
 - Google slides for Week 5 (T.B.A.)
