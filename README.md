@@ -6,6 +6,21 @@ The goal of this project is to study the use of deep learning to semantically se
 
 Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
 
+# Week 2: Object Recognition
+
+## Asbtract
+This second week goal is prepare an object recognition classifier using the state of art of Neural Networks. As a first step for the M5 project, we need to identify properly the elements in a image, how the project is focused in Scene Understanding for Autonomous Driving, the elements to identify will be the relevants for this fuction, how they can be cars, pedestrians, traffic signs, etc. In order to train and validate our classfier we use Datasets provided with related traffic elements, this Datasets are TSingHua-TenCent 100K, INRIA pedestrians, Belgium traffic signs, Daimler pedestrians and KITTI. The classifier will be based on Convolutional Neural network, studying the actual state of art for image classification, training the best models of this last years and comparing the results.
+
+## Framework composition
+
+A framework in Python is provided to prepare easily the models, read automatically the provided Dataset, splitting in Train, Validation and Test, where with a configuration file we can manage all the parameters needed to train the CNN. The framework use Keras library and supports Theano and TensorFlow, making easy the compatibilily of both libraries and the creation or integration of models.
+
+### Run an experiment
+
+To run an experiment using TensorFlow we use the next command with optional parameters as input in []: CUDA_VISIBLE_DEVICES=1 python test.py -c config/TT100k_classfier.py -e ExperimentName [-s SharedPath (default:/data)] [-l localPath (defaut: /datatmp).
+We can also define by default this input parameters in the train.py in the lines 81 to 88. This command read the Dataset from the shared path specified, make a local copy on the local path especified, read the configuration file and names the experiment.
+Automatically the execution creates a Experiments folder on the local path and stores information relevant about this experiment, like wieghts of the model, results, log files, etc. The configuration file especified in the command is the main tool to configurate and parametrize the differetns experiments to do, selecting the CNN, Dataset, training configuration and data preparation.
+
 ## Code Changes
 
 - Added the densenet model using the implementation from: https://github.com/titu1994/DenseNet, now the denset net 40 is available. For using this model, please set densenet into the config file (model_name).
@@ -22,12 +37,6 @@ Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
 - TensorFlow try to allocate memory on the GPU even if don't fit firstly, if you use batch sizes inapropiate or resize the image to higher dimensions you can experiment a drastical increment in the epoch calculation time, so it's improtant to take into account.
 - Use weight decay with lower values (exponent -4 or -5), high values penalyze the weight and allows less variations needing more time to train and higher loss values, still the CNN will learn, but not appropriately.
 
-# Week 2: Object Recognition
-
-## Asbtract
-
-## Framework composition and modifications
-
 ## Task summaty
 ### Task (a): Run the provided code
 
@@ -37,7 +46,7 @@ Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
 
 ### Task (e): Boost the performance of your network
 
-### Test Realized
+## Tests Realized
 
 Tested the Weight normalization behaviour in the models trying a weight decay value of 0.1, 0.01 and 0.001 in VGG16.
 - 0.1: High starting loss, around 150, each epoch reduce this loss constantly but the training step is really slow per epoch, reducing the loss in the validation data but poor changes in the accuracy score. Too slow and higher penalization for weight is not useful.
