@@ -121,29 +121,31 @@ class Dataset_Generators():
                                               seed=cf.seed_valid)
 
         # Load testing set
-        print ('\n > Reading testing set...')
-        dg_ts = ImageDataGenerator(imageNet=cf.norm_imageNet_preprocess,
-                                   rgb_mean=mean,
-                                   rgb_std=std,
-                                   rescale=cf.norm_rescale,
-                                   featurewise_center=cf.norm_featurewise_center,
-                                   featurewise_std_normalization=cf.norm_featurewise_std_normalization,
-                                   samplewise_center=cf.norm_samplewise_center,
-                                   samplewise_std_normalization=cf.norm_samplewise_std_normalization,
-                                   gcn=cf.norm_gcn,
-                                   zca_whitening=cf.norm_zca_whitening,
-                                   crop_size=cf.crop_size_test,
-                                   dim_ordering='th' if cf.model_name == 'yolo' else 'default',
-                                   class_mode=cf.dataset.class_mode)
-        test_gen = dg_ts.flow_from_directory(directory=cf.dataset.path_test_img,
-                                             gt_directory=cf.dataset.path_test_mask,
-                                             resize=cf.resize_test,
-                                             target_size=cf.target_size_test,
-                                             color_mode=cf.dataset.color_mode,
-                                             classes=cf.dataset.classes,
-                                             class_mode=cf.dataset.class_mode,
-                                             batch_size=cf.batch_size_test,
-                                             shuffle=cf.shuffle_test,
-                                             seed=cf.seed_test)
+        test_gen = []
+        if cf.test_model:
+            print ('\n > Reading testing set...')
+            dg_ts = ImageDataGenerator(imageNet=cf.norm_imageNet_preprocess,
+                                       rgb_mean=mean,
+                                       rgb_std=std,
+                                       rescale=cf.norm_rescale,
+                                       featurewise_center=cf.norm_featurewise_center,
+                                       featurewise_std_normalization=cf.norm_featurewise_std_normalization,
+                                       samplewise_center=cf.norm_samplewise_center,
+                                       samplewise_std_normalization=cf.norm_samplewise_std_normalization,
+                                       gcn=cf.norm_gcn,
+                                       zca_whitening=cf.norm_zca_whitening,
+                                       crop_size=cf.crop_size_test,
+                                       dim_ordering='th' if cf.model_name == 'yolo' else 'default',
+                                       class_mode=cf.dataset.class_mode)
+            test_gen = dg_ts.flow_from_directory(directory=cf.dataset.path_test_img,
+                                                 gt_directory=cf.dataset.path_test_mask,
+                                                 resize=cf.resize_test,
+                                                 target_size=cf.target_size_test,
+                                                 color_mode=cf.dataset.color_mode,
+                                                 classes=cf.dataset.classes,
+                                                 class_mode=cf.dataset.class_mode,
+                                                 batch_size=cf.batch_size_test,
+                                                 shuffle=cf.shuffle_test,
+                                                 seed=cf.seed_test)
 
         return (train_gen, valid_gen, test_gen)
