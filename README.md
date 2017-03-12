@@ -71,7 +71,23 @@ Tested the Weight normalization behaviour in the models trying a weight decay va
 - 0.01: Similar to the previous case, but the lost start at 20 and drops slowly, being better but still too slow to be really useful.
 - 0.001 and above: train fast, similar loss speed like without weight decay but with a better control of the train step and normalizing the weights.
 
+### Train from Scratch VS ImageNet
+In general, with sufficient time to execute, both method achieve similar accuracy if you choose proper optimizer configurations, the main difference is the starting point, from scratch the start loss are high and falls more slowly than use the ImageNet weight where the starting loss is lower. It's recommended to start with imageNet weight if the model support it to save execution time and can be useful to perform Fine Tune adding new layers of modifying the top of a model.
+
+#### Fine Tune example
+
+### Analysing different pre-processings
+
+### Transfer learning to another dataset
+
+### Analysing data augmentation
+
+### Practical differences between Adam and RMSProp
+
 ### Datasets test
+
+### Techniques to improve the network results
+
 #### TSingHua-TenCent 100K (TT100K)
 
 Ranking best result of the models on TT100K daset: https://drive.google.com/open?id=1DPU7IIxMk3xZAEAY_5cH4X0YRmexPwH_1sK1yAKgDQs
