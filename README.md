@@ -75,6 +75,7 @@ Tested the Weight normalization behaviour in the models trying a weight decay va
 #### TSingHua-TenCent 100K (TT100K)
 
 Ranking best result of the models on TT100K daset: https://drive.google.com/open?id=1DPU7IIxMk3xZAEAY_5cH4X0YRmexPwH_1sK1yAKgDQs
+![CNN Ranking](figures/Ranking.png?raw=true "CNN Ranking Experiment")
 
 ##### VGG16 Keras
 ![VGG16 plot](figures/plotVGG16.png?raw=true "VGG16 Keras Experiment")
