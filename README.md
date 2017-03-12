@@ -25,7 +25,11 @@ Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
 Tested the Weight normalization behaviour in the models trying a weight decay value of 0.1, 0.01 and 0.001 in VGG16.
 - 0.1: High starting loss, around 150, each epoch reduce this loss constantly but the training step is really slow per epoch, reducing the loss in the validation data but poor changes in the accuracy score. Too slow and higher penalization for weight is not useful.
 - 0.01: Similar to the previous case, but the lost start at 20 and drops slowly, being better but still too slow to be really useful.
-- 0.001 and above: train fast, similar loss speed like without weight decay but with a better control of the train step and normalizing the weights.  
+- 0.001 and above: train fast, similar loss speed like without weight decay but with a better control of the train step and normalizing the weights.
+
+## CNN ranking on TT100K daset
+
+https://drive.google.com/open?id=1DPU7IIxMk3xZAEAY_5cH4X0YRmexPwH_1sK1yAKgDQs
 
 ## Project slides
 - Google slides for [Week 1](https://docs.google.com/presentation/d/1jiS8scHFZGNVeYUV8wJpG2AjLw9J-iSCpzYKUXmoAWQ/edit?usp=sharing)
