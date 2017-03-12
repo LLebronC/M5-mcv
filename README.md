@@ -22,7 +22,22 @@ Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
 - TensorFlow try to allocate memory on the GPU even if don't fit firstly, if you use batch sizes inapropiate or resize the image to higher dimensions you can experiment a drastical increment in the epoch calculation time, so it's improtant to take into account.
 - Use weight decay with lower values (exponent -4 or -5), high values penalyze the weight and allows less variations needing more time to train and higher loss values, still the CNN will learn, but not appropriately.
 
-## Test Realized
+# Week 2: Object Recognition
+
+## Asbtract
+
+## Framework composition and modifications
+
+## Task summaty
+### Task (a): Run the provided code
+
+### Task (b): Train the network on a different dataset
+
+### Tasks (c) and (d): Implement a new network
+
+### Task (e): Boost the performance of your network
+
+### Test Realized
 
 Tested the Weight normalization behaviour in the models trying a weight decay value of 0.1, 0.01 and 0.001 in VGG16.
 - 0.1: High starting loss, around 150, each epoch reduce this loss constantly but the training step is really slow per epoch, reducing the loss in the validation data but poor changes in the accuracy score. Too slow and higher penalization for weight is not useful.
