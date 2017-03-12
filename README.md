@@ -103,10 +103,13 @@ Ranking best result of the models on TT100K daset: https://drive.google.com/open
 ![VGG19 plot](figures/plotVGG19.png?raw=true "VGG19 Keras Experiment")
 
 ##### ResNet 50 Keras
+
 - with Fine Tune:
+
 ![ResNet 50 Keras plot](figures/plotResnet50Keras.png?raw=true "ResNet 50 Keras Experiment")
 
 - From Scratch:
+
 ![ResNet 50 Keras plot](figures/plotResNet50.png?raw=true "ResNet 50 Keras Experiment")
 
 ##### ResNet 152
