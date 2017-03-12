@@ -76,6 +76,9 @@ In general, with sufficient time to execute, both method achieve similar accurac
 
 #### Fine Tune example
 
+A Fine Tune example can be seen in the test Datasets section bellow, the experiment is with a ResNet 50 of Keras tested in TT100K Dataset. A first train step with the weight preload from ImageNet and frozen to keep the values during 19 epochs, where we can see how is slowly adapted due the learning of the top of the model part, the flatten layer and softmax. When is observed that the model can't adapt more the loss, we stop the training and reestart again unfrozen the layer from the base model part, allowing the learning. From this point (epoch 19) we can see how the loss drops until the saturation of the train.
+If we compare with the ResNet 50 from scratch just bellow this one, there aren't notables differences at the end, ResNet learn quite good the Dataset with the proper learning rate and data augmentation, don't needing the ImageNet weights, but the fact that we used this weights improve sighlty the final score in validation due the differences in weight adaptation during the train phase, end with this little variation that benefits the Fine Tune case.
+
 ### Analysing different pre-processings
 
 ### Transfer learning to another dataset
@@ -100,7 +103,11 @@ Ranking best result of the models on TT100K daset: https://drive.google.com/open
 ![VGG19 plot](figures/plotVGG19.png?raw=true "VGG19 Keras Experiment")
 
 ##### ResNet 50 Keras
+- with Fine Tune:
 ![ResNet 50 Keras plot](figures/plotResnet50Keras.png?raw=true "ResNet 50 Keras Experiment")
+
+- From Scratch:
+![ResNet 50 Keras plot](figures/ 	plotResNet50.png?raw=true "ResNet 50 Keras Experiment")
 
 ##### ResNet 152
 ![ResNet 152 plot](figures/plotResnet152.png?raw=true "ResNet 152 Experiment")
