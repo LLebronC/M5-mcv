@@ -1,6 +1,22 @@
 # Scene Understanding for Autonomous Vehicles with deep neural networks
 Master in Computer Vision - M5 Visual recognition
 
+## Project slides
+- Google slides for [Week 1](https://docs.google.com/presentation/d/1jiS8scHFZGNVeYUV8wJpG2AjLw9J-iSCpzYKUXmoAWQ/edit?usp=sharing)
+- Google slides for [Week 2](https://docs.google.com/presentation/d/1AHFAFCaj7uQkiXKEfW8QbdqtRUyyvBKobA6NQJt4pjs/edit?usp=sharing)
+- Google slides for Week 3 (T.B.A.)
+- Google slides for Week 4 (T.B.A.)
+- Google slides for Week 5 (T.B.A.)
+- Google slides for Week 6 (T.B.A.)
+- Google slides for Week 7 (T.B.A.)
+
+## Groups
+ - [Group 6:](https://github.com/LLebronC/mcv-m5)
+  - Jose Luis Gómez (joseluis-master@hotmail.com)
+  - Luís Lebron(luis.lebron@e-campus.uab.cat)
+  - Axel Barroso (axel.barroso@e-campus.uab.cat)
+  - Hassan Ahmed
+  
 ## Project description
 The goal of this project is to study the use of deep learning to semantically segment images and extract some knowledge of the scene. To do it we will use different types of neural networks.
 
@@ -83,7 +99,7 @@ If we compare with the ResNet 50 from scratch just bellow this one, there aren't
 ### Analysing different pre-processings
 
 ### Transfer learning to another dataset
-We use transfer learning using VGG16 from the TT100K dataset to the BelgiumTSC dataset. 
+We use transfer learning using VGG16 from the TT100K dataset to the BelgiumTSC dataset. [Table](https://docs.google.com/spreadsheets/d/1edlG_QVyAuVgNCifR7pAlTNp4yfkvcW-LEhC4yp5AbE/edit?usp=sharing)
 
 - train VGG16 in the BelgiumTSC from scratch 
 
@@ -195,22 +211,6 @@ he KITTI dataset provided is composed by 60060 train images and 14876 for valida
 
 ##### ResNet 50 Keras
 ![ResNet 50 Keras plot](figures/plotResnet50KITTI.png?raw=true "ResNet 50 Keras Experiment")
-
-## Project slides
-- Google slides for [Week 1](https://docs.google.com/presentation/d/1jiS8scHFZGNVeYUV8wJpG2AjLw9J-iSCpzYKUXmoAWQ/edit?usp=sharing)
-- Google slides for [Week 2](https://docs.google.com/presentation/d/1AHFAFCaj7uQkiXKEfW8QbdqtRUyyvBKobA6NQJt4pjs/edit?usp=sharing)
-- Google slides for Week 3 (T.B.A.)
-- Google slides for Week 4 (T.B.A.)
-- Google slides for Week 5 (T.B.A.)
-- Google slides for Week 6 (T.B.A.)
-- Google slides for Week 7 (T.B.A.)
-
-## Groups
- - [Group 6:](https://github.com/LLebronC/mcv-m5)
-  - Jose Luis Gómez (joseluis-master@hotmail.com)
-  - Luís Lebron(luis.lebron@e-campus.uab.cat)
-  - Axel Barroso (axel.barroso@e-campus.uab.cat)
-  - Hassan Ahmed
   
 ## Reference
 Simonyan, K., & Zisserman, A. (2014). Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556. [Summary](Summaries/VGG.md)
