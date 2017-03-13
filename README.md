@@ -120,7 +120,7 @@ The main configuration for this test was using preload weight for ImageNet, opti
 ##### VGG19 Keras
 ![VGG19 plot](figures/plotVGG19.png?raw=true "VGG19 Keras Experiment")
 
-For this experiment the configuration are preload weight from ImageNet, only rescale to the input data and a data augmentation with 10 dregrees of rotation and shifts, shear and zoom of 0.1. We can see that the lowest loss for validation was between epochs 40-50, but the early stopping was defined using the validation accuracy in this case, scoring the best near the epoch 91. This example is similar to the previous one with VGG16, score a little more validation due the generalization of the data augmentation.
+For this experiment the configuration are preload weight from ImageNet, optimizer adam with 1-E04 of learning rate and 0,001 of weight decay, only a rescale to the input data and a data augmentation with 10 dregrees of rotation and shifts, shear and zoom of 0.1. We can see that the lowest loss for validation was between epochs 40-50, but the early stopping was defined using the validation accuracy in this case, scoring the best near the epoch 91. This example is similar to the previous one with VGG16, score a little more validation due the generalization of the data augmentation.
 
 A common propiety of the VGG models is the amount of parameters that they have, needing a lot of memory and having heavy weight files. In general they allow small input images and are fast due the few layers in comparison to the other models. But the validation loss shows that this model is less stable and generalize a little worst than Resnet for example.
 
@@ -132,15 +132,23 @@ For this example we should two experiments involving the ResNet 50 from the Kera
 
 ![ResNet 50 Keras plot](figures/plotResnet50Keras.png?raw=true "ResNet 50 Keras Experiment")
 
+For the find tune configuration we use a first step frozen the weight of the base model, preloading the ImageNet, we resize input image to 197x197, and use optimizer adam with 1-E05 of learning rate and 1-E04 of weight decay. Rescaling, mean and std substraction from the pinput preprocessing, with data augmentation with 10 degrees of rotation, and 0.2 factor for shifts, shear and zoom.
+The second step have the same configuration but with the weight unfrozen.
+
 - From Scratch:
 
 ![ResNet 50 Keras plot](figures/plotResNet50.png?raw=true "ResNet 50 Keras Experiment")
 
 ##### ResNet 152
+
+This experiment using a new implementation of the resnet model, allowing the 152 layer model shows how the model learn from scratch and have a fast learning process like the resnet from keras, being also smooth. The train model is adapted really fast.
+
 ![ResNet 152 plot](figures/plotResnet152.png?raw=true "ResNet 152 Experiment")
 
+The configuration for this experiment was resize of the data to 197x197, optimizer adam with 1-E05 of learning rate and 1-E04 of weight decay, rescaling, mean and std substraction and data augmentation of 10 degrees of rotation and 0.2 factor for shifs, shear and zoom.
+
 ##### InceptionV3 Keras
-![InceptionV3 plot](figures/plotVGG19.png?raw=true "InceptionV3 Keras Experiment")
+![InceptionV3 plot](figures/plotInceptionV3.png?raw=true "InceptionV3 Keras Experiment")
 
 ##### DenseNet 40 
 ![DenseNet plot](figures/plotDenseNet.png?raw=true "DenseNet 40 Experiment")
