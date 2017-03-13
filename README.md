@@ -95,9 +95,20 @@ We use transfer learning using VGG16 from the TT100K dataset to the BelgiumTSC d
 
 ### Analysing data augmentation
 
+To use properly the data augmentation is improtant to know which information are we obtaining from a dataset and also the model type of our CNN. For example, if we try to identify traffic signs a low rotations, shift and affinities with the proper values can have sense to make our dataset more complet and our model more robust, but some parameter like flips can detroy the meaning of the sign or element to classify.
+In general, all the experiments are performed with Data augmetation, but sometimes we try to don't use it to see if the network learns better or for refine finals epochs to adjust the model to the data. The data augmentation used normally are 10 degrees of rotation and a factor of 0,1 or 0,2 in shifts, zooms and shears.
+
 ### Practical differences between Adam and RMSProp
 
+Anaylse the differences between both method practically is not easy and can be about personal likes, but in your case we choosed adam from RMSprop, because adapt better the learning rates, a generic value of 1-E04 or 1-E05 works fine for all the models normally, but RMSprop need to be adjusted better, having cases that you need a learning rate more low or somethings higher. We won't say that adam is better, but in our case makes more easy the learning phase and become a preference for us.
+
 ### Techniques to improve the network results
+
+In order to improve the results of the network or train more fast, focusing in the evaluation loss and scores there are some hints learnt while we make the experiment that can be useful.
+- Use data augmentation accordingly to the necesities of the dataset to increase the generalization power of your model, this normally add loss in the train, making a bit more difficult to adapt the model, needing more epoch to adjust and being beneficious for the validation.
+- Data preprocesing is essential, but in our case a rescale of the data is the best option to score the best values in validation, if you use mean or std substraction this performance will drop slightly.
+- If you use a model from Keras compatible with ImageNet weight, the ebst option is preload this weight and make find tune or simply use it from the begining, you will obtain less starting loss and a fast learning for your model.
+- when your model don't learn more, try to repeteat the experiment in our last checkpoint using a lower learning rate value, sometimes you can fine a plateau in the gradient descent that can be solved using a low learning rate.
 
 ### Dataset Experiments
 
