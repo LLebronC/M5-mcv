@@ -97,22 +97,36 @@ We use transfer learning using VGG16 from the TT100K dataset to the BelgiumTSC d
 
 ### Practical differences between Adam and RMSProp
 
-### Datasets test
-
 ### Techniques to improve the network results
+
+### Dataset Experiments
 
 #### TSingHua-TenCent 100K (TT100K)
 
+This Dataset can be find here: http://cg.cs.tsinghua.edu.cn/traffic-sign/tutorial.html It's a Dataset of traffic signs of 64x64, that consist in 16527 images for train, 1655 for validation and 8190 for test, being the most challenging one for us with 220 classes of signals to identify and for this reaon is the preferent Dataset to test our Models.
+
 Ranking best result of the models on TT100K daset: https://drive.google.com/open?id=1DPU7IIxMk3xZAEAY_5cH4X0YRmexPwH_1sK1yAKgDQs
+Inside the document we can find the weight and configuration files associated to each experimented and can be recreated in this code.
+
 ![CNN Ranking](figures/Ranking.png?raw=true "CNN Ranking Experiment")
+
+If we analyze the results obtained, in general we can see that the test Dataset for the TT100K should have a really similar properties like the train, because for all models the accuracy obtained is really high. In other hand, we can pay attention to the loss rating where the differences are noticed and also the validation accuracy. For this case we can see how the ResNet 50 Keras is the best model, the lowest loss and highest accuracy for validation. We should say that this experiments aren't homogenious, someone has more dataaugmentation, others ones don't have mean and std substraction, ImageNet weight preload, etc. All this factors makes little differences, but in general this are the top values obtained for each experiment and model.
 
 ##### VGG16 Keras
 ![VGG16 plot](figures/plotVGG16.png?raw=true "VGG16 Keras Experiment")
 
+The main configuration for this test was using preload weight for ImageNet, optimizer Adam with 1-E05 of learning rate, weight decay of 1-E04, rescaling, std and mean substraction without Data augmentation. The graphic shows the evolution of the model until the early stops callback end the training step. The models starts with a low loss due the ImageNet weights.
+
 ##### VGG19 Keras
 ![VGG19 plot](figures/plotVGG19.png?raw=true "VGG19 Keras Experiment")
 
+For this experiment the configuration are preload weight from ImageNet, only rescale to the input data and a data augmentation with 10 dregrees of rotation and shifts, shear and zoom of 0.1. We can see that the lowest loss for validation was between epochs 40-50, but the early stopping was defined using the validation accuracy in this case, scoring the best near the epoch 91. This example is similar to the previous one with VGG16, score a little more validation due the generalization of the data augmentation.
+
+A common propiety of the VGG models is the amount of parameters that they have, needing a lot of memory and having heavy weight files. In general they allow small input images and are fast due the few layers in comparison to the other models. But the validation loss shows that this model is less stable and generalize a little worst than Resnet for example.
+
 ##### ResNet 50 Keras
+
+For this example we should two experiments involving the ResNet 50 from the Keras implementation, one with Fine Tune and other one from scratch. In general this ResNet model is really smooth learning, don't have a high variantion within epochs in validation like VGG, even when the loss is a little higher, the scores in accuracy are close. The main problem is that they need a minimum input size of 197x197, needing to resize the Dataset input and increasing the computation time for epoch.
 
 - with Fine Tune:
 
