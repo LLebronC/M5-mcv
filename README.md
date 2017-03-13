@@ -9,17 +9,17 @@ Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
 # Week 2: Object Recognition
 
 ## Abstract
-This second week's goal is to prepare an object recognition classifier using the state of art of Neural Networks. As a first step, we need to focus on the task of classifying properly elements in images. The project is focused as in Scene Understanding for Autonomous Driving problem, elements to identify will be relevant for this function. Such elements can be cars, pedestrians, traffic signs... In order to train and validate our classifier we use different datasets provided to us with related traffic elements. Those datasets are TSingHua-TenCent 100K, INRIA pedestrians, Belgium traffic signs, Daimler pedestrians and KITTI. As we mentioned, our classifier will be based on Convolutional Neural networks. We will study, train and compare actual state of art models for image classification. Figuring out then which is the best model performance for out task.
+This second week goal is prepare an object recognition classifier using the state of art of Neural Networks. As a first step for the M5 project, we need to identify properly the elements in a image, how the project is focused in Scene Understanding for Autonomous Driving, the elements to identify will be the relevants for this fuction, how they can be cars, pedestrians, traffic signs, etc. In order to train and validate our classfier we use Datasets provided with related traffic elements, this Datasets are TSingHua-TenCent 100K, INRIA pedestrians, Belgium traffic signs, Daimler pedestrians and KITTI. The classifier will be based on Convolutional Neural network, studying the actual state of art for image classification, training the best models of this last years and comparing the results.
 
 ## Framework composition
 
-A framework in Python is provided to us in order to help us out with different task. Framework is in charge of preparing easily the models, reading automatically the provided datasets and splitting dataset into train, validation and test data. In addition, a configuration file is provided, that file manages all the parameters needed to configure, train and test different CNN. The framework uses Keras library and it supports Theano and TensorFlow, making easier the compatibility of both libraries and the creation or integration of new models.
+A framework in Python is provided to prepare easily the models, read automatically the provided Dataset, splitting in Train, Validation and Test, where with a configuration file we can manage all the parameters needed to train the CNN. The framework use Keras library and supports Theano and TensorFlow, making easy the compatibilily of both libraries and the creation or integration of models.
 [TODO: EXPLAIN MORE ABOUT DE FRAMEWORK]
 
 ### Modules used
 
-The following modules has being used in this week to understand properly the code and fix minor problems:
-- Main file train.py: file in charge of calls to the different modules and set arguments that we will use in running time.
+The following modules are being used for this week to understand properly the code and fix minor problems:
+- Main file train.py: where we can see the calls of the different modules and the arguments to use when we run it.
 - Configuration: module where a configuration file is read in order to automatize the preparation of the experiments.
 - Models: model factory implementation to add easily new models to the framework
 - Tools: where we can find the optimizer factory to use the diferent optimizers integrated to use in the CNN, also the dataset loader and related files.
@@ -148,12 +148,21 @@ This experiment using a new implementation of the resnet model, allowing the 152
 The configuration for this experiment was resize of the data to 197x197, optimizer adam with 1-E05 of learning rate and 1-E04 of weight decay, rescaling, mean and std substraction and data augmentation of 10 degrees of rotation and 0.2 factor for shifs, shear and zoom.
 
 ##### InceptionV3 Keras
+
+The Inception V3 model from Keras using the weight from ImageNet learns really fast, we can see that in 2 epochs the train accuracy saturates, also it is not so smooth than the ResNet, but it's stable. Apart of this, the learn progression is good and the scores similar to the other ones.
+We need to remark that the standard InceptionV3 needs a image size input of 300x300, due the final AvgPooling layer in the top of the model, in order to avoid this high resize of the images, we modified the Inception to allow lower resolution, modifying the padding and stride inside this AvgPooling layer to 4, with images lower than this 300x300. With this modification we allow a minimum of 200x200 input images, close to the resnet restriction in order to compare and don't have significant diferences.
+
 ![InceptionV3 plot](figures/plotInceptionV3.png?raw=true "InceptionV3 Keras Experiment")
+
+The configuration for this experiment was resize of the data to 200x200, optimizer adam with 1-E04 of learning rate and 1-E04 of weight decay, rescaling, mean and std substraction and without data augmentation.
 
 ##### DenseNet 40 
 ![DenseNet plot](figures/plotDenseNet.png?raw=true "DenseNet 40 Experiment")
 
 #### INRIA pedestrians
+
+INRIA pedestrian is a dataset that contains pedestrian images cuts with size of 128x64, to train we have 13429 imges and 5100 of validation. The Dataset can be found here: http://pascal.inrialpes.fr/data/human/.
+The two experiment performed show how easy is to train and obtain good results in a binary classification, needing few epochs to achieve a really high accuracy to detect pedestrians.
 
 ##### InceptionV3 Keras
 ![InceptionV3 plot](figures/plotInceptionINRIA.png?raw=true "InceptionV3 Keras Experiment")
@@ -163,10 +172,15 @@ The configuration for this experiment was resize of the data to 197x197, optimiz
 
 #### Belgium traffic signs (TBSC)
 
+Dataset of traffic signs like TT100K, but with less claases and images, 61 classes with 4575 images for train, 2520 for validation and test.
+This dataset is more easy to learn, giving easily veru good results for test with a resnet 50.
+
 ##### ResNet 50 Keras
 ![ResNet 50 Keras plot](figures/plotResnet50BTSC.png?raw=true "ResNet 50 Keras Experiment")
 
 #### KITTI
+
+he KITTI dataset provided is composed by 60060 train images and 14876 for validation, don't have test. The image shape is 128x128 and the classes are different types of vehicles, ciclists and pedestrians.
 
 ##### ResNet 50 Keras
 ![ResNet 50 Keras plot](figures/plotResnet50KITTI.png?raw=true "ResNet 50 Keras Experiment")
