@@ -9,17 +9,17 @@ Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
 # Week 2: Object Recognition
 
 ## Abstract
-This second week goal is prepare an object recognition classifier using the state of art of Neural Networks. As a first step for the M5 project, we need to identify properly the elements in a image, how the project is focused in Scene Understanding for Autonomous Driving, the elements to identify will be the relevants for this fuction, how they can be cars, pedestrians, traffic signs, etc. In order to train and validate our classfier we use Datasets provided with related traffic elements, this Datasets are TSingHua-TenCent 100K, INRIA pedestrians, Belgium traffic signs, Daimler pedestrians and KITTI. The classifier will be based on Convolutional Neural network, studying the actual state of art for image classification, training the best models of this last years and comparing the results.
+This second week's goal is to prepare an object recognition classifier using the state of art of Neural Networks. As a first step, we need to focus on the task of classifying properly elements in images. The project is focused as in Scene Understanding for Autonomous Driving problem, elements to identify will be relevant for this function. Such elements can be cars, pedestrians, traffic signs... In order to train and validate our classifier we use different datasets provided to us with related traffic elements. Those datasets are TSingHua-TenCent 100K, INRIA pedestrians, Belgium traffic signs, Daimler pedestrians and KITTI. As we mentioned, our classifier will be based on Convolutional Neural networks. We will study, train and compare actual state of art models for image classification. Figuring out then which is the best model performance for out task.
 
 ## Framework composition
 
-A framework in Python is provided to prepare easily the models, read automatically the provided Dataset, splitting in Train, Validation and Test, where with a configuration file we can manage all the parameters needed to train the CNN. The framework use Keras library and supports Theano and TensorFlow, making easy the compatibilily of both libraries and the creation or integration of models.
+A framework in Python is provided to us in order to help us out with different task. Framework is in charge of preparing easily the models, reading automatically the provided datasets and splitting dataset into train, validation and test data. In addition, a configuration file is provided, that file manages all the parameters needed to configure, train and test different CNN. The framework uses Keras library and it supports Theano and TensorFlow, making easier the compatibility of both libraries and the creation or integration of new models.
 [TODO: EXPLAIN MORE ABOUT DE FRAMEWORK]
 
 ### Modules used
 
-The following modules are being used for this week to understand properly the code and fix minor problems:
-- Main file train.py: where we can see the calls of the different modules and the arguments to use when we run it.
+The following modules has being used in this week to understand properly the code and fix minor problems:
+- Main file train.py: file in charge of calls to the different modules and set arguments that we will use in running time.
 - Configuration: module where a configuration file is read in order to automatize the preparation of the experiments.
 - Models: model factory implementation to add easily new models to the framework
 - Tools: where we can find the optimizer factory to use the diferent optimizers integrated to use in the CNN, also the dataset loader and related files.
