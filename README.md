@@ -1,14 +1,14 @@
 # Scene Understanding for Autonomous Vehicles with deep neural networks
 Master in Computer Vision - M5 Visual recognition
 
-## Project slides
-- Google slides for [Week 1](https://docs.google.com/presentation/d/1jiS8scHFZGNVeYUV8wJpG2AjLw9J-iSCpzYKUXmoAWQ/edit?usp=sharing)
-- Google slides for [Week 2](https://docs.google.com/presentation/d/1AHFAFCaj7uQkiXKEfW8QbdqtRUyyvBKobA6NQJt4pjs/edit?usp=sharing)
-- Google slides for Week 3 (T.B.A.)
-- Google slides for Week 4 (T.B.A.)
-- Google slides for Week 5 (T.B.A.)
-- Google slides for Week 6 (T.B.A.)
-- Google slides for Week 7 (T.B.A.)
+## Project Documentation
+### Project slides
+- [Google slides](https://docs.google.com/presentation/d/1AHFAFCaj7uQkiXKEfW8QbdqtRUyyvBKobA6NQJt4pjs/edit?usp=sharing) [In process]
+
+### Project description
+The goal of this project is to study the use of deep learning to semantically segment images and extract some knowledge of the scene. To do it we will use different types of neural networks.
+
+- [Project Paper](https://www.overleaf.com/read/zbhrkkjvwkjv) [In process]
 
 ## Groups
  - [Group 6:](https://github.com/LLebronC/mcv-m5)
@@ -17,11 +17,6 @@ Master in Computer Vision - M5 Visual recognition
   - Axel Barroso (axel.barroso@e-campus.uab.cat)
   - Hassan Ahmed
  
-## Project description
-The goal of this project is to study the use of deep learning to semantically segment images and extract some knowledge of the scene. To do it we will use different types of neural networks.
-
-Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
-
 # Week 2: Object Recognition
 
 ## Abstract
