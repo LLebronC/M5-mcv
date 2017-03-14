@@ -10,7 +10,7 @@ The goal of this project is to study the use of deep learning to semantically se
 
 - [Project Paper](https://www.overleaf.com/read/zbhrkkjvwkjv) [In process]
 
-## Groups
+## Group members
  - [Group 6:](https://github.com/LLebronC/mcv-m5)
   - Jose Luis Gómez (joseluis-master@hotmail.com)
   - Luís Lebron(luis.lebron@e-campus.uab.cat)
