@@ -82,7 +82,7 @@ class Model_Factory():
         if cf.model_name in ['lenet', 'alexNet', 'vgg16', 'vgg19', 'resnet50',
                              'InceptionV3', 'fcn8', 'unet', 'segnet',
                              'segnet_basic', 'resnetFCN', 'yolo', 'resnet50Keras',
-                             'resnet18','resnet34','resnet50','resnet101','resnet152', 'densenet']:
+                             'resnet18','resnet34','resnet50','resnet101','resnet152', 'densenet','tiny-yolo']:
             if optimizer is None:
                 raise ValueError('optimizer can not be None')
 
