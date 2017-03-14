@@ -219,6 +219,9 @@ he KITTI dataset provided is composed by 60060 train images and 14876 for valida
 
 ##### ResNet 50 Keras
 ![ResNet 50 Keras plot](figures/plotResnet50KITTI.png?raw=true "ResNet 50 Keras Experiment")
+
+##### VGG19 Keras
+![VGG19 Keras plot](figures/VGG19kitti.png?raw=true "VGG19 Keras Experiment")
   
 ## Reference
 Simonyan, K., & Zisserman, A. (2014). Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556. [Summary](Summaries/VGG.md)
