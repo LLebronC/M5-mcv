@@ -10,7 +10,9 @@ from keras.utils.visualize_util import plot
 #from models.alexNet import build_alexNet
 from models.vgg import build_vgg
 from models.resnet50 import build_resnet50
+from models.resnet import ResnetBuilder
 from models.inceptionV3 import build_inceptionV3
+from models.densenet import build_densenet
 
 # Detection models
 from models.yolo import build_yolo
@@ -79,13 +81,13 @@ class Model_Factory():
     def make(self, cf, optimizer=None):
         if cf.model_name in ['lenet', 'alexNet', 'vgg16', 'vgg19', 'resnet50',
                              'InceptionV3', 'fcn8', 'unet', 'segnet',
-                             'segnet_basic', 'resnetFCN', 'yolo']:
+                             'segnet_basic', 'resnetFCN', 'yolo', 'resnet50Keras',
+                             'resnet18','resnet34','resnet50','resnet101','resnet152', 'densenet']:
             if optimizer is None:
                 raise ValueError('optimizer can not be None')
 
             in_shape, loss, metrics = self.basic_model_properties(cf, True)
-            model = self.make_one_net_model(cf, in_shape, loss, metrics,
-                                            optimizer)
+            model = self.make_one_net_model(cf, in_shape, loss, metrics, optimizer)
 
         elif cf.model_name == 'adversarial_semseg':
             if optimizer is None:
@@ -143,28 +145,45 @@ class Model_Factory():
             model = build_vgg(in_shape, cf.dataset.n_classes, 19, cf.weight_decay,
                               load_pretrained=cf.load_imageNet,
                               freeze_layers_from=cf.freeze_layers_from)
-        elif cf.model_name == 'resnet50':
+        elif cf.model_name == 'resnet50Keras':
             model = build_resnet50(in_shape, cf.dataset.n_classes, cf.weight_decay,
                                    load_pretrained=cf.load_imageNet,
                                    freeze_layers_from=cf.freeze_layers_from)
+        elif cf.model_name == 'resnet18':
+            model = ResnetBuilder.build_resnet_18(in_shape, cf.dataset.n_classes)
+        elif cf.model_name == 'resnet34':
+            model = ResnetBuilder.build_resnet_34(in_shape, cf.dataset.n_classes)
+        elif cf.model_name == 'resnet50':
+            model = ResnetBuilder.build_resnet_50(in_shape, cf.dataset.n_classes)
+        elif cf.model_name == 'resnet101':
+            model = ResnetBuilder.build_resnet_101(in_shape, cf.dataset.n_classes)
+        elif cf.model_name == 'resnet152':
+            model = ResnetBuilder.build_resnet_152(in_shape, cf.dataset.n_classes)                                                                                   
         elif cf.model_name == 'InceptionV3':
             model = build_inceptionV3(in_shape, cf.dataset.n_classes,
                                       cf.weight_decay,
                                       load_pretrained=cf.load_imageNet,
                                       freeze_layers_from=cf.freeze_layers_from)
+        elif cf.model_name == 'densenet':
+            model = build_densenet(in_shape, cf.dataset.n_classes, cf.weight_decay)
+
+            
         elif cf.model_name == 'yolo':
             model = build_yolo(in_shape, cf.dataset.n_classes,
                                cf.dataset.n_priors,
                                load_pretrained=cf.load_imageNet,
                                freeze_layers_from=cf.freeze_layers_from)
+            
         else:
             raise ValueError('Unknown model')
 
         # Load pretrained weights
         if cf.load_pretrained:
-            print('   loading model weights from: ' + cf.weights_file + '...')
+            print('   loading model weights from: ' + cf.weights_file + ' (last layer will be replaced, no weights load)...')
+            old_name=model.layers[-2].name
+            model.layers[-2].name=model.layers[-2].name+'_replaced'
             model.load_weights(cf.weights_file, by_name=True)
-
+            model.layers[-2].name=old_name
         # Compile model
         model.compile(loss=loss, metrics=metrics, optimizer=optimizer)
 

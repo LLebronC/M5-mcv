@@ -83,7 +83,7 @@ def main():
     parser.add_argument('-e', '--exp_name', type=str,
                         default=None, help='Name of the experiment')
     parser.add_argument('-s', '--shared_path', type=str,
-                        default='/share/mastergpu/module5', help='Path to shared data folder')
+                        default='/home/master/master', help='Path to shared data folder')
     parser.add_argument('-l', '--local_path', type=str,
                         default='/home/master/master', help='Path to local data folder')
 
