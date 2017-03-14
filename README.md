@@ -72,12 +72,26 @@ The steps to add a new model to the framework are:
 
 ## Task summary
 ### Task (a): Run the provided code
+- Analyze the dataset.
+- Calculate the accuracy on train and test sets.
+- Evaluate different techniques in the configuration file:
+ -- Use different pre-processings.
+- Transfer learning to another dataset (BTS).
 
 ### Task (b): Train the network on a different dataset
+- Set-up a new experiment file to discriminate among pedestrians, vehicles, and cyclists on KITTI dataset.
+- VGG16 model.
+- Train from scratch or fine-tuning?
 
 ### Tasks (c) and (d): Implement a new network
+- InceptionV3 and Resnet are already implemented in Keras. Other models will be positively valued.
+- Integrate the new model into the framework.
+- Evaluate the new model on TT100K.
+- Compare fine-tuning vs. training from scratch.
 
 ### Task (e): Boost the performance of your network
+- meta-parameters tuning
+- data augmentation
 
 ## Tests Realized
 
@@ -161,9 +175,9 @@ For this example we should two experiments involving the ResNet 50 from the Kera
 For the find tune configuration we use a first step frozen the weight of the base model, preloading the ImageNet, we resize input image to 197x197, and use optimizer adam with 1-E05 of learning rate and 1-E04 of weight decay. Rescaling, mean and std subtraction from the input preprocessing, with data augmentation with 10 degrees of rotation, and 0.2 factor for shifts, shear and zoom.
 The second step have the same configuration but with the weight unfrozen.
 
-- From Scratch:
+- From Scratch VS ImageNet preloaded weight:
 
-![ResNet 50 Keras plot](figures/plotResNet50.png?raw=true "ResNet 50 Keras Experiment")
+![ResNet 50 Keras plot](figures/resnet50-ScratchVSImNet.png?raw=true "ResNet 50 Keras Experiment")
 
 ##### ResNet 152
 
