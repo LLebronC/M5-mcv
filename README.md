@@ -1,27 +1,22 @@
 # Scene Understanding for Autonomous Vehicles with deep neural networks
 Master in Computer Vision - M5 Visual recognition
 
-## Project slides
-- Google slides for [Week 1](https://docs.google.com/presentation/d/1jiS8scHFZGNVeYUV8wJpG2AjLw9J-iSCpzYKUXmoAWQ/edit?usp=sharing)
-- Google slides for [Week 2](https://docs.google.com/presentation/d/1AHFAFCaj7uQkiXKEfW8QbdqtRUyyvBKobA6NQJt4pjs/edit?usp=sharing)
-- Google slides for Week 3 (T.B.A.)
-- Google slides for Week 4 (T.B.A.)
-- Google slides for Week 5 (T.B.A.)
-- Google slides for Week 6 (T.B.A.)
-- Google slides for Week 7 (T.B.A.)
+## Project Documentation
+### Project slides
+- [Google slides](https://docs.google.com/presentation/d/1AHFAFCaj7uQkiXKEfW8QbdqtRUyyvBKobA6NQJt4pjs/edit?usp=sharing) [In process]
 
-## Groups
+### Project description
+The goal of this project is to study the use of deep learning to semantically segment images and extract some knowledge of the scene. To do it we will use different types of neural networks.
+
+- [Project Paper](https://www.overleaf.com/read/zbhrkkjvwkjv) [In process]
+
+## Group members
  - [Group 6:](https://github.com/LLebronC/mcv-m5)
   - Jose Luis Gómez (joseluis-master@hotmail.com)
   - Luís Lebron(luis.lebron@e-campus.uab.cat)
   - Axel Barroso (axel.barroso@e-campus.uab.cat)
   - Hassan Ahmed
  
-## Project description
-The goal of this project is to study the use of deep learning to semantically segment images and extract some knowledge of the scene. To do it we will use different types of neural networks.
-
-Download the [Overleaf document](https://www.overleaf.com/read/zbhrkkjvwkjv)
-
 # Week 2: Object Recognition
 
 ## Abstract
@@ -72,12 +67,26 @@ The steps to add a new model to the framework are:
 
 ## Task summary
 ### Task (a): Run the provided code
+- Analyze the dataset.
+- Calculate the accuracy on train and test sets.
+- Evaluate different techniques in the configuration file:
+ -- Use different pre-processings.
+- Transfer learning to another dataset (BTS).
 
 ### Task (b): Train the network on a different dataset
+- Set-up a new experiment file to discriminate among pedestrians, vehicles, and cyclists on KITTI dataset.
+- VGG16 model.
+- Train from scratch or fine-tuning?
 
 ### Tasks (c) and (d): Implement a new network
+- InceptionV3 and Resnet are already implemented in Keras. Other models will be positively valued.
+- Integrate the new model into the framework.
+- Evaluate the new model on TT100K.
+- Compare fine-tuning vs. training from scratch.
 
 ### Task (e): Boost the performance of your network
+- meta-parameters tuning
+- data augmentation
 
 ## Tests Realized
 
@@ -161,9 +170,9 @@ For this example we should two experiments involving the ResNet 50 from the Kera
 For the find tune configuration we use a first step frozen the weight of the base model, preloading the ImageNet, we resize input image to 197x197, and use optimizer adam with 1-E05 of learning rate and 1-E04 of weight decay. Rescaling, mean and std subtraction from the input preprocessing, with data augmentation with 10 degrees of rotation, and 0.2 factor for shifts, shear and zoom.
 The second step have the same configuration but with the weight unfrozen.
 
-- From Scratch:
+- From Scratch VS ImageNet preloaded weight:
 
-![ResNet 50 Keras plot](figures/plotResNet50.png?raw=true "ResNet 50 Keras Experiment")
+![ResNet 50 Keras plot](figures/resnet50-ScratchVSImNet.png?raw=true "ResNet 50 Keras Experiment")
 
 ##### ResNet 152
 
@@ -210,6 +219,9 @@ he KITTI dataset provided is composed by 60060 train images and 14876 for valida
 
 ##### ResNet 50 Keras
 ![ResNet 50 Keras plot](figures/plotResnet50KITTI.png?raw=true "ResNet 50 Keras Experiment")
+
+##### VGG19 Keras
+![VGG19 Keras plot](figures/VGG19kitti.png?raw=true "VGG19 Keras Experiment")
   
 ## Reference
 Simonyan, K., & Zisserman, A. (2014). Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556. [Summary](Summaries/VGG.md)
