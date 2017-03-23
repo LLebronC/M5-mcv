@@ -1,7 +1,7 @@
 import os
 
 # Keras imports
-from metrics.metrics import cce_flatt, IoU, YOLOLoss, YOLOMetrics
+from metrics.metrics import cce_flatt, IoU, YOLOLoss, YOLOMetrics, SSDLoss
 from keras import backend as K
 from keras.utils.visualize_util import plot
 
@@ -13,6 +13,7 @@ from models.resnet50 import build_resnet50
 from models.resnet import ResnetBuilder
 from models.inceptionV3 import build_inceptionV3
 from models.densenet import build_densenet
+from models.SSD import build_SSD300
 
 # Detection models
 from models.yolo import build_yolo
@@ -54,8 +55,13 @@ class Model_Factory():
                         cf.target_size_train[0],
                         cf.target_size_train[1])
             # TODO detection : check model, different detection nets may have different losses and metrics
-            loss = YOLOLoss(in_shape, cf.dataset.n_classes, cf.dataset.priors)
-            metrics = [YOLOMetrics(in_shape, cf.dataset.n_classes, cf.dataset.priors)]
+            if cf.model_name == 'tiny-yolo' or cf.model_name == 'yolo':
+                loss = YOLOLoss(in_shape, cf.dataset.n_classes, cf.dataset.priors)
+                metrics = [YOLOMetrics(in_shape, cf.dataset.n_classes, cf.dataset.priors)]
+            elif cf.model_name == 'ssd':
+                loss = SSDLoss(in_shape, cf.dataset.n_classes, cf.dataset.priors)
+                #metrics = [YOLOMetrics(in_shape, cf.dataset.n_classes, cf.dataset.priors)]
+                metrics = ['accuracy']
         elif cf.dataset.class_mode == 'segmentation':
             if K.image_dim_ordering() == 'th':
                 if variable_input_size:
@@ -81,7 +87,7 @@ class Model_Factory():
     def make(self, cf, optimizer=None):
         if cf.model_name in ['lenet', 'alexNet', 'vgg16', 'vgg19', 'resnet50',
                              'InceptionV3', 'fcn8', 'unet', 'segnet',
-                             'segnet_basic', 'resnetFCN', 'yolo', 'resnet50Keras',
+                             'segnet_basic', 'resnetFCN', 'yolo', 'resnet50Keras', 'ssd',
                              'resnet18','resnet34','resnet50','resnet101','resnet152', 'densenet','tiny-yolo']:
             if optimizer is None:
                 raise ValueError('optimizer can not be None')
@@ -178,16 +184,22 @@ class Model_Factory():
                                cf.dataset.n_priors,
                                load_pretrained=cf.load_imageNet,
                                freeze_layers_from=cf.freeze_layers_from, tiny=True)
+        elif cf.model_name == 'ssd':
+            model = build_SSD300(in_shape, cf.dataset.n_classes)
+            if cf.load_imageNet:
+            # Rename last layer to not load pretrained weights
+                model.layers[-1].name += '_new'
+                model.load_weights('weights/weights_SSD300.hdf5',by_name=True)
         else:
             raise ValueError('Unknown model')
 
         # Load pretrained weights
         if cf.load_pretrained:
-            print('   loading model weights from: ' + cf.weights_file + ' (last layer will be replaced, no weights load)...')
-            old_name=model.layers[-2].name
-            model.layers[-2].name=model.layers[-2].name+'_replaced'
+            print('   loading model weights from: ' + cf.weights_file )
+            #old_name=model.layers[-2].name
+            #model.layers[-2].name=model.layers[-2].name+'_replaced'
             model.load_weights(cf.weights_file, by_name=True)
-            model.layers[-2].name=old_name
+            #model.layers[-2].name=old_name
         # Compile model
         model.compile(loss=loss, metrics=metrics, optimizer=optimizer)
 
