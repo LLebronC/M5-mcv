@@ -1,5 +1,7 @@
 import numpy as np
 from keras import backend as K
+import tensorflow as tf
+
 dim_ordering = K.image_dim_ordering()
 if dim_ordering == 'th':
     import theano
@@ -246,3 +248,171 @@ def YOLOMetrics(input_shape=(3,640,640),num_classes=45,priors=[[0.25,0.25], [0.5
       return {'avg_iou':tf.reduce_mean(avg_iou), 'avg_recall':tf.reduce_mean(avg_recall)}
   return _YOLOMetrics
 
+"""
+    SSD detection metrics
+"""
+def SSDLoss(input_shape=(3,300,300),num_classes=45,priors=[[0.25,0.25], [0.5,0.5], [1.0,1.0], [1.7,1.7], [2.5,2.5]],max_truth_boxes=30,thresh=0.6,nms_thresh=0.3,alpha=1.0, neg_pos_ratio=3.0, background_label_id=0, negatives_for_hard=100.0):
+    def _l1_smooth_loss(y_true, y_pred):
+        """Compute L1-smooth loss.
+        # Arguments
+            y_true: Ground truth bounding boxes,
+                tensor of shape (?, num_boxes, 4).
+            y_pred: Predicted bounding boxes,
+                tensor of shape (?, num_boxes, 4).
+        # Returns
+            l1_loss: L1-smooth loss, tensor of shape (?, num_boxes).
+        # References
+            https://arxiv.org/abs/1504.08083
+        """
+        abs_loss = tf.abs(y_true - y_pred)
+        sq_loss = 0.5 * (y_true - y_pred)**2
+        l1_loss = tf.where(tf.less(abs_loss, 1.0), sq_loss, abs_loss - 0.5)
+        return tf.reduce_sum(l1_loss, -1)
+
+    def _softmax_loss(y_true, y_pred):
+        """Compute softmax loss.
+        # Arguments
+            y_true: Ground truth targets,
+                tensor of shape (?, num_boxes, num_classes).
+            y_pred: Predicted logits,
+                tensor of shape (?, num_boxes, num_classes).
+        # Returns
+            softmax_loss: Softmax loss, tensor of shape (?, num_boxes).
+        """
+        y_pred = tf.maximum(tf.minimum(y_pred, 1 - 1e-15), 1e-15)
+        softmax_loss = -tf.reduce_sum(y_true * tf.log(y_pred),
+                                      axis=-1)
+        return softmax_loss
+
+    def compute_loss(y_true, y_pred):
+        """Compute mutlibox loss.
+        # Arguments
+            y_true: Ground truth targets,
+                tensor of shape (?, num_boxes, 4 + num_classes + 8),
+                priors in ground truth are fictitious,
+                y_true[:, :, -8] has 1 if prior should be penalized
+                    or in other words is assigned to some ground truth box,
+                y_true[:, :, -7:] are all 0.
+            y_pred: Predicted logits,
+                tensor of shape (?, num_boxes, 4 + num_classes + 8).
+        # Returns
+            loss: Loss for prediction, tensor of shape (?,).
+        """
+        batch_size = tf.shape(y_true)[0]
+        num_boxes = tf.to_float(tf.shape(y_true)[1])
+
+        # loss for all priors
+        conf_loss = _softmax_loss(y_true[:, :, 4:-8],
+                                       y_pred[:, :, 4:-8])
+        loc_loss = _l1_smooth_loss(y_true[:, :, :4],
+                                        y_pred[:, :, :4])
+
+        # get positives loss
+        num_pos = tf.reduce_sum(y_true[:, :, -8], axis=-1)
+        pos_loc_loss = tf.reduce_sum(loc_loss * y_true[:, :, -8],
+                                     axis=1)
+        pos_conf_loss = tf.reduce_sum(conf_loss * y_true[:, :, -8],
+                                      axis=1)
+
+        # get negatives loss, we penalize only confidence here
+        num_neg = tf.minimum(neg_pos_ratio * num_pos,
+                             num_boxes - num_pos)
+        pos_num_neg_mask = tf.greater(num_neg, 0)
+        has_min = tf.to_float(tf.reduce_any(pos_num_neg_mask))
+        num_neg = tf.concat(axis=0, values=[num_neg,
+                                [(1 - has_min) * negatives_for_hard]])
+        num_neg_batch = tf.reduce_min(tf.boolean_mask(num_neg,
+                                                      tf.greater(num_neg, 0)))
+        num_neg_batch = tf.to_int32(num_neg_batch)
+        confs_start = 4 + background_label_id + 1
+        confs_end = confs_start + num_classes - 1
+        max_confs = tf.reduce_max(y_pred[:, :, confs_start:confs_end],
+                                  axis=2)
+        _, indices = tf.nn.top_k(max_confs * (1 - y_true[:, :, -8]),
+                                 k=num_neg_batch)
+        batch_idx = tf.expand_dims(tf.range(0, batch_size), 1)
+        batch_idx = tf.tile(batch_idx, (1, num_neg_batch))
+        full_indices = (tf.reshape(batch_idx, [-1]) * tf.to_int32(num_boxes) +
+                        tf.reshape(indices, [-1]))
+        # full_indices = tf.concat(2, [tf.expand_dims(batch_idx, 2),
+        #                              tf.expand_dims(indices, 2)])
+        # neg_conf_loss = tf.gather_nd(conf_loss, full_indices)
+        neg_conf_loss = tf.gather(tf.reshape(conf_loss, [-1]),
+                                  full_indices)
+        neg_conf_loss = tf.reshape(neg_conf_loss,
+                                   [batch_size, num_neg_batch])
+        neg_conf_loss = tf.reduce_sum(neg_conf_loss, axis=1)
+
+        # loss is sum of positives and negatives
+        total_loss = pos_conf_loss + neg_conf_loss
+        total_loss /= (num_pos + tf.to_float(num_neg_batch))
+        num_pos = tf.where(tf.not_equal(num_pos, 0), num_pos,
+                            tf.ones_like(num_pos))
+        total_loss += (alpha * pos_loc_loss) / num_pos
+        return total_loss
+    return compute_loss
+    
+    """YOLO f-score detection metric"""
+
+def YOLOFscore(input_shape=(3,640,640),num_classes=45,priors=[[0.25,0.25], [0.5,0.5], [1.0,1.0], [1.7,1.7], [2.5,2.5]],max_truth_boxes=30,thresh=0.6,nms_thresh=0.3):
+
+  # Def custom metric using numpy
+  def _YOLOFscore(y_true, y_pred, name=None):
+    with ops.name_scope( name, "YOLOFscore", [y_true,y_pred] ) as name:
+      fscore = tf.py_func(YOLOFscore_np,
+                          [y_true,y_pred,num_classes,np.array(priors),
+                           max_truth_boxes,thresh,nms_thresh],
+                          [tf.float32], name=name)
+    return {'fscore':tf.reduce_mean(fscore[0])}
+
+  return _YOLOFscore
+
+
+def YOLOFscore_np(y_true, y_pred, num_classes, priors, max_truth_boxes, thresh, nms_thresh):
+    batch_size = y_pred.shape[0]
+    fscore = np.zeros(batch_size, dtype='f')
+    num_priors = priors.shape[0]
+    num_coords  = 4
+    data_size = num_coords+num_classes+1
+
+    y_pred = yolo_activate_regions(y_pred, num_priors, num_classes)
+    boxes,probs = yolo_get_region_boxes(y_pred, priors, num_classes, thresh)
+    boxes,probs = yolo_do_nms_sort(boxes, probs, num_classes, nms_thresh)
+
+
+    # for each image in batch
+    for i in range(batch_size):
+        b = boxes[i,:,:]
+        p = probs[i,:,:]
+        num_boxes   = b.shape[0]
+        num_classes = p.shape[1]
+        # put GT boxes for this image in a list
+        gt_boxes = []
+        for h_i in range(y_true.shape[2]):
+          for w_i in range(y_true.shape[3]):
+            if y_true[i,0,h_i,w_i] >= 0:
+              gt_boxes.append(y_true[i,:,h_i,w_i])
+        num_gt = len(gt_boxes)
+        ok    = 0.
+        total = 0.
+        # for each detected bounding box in this image, find the class with maximum prob
+        for j in range(num_boxes):
+            max_class = np.argmax(p[j,:])
+            pb = p[j,max_class]
+            if(pb > thresh):
+                total += 1.
+                bb = b[j,:]
+                # count as TP if the box overlaps more than 50% with a GT object and the class is correct
+                for idx,gt in enumerate(gt_boxes):
+                    if gt[0] == max_class and yolo_box_iou(bb,gt[1:5]) > 0.5:
+                        ok += 1.
+                        gt_boxes = gt_boxes[0:idx]+gt_boxes[idx+1:]
+                        break
+        recall = ok / num_gt
+        precision = 0.
+        if total > 0.:
+          precision = ok / total
+        if (recall+precision) > 0:
+          fscore[i] = 2 * ((recall*precision) / (recall+precision))
+
+    return fscore
