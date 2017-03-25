@@ -1,9 +1,14 @@
 import math
 import time
 import numpy as np
+import tensorflow as tf
+import cv2
+import os
+import scipy.misc
 from keras.engine.training import GeneratorEnqueuer
 #from model_factory import Model_Factory
 from tools.save_images import save_img3
+from tools.yolo_utils import yolo_postprocess_net_out, yolo_draw_detections
 
 
 """
@@ -58,43 +63,57 @@ class One_Net_Model(Model):
             return None
 
     # Predict the model
-    def predict(self, test_gen, tag='pred'):
-        if self.cf.pred_model:
-            print('Predict method not implemented.')
-            return
+    def predict(self, test_gen, tag='pred', max_q_size=10, workers=1, pickle_safe=False, wait_time = 0.01):
+        if self.cf.pred_model and test_gen is not None:
             # TODO fix model predict method
             print('\n > Predicting the model...')
+            aux =  'image_result'
+            result_path = os.path.join(self.cf.savepath,aux)
+            if not os.path.exists(result_path):
+                os.makedirs(result_path)
             # Load best trained model
             # self.model.load_weights(os.path.join(self.cf.savepath, "weights.hdf5"))
             self.model.load_weights(self.cf.weights_file)
-
+            priors = self.cf.dataset.priors
+            anchors = np.array(priors)
+            thresh = 0.6
+            nms_thresh = 0.3
+            classes = self.cf.dataset.classes
             # Create a data generator
-            data_gen_queue, _stop, _generator_threads = GeneratorEnqueuer(self.test_gen, max_q_size=1)
-
+            data_gen_queue = GeneratorEnqueuer(test_gen, pickle_safe=pickle_safe)
+            data_gen_queue.start(workers, max_q_size)
             # Process the dataset
             start_time = time.time()
+            image_counter = 1
             for _ in range(int(math.ceil(self.cf.dataset.n_images_train/float(self.cf.batch_size_test)))):
-
-                # Get data for this minibatch
-                data = data_gen_queue.get()
+                data = None
+                while data_gen_queue.is_running():
+                    if not data_gen_queue.queue.empty():
+                        data = data_gen_queue.queue.get()
+                        break
+                    else:
+                        time.sleep(wait_time)               
                 x_true = data[0]
                 y_true = data[1].astype('int32')
 
                 # Get prediction for this minibatch
                 y_pred = self.model.predict(x_true)
-
-                # Compute the argmax
-                y_pred = np.argmax(y_pred, axis=1)
-
-                # Reshape y_true
-                y_true = np.reshape(y_true, (y_true.shape[0], y_true.shape[2],
-                                             y_true.shape[3]))
-
-                save_img3(x_true, y_true, y_pred, self.cf.savepath, 0,
-                          self.cf.dataset.color_map, self.cf.dataset.classes, tag+str(_), self.cf.dataset.void_class)
+                if self.cf.model_name == "yolo" or self.cf.model_name == "tiny-yolo":
+                    for i in range(len(y_pred)):                  
+                        boxes = yolo_postprocess_net_out(y_pred[i], anchors, classes, thresh, nms_thresh)
+                        '''print len(boxes)
+                        print (boxes[0].x, boxes[0].y, boxes[0].w, boxes[0].h, boxes[0].c, boxes[0].probs)'''
+                        #img = x_true[i]*255
+                        
+                        im = yolo_draw_detections(boxes, x_true[i], anchors, classes, thresh, nms_thresh)
+                        out_name = os.path.join(result_path, 'img_' + str(image_counter).zfill(4)+ '.png')
+                        scipy.misc.toimage(im).save(out_name)
+                        image_counter = image_counter+1
+                '''save_img3(x_true, y_true, y_pred, self.cf.savepath, 0,
+                          self.cf.dataset.color_map, self.cf.dataset.classes, tag+str(_), self.cf.dataset.void_class)'''
 
             # Stop data generator
-            _stop.set()
+            data_gen_queue.stop()
 
             total_time = time.time() - start_time
             fps = float(self.cf.dataset.n_images_test) / total_time
@@ -103,7 +122,7 @@ class One_Net_Model(Model):
 
     # Test the model
     def test(self, test_gen):
-        if self.cf.test_model:
+        if self.cf.test_model and test_gen is not None:
             print('\n > Testing the model...')
             # Load best trained model
             self.model.load_weights(self.cf.weights_test_file)
@@ -140,3 +159,6 @@ class One_Net_Model(Model):
                 # Compute jaccard mean
                 jacc_mean = np.nanmean(jacc_percl)
                 print ('   Jaccard mean: {}'.format(jacc_mean))
+                
+    def logistic_activate_tensor(x):
+        return 1. / (1. + tf.exp(-x))
