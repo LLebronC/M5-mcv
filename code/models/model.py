@@ -68,7 +68,6 @@ class One_Net_Model(Model):
     # Predict the model
     def predict(self, test_gen, tag='pred', max_q_size=10, workers=1, pickle_safe=False, wait_time = 0.01):
         if self.cf.pred_model and test_gen is not None:
-            # TODO fix model predict method
             print('\n > Predicting the model...')
             aux =  'image_result'
             result_path = os.path.join(self.cf.savepath,aux)
@@ -77,46 +76,71 @@ class One_Net_Model(Model):
             # Load best trained model
             # self.model.load_weights(os.path.join(self.cf.savepath, "weights.hdf5"))
             self.model.load_weights(self.cf.weights_file)
-            priors = self.cf.dataset.priors
-            anchors = np.array(priors)
-            thresh = 0.6
-            nms_thresh = 0.3
-            classes = self.cf.dataset.classes
-            # Create a data generator
-            data_gen_queue = GeneratorEnqueuer(test_gen, pickle_safe=pickle_safe)
-            data_gen_queue.start(workers, max_q_size)
-            # Process the dataset
-            start_time = time.time()
-            image_counter = 1
-            for _ in range(int(math.ceil(self.cf.dataset.n_images_train/float(self.cf.batch_size_test)))):
-                data = None
-                while data_gen_queue.is_running():
-                    if not data_gen_queue.queue.empty():
-                        data = data_gen_queue.queue.get()
-                        break
+            
+            if self.cf.problem_type == 'detection':
+                priors = self.cf.dataset.priors
+                anchors = np.array(priors)
+                thresh = 0.6
+                nms_thresh = 0.3
+                classes = self.cf.dataset.classes
+                # Create a data generator
+                data_gen_queue = GeneratorEnqueuer(test_gen, pickle_safe=pickle_safe)
+                data_gen_queue.start(workers, max_q_size)
+                # Process the dataset
+                start_time = time.time()
+                image_counter = 1
+                for _ in range(int(math.ceil(self.cf.dataset.n_images_train/float(self.cf.batch_size_test)))):
+                    data = None
+                    while data_gen_queue.is_running():
+                        if not data_gen_queue.queue.empty():
+                            data = data_gen_queue.queue.get()
+                            break
+                        else:
+                            time.sleep(wait_time)               
+                    x_true = data[0]
+                    y_true = data[1].astype('int32')
+    
+                    # Get prediction for this minibatch
+                    y_pred = self.model.predict(x_true)
+                    if self.cf.model_name == "yolo" or self.cf.model_name == "tiny-yolo":
+                        for i in range(len(y_pred)):
+                            #Process the YOLO output to obtain final BBox per image                  
+                            boxes = yolo_postprocess_net_out(y_pred[i], anchors, classes, thresh, nms_thresh)
+                            #Draw the Bbox in the image to visualize
+                            im = yolo_draw_detections(boxes, x_true[i], anchors, classes, thresh, nms_thresh)
+                            out_name = os.path.join(result_path, 'img_' + str(image_counter).zfill(4)+ '.png')
+                            scipy.misc.toimage(im).save(out_name)
+                            image_counter = image_counter+1
+                    elif self.cf.model_name == "ssd":
+                        results = self.cf.bbox_util.detection_out(y_pred)
+                        for j in range(len(results)):
+                            # Parse the outputs.
+                            if np.any(results[j]):
+                                det_label = results[j][:, 0]
+                                det_conf = results[j][:, 1]
+                                det_xmin = results[j][:, 2]
+                                det_ymin = results[j][:, 3]
+                                det_xmax = results[j][:, 4]
+                                det_ymax = results[j][:, 5]
+                            
+                                # Get detections with confidence higher than 0.6.
+                                top_indices = [i for i, conf in enumerate(det_conf) if conf >= thresh]
+                            
+                                top_conf = det_conf[top_indices]
+                                top_label_indices = det_label[top_indices].tolist()
+                                top_xmin = det_xmin[top_indices]
+                                top_ymin = det_ymin[top_indices]
+                                top_xmax = det_xmax[top_indices]
+                                top_ymax = det_ymax[top_indices]
+                                im = self.cf.bbox_util.ssd_draw_detections(top_conf, top_label_indices, top_xmin, top_ymin,
+                                                                           top_xmax, top_ymax, x_true[j], classes)
+                                out_name = os.path.join(result_path, 'img_' + str(image_counter).zfill(4)+ '.png')
+                                scipy.misc.toimage(im).save(out_name)
+                                image_counter = image_counter+1
                     else:
-                        time.sleep(wait_time)               
-                x_true = data[0]
-                y_true = data[1].astype('int32')
-
-                # Get prediction for this minibatch
-                y_pred = self.model.predict(x_true)
-                if self.cf.model_name == "yolo" or self.cf.model_name == "tiny-yolo":
-                    for i in range(len(y_pred)):                  
-                        boxes = yolo_postprocess_net_out(y_pred[i], anchors, classes, thresh, nms_thresh)
-                        '''print len(boxes)
-                        print (boxes[0].x, boxes[0].y, boxes[0].w, boxes[0].h, boxes[0].c, boxes[0].probs)'''
-                        #img = x_true[i]*255
-                        
-                        im = yolo_draw_detections(boxes, x_true[i], anchors, classes, thresh, nms_thresh)
-                        out_name = os.path.join(result_path, 'img_' + str(image_counter).zfill(4)+ '.png')
-                        scipy.misc.toimage(im).save(out_name)
-                        image_counter = image_counter+1
-                '''save_img3(x_true, y_true, y_pred, self.cf.savepath, 0,
-                          self.cf.dataset.color_map, self.cf.dataset.classes, tag+str(_), self.cf.dataset.void_class)'''
-
-            # Stop data generator
-            data_gen_queue.stop()
+                        raise ValueError("No model name defined or valid: " + self.model_name)
+                # Stop data generator
+                data_gen_queue.stop()
 
             total_time = time.time() - start_time
             fps = float(self.cf.dataset.n_images_test) / total_time
