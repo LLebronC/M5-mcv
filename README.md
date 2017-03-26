@@ -16,8 +16,13 @@ The goal of this project is to study the use of deep learning to semantically se
   - Luís Lebron(luis.lebron@e-campus.uab.cat)
   - Axel Barroso (axel.barroso@e-campus.uab.cat)
   - Hassan Ahmed
- 
-# Week 2: Object Recognition
+  
+## Week reviews
+
+<p><a href="#Week 2">Week 2: Object Recgonition</a></p>
+<p><a href="#Week 4">Week 4: Object Detection</a></p>
+
+<h1 id="Week 2">Week 2: Object Recognition</h1>
 
 ## Abstract
 This second week goal is prepare an object recognition classifier using the state of art of Neural Networks. As a first step for the M5 project, we need to identify properly the elements in a image, how the project is focused in Scene Understanding for Autonomous Driving, the elements to identify will be the relevance for this function, how they can be cars, pedestrians, traffic signs, etc. In order to train and validate our classifier we use Datasets provided with related traffic elements, this Datasets are TSingHua-TenCent 100K, INRIA pedestrians, Belgium traffic signs, Daimler pedestrians and KITTI. The classifier will be based on Convolutional Neural network, studying the actual state of art for image classification, training the best models of this last years and comparing the results.
@@ -222,6 +227,8 @@ he KITTI dataset provided is composed by 60060 train images and 14876 for valida
 
 ##### VGG19 Keras
 ![VGG19 Keras plot](figures/VGG19kitti.png?raw=true "VGG19 Keras Experiment")
+
+<h1 id="Week 4">Week 4: Object Detection</h1>
   
 ## Reference
 Simonyan, K., & Zisserman, A. (2014). Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556. [Summary](Summaries/VGG.md)
