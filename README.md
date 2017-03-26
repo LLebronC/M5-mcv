@@ -18,6 +18,7 @@ The goal of this project is to study the use of deep learning to semantically se
   - Hassan Ahmed
   
 ## Week reviews
+<h2 id="WSum">Weekly summary</h2>
 
 <p><a href="#Week 2">Week 2: Object Recgonition</a></p>
 <p><a href="#Week 4">Week 4: Object Detection</a></p>
@@ -228,7 +229,11 @@ he KITTI dataset provided is composed by 60060 train images and 14876 for valida
 ##### VGG19 Keras
 ![VGG19 Keras plot](figures/VGG19kitti.png?raw=true "VGG19 Keras Experiment")
 
+<p align="right"><a href="#WSum">Back to summary</a></p>
+
 <h1 id="Week 4">Week 4: Object Detection</h1>
+
+<p align="right"><a href="#WSum">Back to summary</a></p>
   
 ## Reference
 Simonyan, K., & Zisserman, A. (2014). Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556. [Summary](Summaries/VGG.md)
