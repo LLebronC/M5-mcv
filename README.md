@@ -20,7 +20,7 @@ The goal of this project is to study the use of deep learning to semantically se
 ## Week reviews
 <h2 id="WSum">Weekly summary</h2>
 
-<p><a href="#Week 2">Week 2: Object Recgonition</a></p>
+<p><a href="#Week 2">Week 2: Object Recognition</a></p>
 <p><a href="#Week 4">Week 4: Object Detection</a></p>
 
 <h1 id="Week 2">Week 2: Object Recognition</h1>
@@ -232,6 +232,16 @@ he KITTI dataset provided is composed by 60060 train images and 14876 for valida
 <p align="right"><a href="#WSum">Back to summary</a></p>
 
 <h1 id="Week 4">Week 4: Object Detection</h1>
+
+## Abstract
+
+## Detection Models
+
+## Code changes and additions
+
+## Task summary
+
+## Tests Realized
 
 <p align="right"><a href="#WSum">Back to summary</a></p>
   
