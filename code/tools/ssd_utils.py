@@ -2,6 +2,7 @@
 
 import numpy as np
 import tensorflow as tf
+import cv2
 
 
 class BBoxUtility(object):
@@ -233,3 +234,44 @@ class BBoxUtility(object):
                 y_box[j][4+int(batch_y[i][j][0])] = 1
             batch_y[i] = self.assign_boxes(y_box)
         return np.asarray(batch_y)
+        
+    def ssd_draw_detections(self, top_conf, top_label_indices, top_xmin, top_ymin,
+                             top_xmax, top_ymax, img, labels):
+
+        def get_color(c,x,max):
+            colors = ( (1,0,1), (0,0,1),(0,1,1),(0,1,0),(1,1,0),(1,0,0) )
+            ratio = (float(x)/max)*5
+            i = np.floor(ratio)
+            j = np.ceil(ratio)
+            ratio -= i
+            r = (1-ratio) * colors[int(i)][int(c)] + ratio*colors[int(j)][int(c)]
+            return r*255
+        #print img    
+        img = img*255
+        imgcv = img    
+        for i in range(top_conf.shape[0]):
+            left = int(round(top_xmin[i] * img.shape[1]))
+            top = int(round(top_ymin[i] * img.shape[0]))
+            right = int(round(top_xmax[i] * img.shape[1]))
+            bot = int(round(top_ymax[i] * img.shape[0]))
+            if left  < 0    :  left = 0
+            if right > img.shape[0] - 1: right = img.shape[1] - 1
+            if top   < 0    :   top = 0
+            if bot   > img.shape[1] - 1:   bot = img.shape[0] - 1
+            score = top_conf[i]
+            label = int(top_label_indices[i])
+            display_txt = '{:0.2f}, {}'.format(score, label)
+            thick = int((img.shape[1]+img.shape[0])/300)
+            mess = '{}'.format(label)
+            offset = top_label_indices[i]*123457 % len(labels)
+            color = (get_color(2,offset,len(labels)),
+                                       get_color(1,offset,len(labels)),
+                                       get_color(0,offset,len(labels)))
+            cv2.rectangle(imgcv,(left, top), (right, bot),color, thick)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            scale = 0.65
+            thickness = 1
+            size=cv2.getTextSize(mess, font, scale, thickness)
+            cv2.rectangle(img, (left-2,top-size[0][1]-4), (left+size[0][0]+4,top), color, -1)
+            cv2.putText(img, mess, (left+2,top-2), font, scale, (0,0,0), thickness, cv2.LINE_AA)
+        return imgcv
