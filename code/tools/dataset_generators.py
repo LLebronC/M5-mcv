@@ -11,7 +11,6 @@ class Dataset_Generators():
         mean = cf.dataset.rgb_mean
         std = cf.dataset.rgb_std
         cf.dataset.cb_weights = None
-
         if cf.train_model:
             # Load training set
             print ('\n > Reading training set...')
@@ -44,7 +43,7 @@ class Dataset_Generators():
                                        dim_ordering='th' if 'yolo' in cf.model_name else 'default',
                                        class_mode=cf.dataset.class_mode,
                                        model_name = cf.model_name,
-                                       bbox_util = cf.bbox_util
+                                       bbox_util = cf.bbox_util if 'ssd' in cf.model_name else None
                                        )
 
             # Compute normalization constants if required
@@ -113,7 +112,7 @@ class Dataset_Generators():
                                        dim_ordering='th' if 'yolo' in cf.model_name else 'default',
                                        class_mode=cf.dataset.class_mode,
                                        model_name = cf.model_name,
-                                       bbox_util = cf.bbox_util)
+                                       bbox_util = cf.bbox_util if 'ssd' in cf.model_name else None)
             valid_gen = dg_va.flow_from_directory(directory=cf.dataset.path_valid_img,
                                                   gt_directory=cf.dataset.path_valid_mask,
                                                   resize=cf.resize_valid,
@@ -145,7 +144,7 @@ class Dataset_Generators():
                                        dim_ordering='th' if 'yolo' in cf.model_name else 'default',
                                        class_mode=cf.dataset.class_mode,
                                        model_name = cf.model_name,
-                                       bbox_util = cf.bbox_util)
+                                       bbox_util = cf.bbox_util if 'ssd' in cf.model_name else None)
             test_gen = dg_ts.flow_from_directory(directory=cf.dataset.path_test_img,
                                                  gt_directory=cf.dataset.path_test_mask,
                                                  resize=cf.resize_test,

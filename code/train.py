@@ -23,7 +23,7 @@ def process(cf):
 
     # Create the data generators
     train_gen, valid_gen, test_gen = Dataset_Generators().make(cf)
-
+    
     # Create the optimizer
     print ('\n > Creating optimizer...')
     optimizer = Optimizer_Factory().make(cf)
@@ -83,9 +83,9 @@ def main():
     parser.add_argument('-e', '--exp_name', type=str,
                         default=None, help='Name of the experiment')
     parser.add_argument('-s', '--shared_path', type=str,
-                        default='/home/master/master', help='Path to shared data folder')
+                        default='/data', help='Name of the experiment')
     parser.add_argument('-l', '--local_path', type=str,
-                        default='/home/master/master', help='Path to local data folder')
+                        default='/datatmp', help='Name of the experiment')
 
     arguments = parser.parse_args()
 

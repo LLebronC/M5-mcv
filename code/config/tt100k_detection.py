@@ -15,13 +15,13 @@ weights_file                 = 'weights.hdf5'  # Training weight file name
 # Parameters
 train_model                  = True            # Train the model
 test_model                   = True            # Test the model
-pred_model                   = True            # Predict using the model
+pred_model                   = False            # Predict using the model
 
 # Debug
-debug                        = False           # Use only few images for debuging
-debug_images_train           = 16              # N images for training in debug mode (-1 means all)
-debug_images_valid           = 16              # N images for validation in debug mode (-1 means all)
-debug_images_test            = 16              # N images for testing in debug mode (-1 means all)
+debug                        = True           # Use only few images for debuging
+debug_images_train           = 32              # N images for training in debug mode (-1 means all)
+debug_images_valid           = 32              # N images for validation in debug mode (-1 means all)
+debug_images_test            = 32              # N images for testing in debug mode (-1 means all)
 debug_n_epochs               = 2              # N of training epochs in debug mode
 
 # Batch sizes
@@ -44,7 +44,7 @@ seed_valid                   = 1924            # Random seed for the validation 
 seed_test                    = 1924            # Random seed for the testing shuffle
 
 # Training parameters
-optimizer                    = 'rmsprop'       # Optimizer
+optimizer                    = 'adam'       # Optimizer
 learning_rate                = 0.00001         # Training learning rate
 weight_decay                 = 0.              # Weight decay or L2 parameter norm penalty
 n_epochs                     = 10              # Number of epochs during training
@@ -57,7 +57,7 @@ save_results_n_legend_rows   = 1               # Number of rows when showwing th
 
 # Callback early stoping
 earlyStopping_enabled        = False           # Enable the Callback
-earlyStopping_monitor        = 'avg_recall'    # Metric to monitor
+earlyStopping_monitor        = 'val_loss'    # Metric to monitor
 earlyStopping_mode           = 'max'           # Mode ['max' | 'min']
 earlyStopping_patience       = 100             # Max patience for the early stopping
 earlyStopping_verbose        = 0               # Verbosity of the early stopping
