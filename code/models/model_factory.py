@@ -196,10 +196,17 @@ class Model_Factory():
         # Load pretrained weights
         if cf.load_pretrained:
             print('   loading model weights from: ' + cf.weights_file )
-            #old_name=model.layers[-2].name
-            #model.layers[-2].name=model.layers[-2].name+'_replaced'
             model.load_weights(cf.weights_file, by_name=True)
-            #model.layers[-2].name=old_name
+		else:
+			try:
+				if cf.load_transferlearning:
+				  print('   loading model weights from: ' + cf.weights_file )
+				  old_name=model.layers[-2].name
+				  model.layers[-2].name=model.layers[-2].name+'_replaced'
+				  model.load_weights(cf.weights_file, by_name=True)
+				  model.layers[-2].name=old_name
+			except:
+				pass	
         # Compile model
         model.compile(loss=loss, metrics=metrics, optimizer=optimizer)
 
