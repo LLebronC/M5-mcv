@@ -112,7 +112,6 @@ def main():
 
     # Train /test/predict with the network, depending on the configuration
     process(cf)
-
     # Copy result to shared directory
     configuration.copy_to_shared()
 

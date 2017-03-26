@@ -1,7 +1,7 @@
 import os
 
 # Keras imports
-from metrics.metrics import cce_flatt, IoU, YOLOLoss, YOLOMetrics, SSDLoss
+from metrics.metrics import cce_flatt, IoU, YOLOLoss, YOLOMetrics, SSDLoss,YOLOFscore, SSDMetrics
 from keras import backend as K
 from keras.utils.visualize_util import plot
 
@@ -57,7 +57,7 @@ class Model_Factory():
             # TODO detection : check model, different detection nets may have different losses and metrics
             if cf.model_name == 'tiny-yolo' or cf.model_name == 'yolo':
                 loss = YOLOLoss(in_shape, cf.dataset.n_classes, cf.dataset.priors)
-                metrics = [YOLOMetrics(in_shape, cf.dataset.n_classes, cf.dataset.priors)]
+                metrics = [YOLOMetrics(in_shape, cf.dataset.n_classes, cf.dataset.priors)]#[YOLOMetrics(in_shape, cf.dataset.n_classes, cf.dataset.priors)]#,YOLOFscore(in_shape, cf.dataset.n_classes, cf.dataset.priors)]
             elif cf.model_name == 'ssd':
                 loss = SSDLoss(in_shape, cf.dataset.n_classes, cf.dataset.priors)
                 #metrics = [YOLOMetrics(in_shape, cf.dataset.n_classes, cf.dataset.priors)]
@@ -200,6 +200,16 @@ class Model_Factory():
             #model.layers[-2].name=model.layers[-2].name+'_replaced'
             model.load_weights(cf.weights_file, by_name=True)
             #model.layers[-2].name=old_name
+        else:
+          try:
+            if cf.load_transferlearning:
+              print('   loading model weights from: ' + cf.weights_file )
+              old_name=model.layers[-2].name
+              model.layers[-2].name=model.layers[-2].name+'_replaced'
+              model.load_weights(cf.weights_file, by_name=True)
+              model.layers[-2].name=old_name
+          except:
+            pass
         # Compile model
         model.compile(loss=loss, metrics=metrics, optimizer=optimizer)
 

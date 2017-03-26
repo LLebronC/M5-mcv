@@ -2,9 +2,7 @@ import imp
 import time
 import os
 from distutils.dir_util import copy_tree
-from tools.ssd_utils import BBoxUtility
 import shutil
-import pickle
 
 
 class Configuration():
@@ -107,9 +105,6 @@ class Configuration():
             cf.valid_metrics = ['val_loss', 'val_avg_recall', 'val_avg_iou']
             cf.best_metric = 'val_avg_recall'
             cf.best_type = 'max'
-            if cf.model_name == 'ssd':
-                cf.dataset.priors = pickle.load(open('prior_boxes_ssd300.pkl', 'rb'))
-                cf.bbox_util = BBoxUtility(cf.dataset.n_classes, cf.dataset.priors)
         else:
             cf.train_metrics = ['loss', 'acc']
             cf.valid_metrics = ['val_loss', 'val_acc']

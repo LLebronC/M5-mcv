@@ -223,8 +223,7 @@ class ImageDataGenerator(object):
                  model_name=None,
                  rgb_mean=None,
                  rgb_std=None,
-                 crop_size=None,
-                 bbox_util = None):
+                 crop_size=None):
         if dim_ordering == 'default':
             dim_ordering = K.image_dim_ordering()
         self.__dict__.update(locals())
@@ -233,7 +232,6 @@ class ImageDataGenerator(object):
         self.preprocessing_function = preprocessing_function
         self.cb_weights = None
         self.model_name = model_name
-        self.bbox_util = bbox_util
 
         if dim_ordering not in {'tf', 'th'}:
             raise Exception('dim_ordering should be "tf" (channel after row '
@@ -304,7 +302,7 @@ class ImageDataGenerator(object):
             classes=classes, class_mode=class_mode,
             dim_ordering=self.dim_ordering,
             batch_size=batch_size, shuffle=shuffle, seed=seed,
-            gt_directory=gt_directory, bbox_util=self.bbox_util,
+            gt_directory=gt_directory,
             save_to_dir=save_to_dir, save_prefix=save_prefix,
             save_format=save_format, model_name=self.model_name)
 
@@ -323,7 +321,7 @@ class ImageDataGenerator(object):
             classes=classes, class_mode=class_mode,
             dim_ordering=self.dim_ordering,
             batch_size=batch_size, shuffle=shuffle, seed=seed,
-            gt_directory=gt_directory, bbox_util=self.bbox_util,
+            gt_directory=gt_directory,
             save_to_dir=save_to_dir, save_prefix=save_prefix,
             save_format=save_format,
             directory2=directory2, gt_directory2=gt_directory2,
@@ -844,7 +842,7 @@ class DirectoryIterator(Iterator):
     def __init__(self, directory, image_data_generator,
                  resize=None, target_size=None, color_mode='rgb',
                  dim_ordering='default',
-                 classes=None, class_mode='categorical', bbox_util=None,
+                 classes=None, class_mode='categorical',
                  batch_size=32, shuffle=True, seed=None, gt_directory=None,
                  save_to_dir=None, save_prefix='', save_format='jpeg', model_name=None):
         # Check dim order
@@ -860,7 +858,6 @@ class DirectoryIterator(Iterator):
         self.save_prefix = save_prefix
         self.save_format = save_format
         self.model_name = model_name
-        self.bbox_util = bbox_util
 
         # Check target size
         if target_size is None and batch_size > 1:
@@ -1054,9 +1051,9 @@ class DirectoryIterator(Iterator):
                 batch_y[i, label] = 1.
         elif self.class_mode == 'detection':
             if self.model_name == 'ssd':
-                '''priors = pickle.load(open('prior_boxes_ssd300.pkl', 'rb'))
-                bbox_util = BBoxUtility(self.nb_class, priors)'''
-                batch_y = self.bbox_util.ssd_build_gt_batch(batch_y)
+                priors = pickle.load(open('prior_boxes_ssd300.pkl', 'rb'))
+                bbox_util = BBoxUtility(self.nb_class, priors)
+                batch_y = bbox_util.ssd_build_gt_batch(batch_y)
             elif  self.model_name == 'yolo' or self.model_name == 'tiny-yolo':
                 # TODO detection: check model, other networks may expect a different batch_y format and shape
                 # YOLOLoss expects a particular batch_y format and shape
@@ -1077,8 +1074,7 @@ class DirectoryIterator2(object):
                  classes=None, class_mode='categorical',
                  batch_size=32, shuffle=True, seed=None, gt_directory=None,
                  save_to_dir=None, save_prefix='', save_format='jpeg',
-                 directory2=None, gt_directory2=None, batch_size2=None, 
-                 model_name=None, bbox_util=None):
+                 directory2=None, gt_directory2=None, batch_size2=None):
 
         self.DI1 = DirectoryIterator(
             directory, image_data_generator, resize=resize,
