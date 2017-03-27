@@ -7,7 +7,10 @@ from keras.layers import MaxPooling2D
 from keras.layers import LeakyReLU
 from keras.layers import merge
 from keras.layers import Reshape
-from layers.yolo_layers import YOLOConvolution2D,Reorg
+from layers.yolo_layers import YOLOConvolution2D,Reorg,YOLODeconvolution2D, concat
+from layers.deconv import Deconvolution2D
+
+import tensorflow as tf
 
 def build_yolo(img_shape=(3, 416, 416), n_classes=80, n_priors=5,
                load_pretrained=False,freeze_layers_from='base_model',
@@ -23,7 +26,9 @@ def build_yolo(img_shape=(3, 416, 416), n_classes=80, n_priors=5,
       model = YOLO(input_shape=img_shape, num_classes=n_classes, num_priors=n_priors)
       base_model_layers = [layer.name for layer in model.layers[0:42]]
     else:
-      model = TinyYOLO(input_shape=img_shape, num_classes=n_classes, num_priors=n_priors)
+      #model = TinyYOLO(input_shape=img_shape, num_classes=n_classes, num_priors=n_priors)
+      #model = TinyYOLO_Siamese(input_shape=img_shape, num_classes=n_classes, num_priors=n_priors)
+      model = TinyYOLO_doubleScale(input_shape=img_shape, num_classes=n_classes, num_priors=n_priors)
       base_model_layers = [layer.name for layer in model.layers[0:21]]
 
     if load_pretrained:
@@ -194,3 +199,159 @@ def TinyYOLO(input_shape=(3,416,416),num_classes=80,num_priors=5):
     return model
 
 
+
+def TinyYOLO_Siamese(input_shape=(3,416,416),num_classes=80,num_priors=5):
+    """Tiny YOLO (v2) architecture
+
+    # Arguments
+        input_shape: Shape of the input image
+        num_classes: Number of classes (excluding background)
+
+    # References
+        https://arxiv.org/abs/1612.08242
+        https://arxiv.org/abs/1506.02640
+    """
+    K.set_image_dim_ordering('th')
+
+    input_tensor_1 = Input(shape=input_shape)
+    input_tensor_2 = Input(shape=input_shape)
+    net_1 = {}
+    net_2 = {}
+    net_1 = create_base_network(input_tensor_1, net_1)
+    net_2 = create_base_network(input_tensor_2, net_2, True)
+
+    merge_nets = (concat())([net_1['relu7'], net_2['relu7']])
+    conv = (YOLOConvolution2D(1024, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(merge_nets)                            
+    ReLU = (LeakyReLU(alpha=0.1))(conv)
+    outNet = (Convolution2D(num_priors*(4+num_classes+1), 1, 1, border_mode='same',
+                                              subsample=(1,1)))(ReLU)
+    model = Model([net_1['input'], net_2['input']], outNet)
+    return model
+
+
+def create_base_network(input_dim, net, doubleScaling = False):
+    
+    net['input'] = input_dim
+    
+    if doubleScaling:
+
+      output_shape_tensor = getShapeLayer(net['input'])
+      
+      net['deconv'] = (YOLODeconvolution2D(3, 3, 3, batch_size = 16, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['input'])
+                              
+      net['conv1'] = (YOLOConvolution2D(16, 3, 3, border_mode='same',subsample=(1,1),
+                                        epsilon=0.000001))(net['deconv'])
+      net['input1'] = (MaxPooling2D(pool_size=(2, 2),border_mode='valid'))(net['conv1'])                                      
+                                      
+    else:
+      net['input1'] = (YOLOConvolution2D(16, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['input'])                                            
+                                  
+    net['relu1'] = (LeakyReLU(alpha=0.1))(net['input1'])
+    net['pool1'] = (MaxPooling2D(pool_size=(2, 2),border_mode='valid'))(net['relu1'])
+    net['conv2'] = (YOLOConvolution2D(32, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['pool1'])
+                                      
+    net['relu2'] = (LeakyReLU(alpha=0.1))(net['conv2'])
+    net['pool2'] = (MaxPooling2D(pool_size=(2, 2),border_mode='valid'))(net['relu2'])
+    net['conv3'] = (YOLOConvolution2D(64, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['pool2'])
+    net['relu3'] = (LeakyReLU(alpha=0.1))(net['conv3'])
+    net['pool3'] = (MaxPooling2D(pool_size=(2, 2),border_mode='valid'))(net['relu3'])
+    net['conv4'] = (YOLOConvolution2D(128, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['pool3'])
+    net['relu4'] = (LeakyReLU(alpha=0.1))(net['conv4'])
+    net['pool4'] = (MaxPooling2D(pool_size=(2, 2),border_mode='valid'))(net['relu4'])
+    net['conv5'] = (YOLOConvolution2D(256, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['pool4'])
+    net['relu5'] = (LeakyReLU(alpha=0.1))(net['conv5'])
+    net['pool5'] = (MaxPooling2D(pool_size=(2, 2),border_mode='valid'))(net['relu5'])
+    net['conv6'] = (YOLOConvolution2D(512, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['pool5'])
+    net['relu6'] = (LeakyReLU(alpha=0.1))(net['conv6'])
+    net['pool6'] = (MaxPooling2D(pool_size=(2, 2),strides=(1,1),border_mode='same'))(net['relu6'])
+    net['conv7'] = (YOLOConvolution2D(1024, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['pool6'])
+    net['relu7'] = (LeakyReLU(alpha=0.1))(net['conv7'])
+    
+    return net
+    
+    
+        
+def TinyYOLO_doubleScale(input_shape=(3,416,416),num_classes=80,num_priors=5):
+    """Tiny YOLO (doubleScale) architecture
+
+    # Arguments
+        input_shape: Shape of the input image
+        num_classes: Number of classes (excluding background)
+
+    # References
+        https://arxiv.org/abs/1612.08242
+        https://arxiv.org/abs/1506.02640
+    """
+    K.set_image_dim_ordering('th')
+
+    input_tensor = Input(shape=input_shape)
+    net = {}
+    net['input'] = input_tensor
+    
+    # Scale 1                              
+    net['input_scale1'] = (YOLOConvolution2D(16, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['input'])      
+    # Scale 2
+    # net['deconv'] = (YOLODeconvolution2D(3, 3, 3, batch_size = 16, border_mode='same',subsample=(1,1),
+      #                                 epsilon=0.000001))(net['input'])                         
+    net['conv1'] = (YOLOConvolution2D(16, 3, 3, border_mode='same',subsample=(1,1),
+                                        epsilon=0.000001))(net['input_scale1'])
+    net['input_scale2'] = (MaxPooling2D(pool_size=(2, 2),border_mode='valid'))(net['conv1'])                                      
+    
+    # Merge scales    
+    #net['merge'] = (concat())([net['input_scale1'], net['input_scale2']])
+    
+    net['relu1'] = (LeakyReLU(alpha=0.1))(net['input_scale2'])
+    net['pool1'] = (MaxPooling2D(pool_size=(2, 2),border_mode='valid'))(net['relu1'])
+    net['conv2'] = (YOLOConvolution2D(32, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['pool1'])
+                                      
+    net['relu2'] = (LeakyReLU(alpha=0.1))(net['conv2'])
+    net['pool2'] = (MaxPooling2D(pool_size=(2, 2),border_mode='valid'))(net['relu2'])
+    net['conv3'] = (YOLOConvolution2D(64, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['pool2'])
+    net['relu3'] = (LeakyReLU(alpha=0.1))(net['conv3'])
+    net['pool3'] = (MaxPooling2D(pool_size=(2, 2),border_mode='valid'))(net['relu3'])
+    net['conv4'] = (YOLOConvolution2D(128, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['pool3'])
+    net['relu4'] = (LeakyReLU(alpha=0.1))(net['conv4'])
+    net['pool4'] = (MaxPooling2D(pool_size=(2, 2),border_mode='valid'))(net['relu4'])
+    net['conv5'] = (YOLOConvolution2D(256, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['pool4'])
+    net['relu5'] = (LeakyReLU(alpha=0.1))(net['conv5'])
+    net['pool5'] = (MaxPooling2D(pool_size=(2, 2),border_mode='valid'))(net['relu5'])
+    net['conv6'] = (YOLOConvolution2D(512, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['pool5'])
+    net['relu6'] = (LeakyReLU(alpha=0.1))(net['conv6'])
+    net['pool6'] = (MaxPooling2D(pool_size=(2, 2),strides=(1,1),border_mode='same'))(net['relu6'])
+    net['conv7'] = (YOLOConvolution2D(1024, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['pool6'])
+    net['relu7'] = (LeakyReLU(alpha=0.1))(net['conv7'])    
+    net['conv8'] = (YOLOConvolution2D(1024, 3, 3, border_mode='same',subsample=(1,1),
+                                      epsilon=0.000001))(net['relu7'])                            
+    net['relu8'] = (LeakyReLU(alpha=0.1))(net['conv8'])
+    net['output'] = (Convolution2D(num_priors*(4+num_classes+1), 1, 1, border_mode='same',
+                                              subsample=(1,1)))(net['relu8'])
+    model = Model(net['input'], net['output'])
+    return model
+    
+def getShapeLayer(layer):
+  input_shape = layer.get_shape().as_list()
+
+  rows = input_shape[2]
+  cols = input_shape[3]
+
+  rows = 2*rows
+  cols = 2*cols
+
+  outputShape = (input_shape[0], 3, rows, cols)
+  return outputShape

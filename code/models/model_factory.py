@@ -1,7 +1,7 @@
 import os
 
 # Keras imports
-from metrics.metrics import cce_flatt, IoU, YOLOLoss, YOLOMetrics, SSDLoss
+from metrics.metrics import cce_flatt, IoU, YOLOLoss, YOLOMetrics, SSDLoss, SSDMetrics
 from keras import backend as K
 from keras.utils.visualize_util import plot
 
@@ -13,7 +13,7 @@ from models.resnet50 import build_resnet50
 from models.resnet import ResnetBuilder
 from models.inceptionV3 import build_inceptionV3
 from models.densenet import build_densenet
-from models.SSD import build_SSD300
+from models.SSD import Build_SSD
 
 # Detection models
 from models.yolo import build_yolo
@@ -51,17 +51,19 @@ class Model_Factory():
             loss = 'categorical_crossentropy'
             metrics = ['accuracy']
         elif cf.dataset.class_mode == 'detection':
-            in_shape = (cf.dataset.n_channels,
-                        cf.target_size_train[0],
-                        cf.target_size_train[1])
-            # TODO detection : check model, different detection nets may have different losses and metrics
             if cf.model_name == 'tiny-yolo' or cf.model_name == 'yolo':
+                in_shape = (cf.dataset.n_channels,
+                            cf.target_size_train[0],
+                            cf.target_size_train[1])
                 loss = YOLOLoss(in_shape, cf.dataset.n_classes, cf.dataset.priors)
                 metrics = [YOLOMetrics(in_shape, cf.dataset.n_classes, cf.dataset.priors)]
             elif cf.model_name == 'ssd':
+                in_shape = (cf.target_size_train[0],
+                            cf.target_size_train[1],
+                            cf.dataset.n_channels,)
                 loss = SSDLoss(in_shape, cf.dataset.n_classes, cf.dataset.priors)
                 #metrics = [YOLOMetrics(in_shape, cf.dataset.n_classes, cf.dataset.priors)]
-                metrics = ['accuracy']
+                metrics = [SSDMetrics()]
         elif cf.dataset.class_mode == 'segmentation':
             if K.image_dim_ordering() == 'th':
                 if variable_input_size:
@@ -185,11 +187,10 @@ class Model_Factory():
                                load_pretrained=cf.load_imageNet,
                                freeze_layers_from=cf.freeze_layers_from, tiny=True)
         elif cf.model_name == 'ssd':
-            model = build_SSD300(in_shape, cf.dataset.n_classes)
-            if cf.load_imageNet:
-            # Rename last layer to not load pretrained weights
-                model.layers[-1].name += '_new'
-                model.load_weights('weights/weights_SSD300.hdf5',by_name=True)
+            model = Build_SSD(in_shape, cf.dataset.n_classes+1,
+                              load_pretrained=cf.load_imageNet,
+                              freeze_layers_from=cf.freeze_layers_from)
+
         else:
             raise ValueError('Unknown model')
 

@@ -18,7 +18,24 @@ from ssd_layers import Normalize
 from ssd_layers import PriorBox
 
 
-def build_SSD300(input_shape=(3,300,300), num_classes=21):
+def Build_SSD(img_shape=(300,300,3), n_classes=80,
+               load_pretrained=False,freeze_layers_from='base_model'):
+
+    # get base model
+    model = SSD300(input_shape=img_shape, num_classes=n_classes)
+    #base_model_layers = [layer.name for layer in model.layers[0:42]]
+
+    if load_pretrained:
+      # Rename last layer to not load pretrained weights
+      model.layers[-1].name += '_new'
+      model.load_weights('weights/weights_SSD300.hdf5',by_name=True)
+
+    if freeze_layers_from is not None:
+        pass
+
+    return model
+
+def SSD300(input_shape=(300,300,3),num_classes=21):
     """SSD300 architecture.
     # Arguments
         input_shape: Shape of the input image,
@@ -29,11 +46,11 @@ def build_SSD300(input_shape=(3,300,300), num_classes=21):
     """
     #K.set_image_dim_ordering('th')
     net = {}
-    # Block 1
-    input_shape = (input_shape[1],input_shape[2],input_shape[0])
     input_tensor = Input(shape=input_shape)
-    img_size = (input_shape[2], input_shape[1])
     net['input'] = input_tensor
+    img_size = (input_shape[1], input_shape[0])
+    
+    # Block 1
     net['conv1_1'] = Convolution2D(64, 3, 3,
                                    activation='relu',
                                    border_mode='same',

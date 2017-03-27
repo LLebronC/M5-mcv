@@ -3,6 +3,7 @@
 import numpy as np
 import tensorflow as tf
 import cv2
+import matplotlib.pyplot as plt
 
 
 class BBoxUtility(object):
@@ -139,7 +140,7 @@ class BBoxUtility(object):
                                                          np.arange(assign_num),
                                                          :4]
         assignment[:, 4][best_iou_mask] = 0
-        assignment[:, 4:-8][best_iou_mask] = boxes[best_iou_idx, 4:]
+        assignment[:, 5:-8][best_iou_mask] = boxes[best_iou_idx, 4:]
         assignment[:, -8][best_iou_mask] = 1
         return assignment
 
@@ -224,19 +225,39 @@ class BBoxUtility(object):
         return results
         
     def ssd_build_gt_batch(self, batch_y):
-        for i,gt in enumerate(batch_y):
-            y_box = np.zeros((len(batch_y[i]),4+self.num_classes))
+        '''for i,gt in enumerate(batch_y):
+            y_box = np.zeros((len(batch_y[i]),4+self.num_classes-1))
             for j in range(len(batch_y[i])):
                 y_box[j][0] = batch_y[i][j][1] - (batch_y[i][j][3]/2)
                 y_box[j][1] = batch_y[i][j][2] - (batch_y[i][j][4]/2)
                 y_box[j][2] = batch_y[i][j][1] + (batch_y[i][j][3]/2)
                 y_box[j][3] = batch_y[i][j][2] + (batch_y[i][j][4]/2)
                 y_box[j][4+int(batch_y[i][j][0])] = 1
-            batch_y[i] = self.assign_boxes(y_box)
-        return np.asarray(batch_y)
+            batch_y[i] = self.assign_boxes(y_box)'''
+        targets = []
+
+        for i, gt in enumerate(batch_y):
+            n_boxes = gt.shape[0]
+            boxes = np.zeros((n_boxes, 4+self.num_classes-1)) # -1 to not count background
+            for j, box in enumerate(gt):
+                coords = box[1:] # [xcenter, ycenter, width, height]
+                # the code expects [xmin, ymin, xmax, ymax]
+                coords[0] = box[1] - box[3]/2
+                coords[1] = box[2] - box[4]/2
+                coords[2] = box[1] + box[3]/2
+                coords[3] = box[2] + box[4]/2
+                boxes[j,0:4] = coords
+                one_hot = np.zeros(self.num_classes-1) # -1 to not count background
+                one_hot[int(box[0])] = 1.
+                boxes[j,4:] = one_hot
+            y = self.assign_boxes(boxes)
+            targets.append(y)
+
+        return np.array(targets)
+        #return np.asarray(batch_y)
         
     def ssd_draw_detections(self, top_conf, top_label_indices, top_xmin, top_ymin,
-                             top_xmax, top_ymax, img, labels):
+                             top_xmax, top_ymax, img, labels, out_name):
 
         def get_color(c,x,max):
             colors = ( (1,0,1), (0,0,1),(0,1,1),(0,1,0),(1,1,0),(1,0,0) )
@@ -246,10 +267,29 @@ class BBoxUtility(object):
             ratio -= i
             r = (1-ratio) * colors[int(i)][int(c)] + ratio*colors[int(j)][int(c)]
             return r*255
-        #print img    
-        img = img*255
-        imgcv = img    
+        #print img
+        #%matplotlib inline
+
+        plt.imshow(img)
+        plt.rcParams['figure.figsize'] = (8, 8)
+        plt.rcParams['image.interpolation'] = 'nearest'  
+        colors = plt.cm.hsv(np.linspace(0, 1, self.num_classes)).tolist()
+        currentAxis = plt.gca()    
         for i in range(top_conf.shape[0]):
+            xmin = int(round(top_xmin[i] * img.shape[1]))
+            ymin = int(round(top_ymin[i] * img.shape[0]))
+            xmax = int(round(top_xmax[i] * img.shape[1]))
+            ymax = int(round(top_ymax[i] * img.shape[0]))
+            score = top_conf[i]
+            label = int(top_label_indices[i])
+    #         label_name = voc_classes[label - 1]
+            display_txt = '{:0.2f}, {}'.format(score, label)
+            coords = (xmin, ymin), xmax-xmin+1, ymax-ymin+1
+            color = colors[label]
+            currentAxis.add_patch(plt.Rectangle(*coords, fill=False, edgecolor=color, linewidth=2))
+            currentAxis.text(xmin, ymin, display_txt, bbox={'facecolor':color, 'alpha':0.5})    
+        plt.savefig(out_name)
+        '''
             left = int(round(top_xmin[i] * img.shape[1]))
             top = int(round(top_ymin[i] * img.shape[0]))
             right = int(round(top_xmax[i] * img.shape[1]))
@@ -274,4 +314,40 @@ class BBoxUtility(object):
             size=cv2.getTextSize(mess, font, scale, thickness)
             cv2.rectangle(img, (left-2,top-size[0][1]-4), (left+size[0][0]+4,top), color, -1)
             cv2.putText(img, mess, (left+2,top-2), font, scale, (0,0,0), thickness, cv2.LINE_AA)
-        return imgcv
+        return imgcv'''
+        
+ # Class for metrics
+class BoundBox:
+    def __init__(self, classes):
+        self.minx, self.miny = float(), float()
+        self.maxx, self.maxy = float(), float()
+        self.c = float()
+        self.class_num = classes
+        self.probs = np.zeros((classes,))
+
+def overlap(x1min,x1max,x2min,x2max):
+    l1 = x1min;
+    l2 = x2min;
+    left = max(l1, l2)
+    r1 = x1max;
+    r2 = x2max;
+    right = min(r1, r2)
+    return right - left;
+
+def box_intersection(a, b):
+    w = overlap(a.xmin, a.xmax, b.xmin, b.xmax);
+    h = overlap(a.ymin, a.ymax, b.ymin, b.ymax);
+    if w < 0 or h < 0: return 0;
+    area = w * h;
+    return area;
+
+def box_union(a, b):
+    i = box_intersection(a, b);
+    a_area = (a.xmax-a.xmin) * (a.ymax-a.ymin)
+    b_area = (b.xmax-b.xmin) * (b.ymax-b.ymin)
+    u = a_area + b_area - i;
+    return u;
+
+def box_iou(a, b):
+    return box_intersection(a, b) / box_union(a, b);       
+        

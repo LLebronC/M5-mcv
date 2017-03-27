@@ -125,17 +125,19 @@ class One_Net_Model(Model):
                             
                                 # Get detections with confidence higher than 0.6.
                                 top_indices = [i for i, conf in enumerate(det_conf) if conf >= thresh]
-                            
                                 top_conf = det_conf[top_indices]
                                 top_label_indices = det_label[top_indices].tolist()
                                 top_xmin = det_xmin[top_indices]
                                 top_ymin = det_ymin[top_indices]
                                 top_xmax = det_xmax[top_indices]
                                 top_ymax = det_ymax[top_indices]
-                                im = self.cf.bbox_util.ssd_draw_detections(top_conf, top_label_indices, top_xmin, top_ymin,
-                                                                           top_xmax, top_ymax, x_true[j], classes)
                                 out_name = os.path.join(result_path, 'img_' + str(image_counter).zfill(4)+ '.png')
-                                scipy.misc.toimage(im).save(out_name)
+                                if top_indices:
+                                    im = self.cf.bbox_util.ssd_draw_detections(top_conf, top_label_indices, top_xmin, top_ymin,
+                                                                           top_xmax, top_ymax, x_true[j], classes, out_name)
+                                
+                                #scipy.misc.toimage(im).save(out_name)
+                                #im.savefig(out_name)
                                 image_counter = image_counter+1
                     else:
                         raise ValueError("No model name defined or valid: " + self.model_name)

@@ -40,6 +40,7 @@ class Configuration():
         cf.final_savepath = os.path.join(shared_experiments_path, cf.dataset_name,
                                          cf.exp_name)
         cf.log_file = os.path.join(cf.savepath, "logfile.log")
+        print 'cf.savepath', cf.savepath
         if not os.path.exists(cf.savepath):
             os.makedirs(cf.savepath)
 
@@ -109,7 +110,7 @@ class Configuration():
             cf.best_type = 'max'
             if cf.model_name == 'ssd':
                 cf.dataset.priors = pickle.load(open('prior_boxes_ssd300.pkl', 'rb'))
-                cf.bbox_util = BBoxUtility(cf.dataset.n_classes, cf.dataset.priors)
+                cf.bbox_util = BBoxUtility(cf.dataset.n_classes+1, cf.dataset.priors)
         else:
             cf.train_metrics = ['loss', 'acc']
             cf.valid_metrics = ['val_loss', 'val_acc']
