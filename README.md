@@ -235,11 +235,44 @@ he KITTI dataset provided is composed by 60060 train images and 14876 for valida
 
 ## Abstract
 
+The aim of this week 3 and 4 is use the CNN to do object detection. Using an input image we want to detect the objects inside this one, define a bounding box for each one with the class that they belong. Using the state of art in object detection we will focus in YOLOv2 and SSD neural networks. First integrating in your framework with the modification needed to make them work, finally we analyze and test their performance and behaviour in the TT100K and Udacity datasets.
+
 ## Detection Models
 
+### You Only Look Once (YOLO9000)
+
+One of the models that we used is the YOLO9000 know as YOLO v2. YOLO is a network used to object detection, where the idea is use a single neural network to divide the image input in square regions, then this squares region defines which class can be (confidence) and then the union of this region determine the size of the bounding boxes. The version 2 adds few tricks that improve the train and performance of the network like Batch normalization, Convolution with Anchor Boxes, dimension clusters and more.
+The final output for each image input of 320x320, consist in a 10x10 region map of the image with 5 prior (bounding boxes sizes) and the vector that contains the bounding box coordinates plus the classes confidence.
+
+### Single Shot MultiBox Detector (SSD)
+
+A different approach from YOLO is the SSD model. Based on a feed-forward convolutional network, the SSD produce a colletion of bounding boxes and scores for the presence of object class instances in those boxes. Use a early network for image classification, followed by a multi-scale feature map using convolutions to predict detections, in each convolution is performed a 3x3xP kernel that produce a score for each category.
+The final output for each image input of 300x300, consist in a detection with 8732 bounding boxes per class, that it’s reduced to one per class using non_maximum supression.
+
 ## Code changes and additions
+- Added the SSD model implementation from https://github.com/rykov8/ssd_keras, using the prior file and weight shared there. We needed to adapt the GT annotations to the input format of the SSD to calculate properly the loss.
+- Fixed the prediction functionality in configuration, now it works with detection models, YOLO, tiny-YOLO and SSD, the prediction is showed in the image set in a folder inside the experiment.
+- Added and adapted all the utilities function of SSD to be useful in the framework.
 
 ## Task summary
+##### Task (a): Run the provided code
+Use the preconfigured experiment file (tt100k_detection.py) to detect traffic signs with the YOLOv2 model.
+- Analyze the dataset.
+- Calculate the f-score and FPS on train, val and test sets.
+- Evaluate different network architectures:
+ -- YOLO
+ -- Tiny-YOLO
+##### Task (b): Read two papers
+- You Only Look at Once (YOLO)
+- Single Shot Multi-Box Detector (SSD)
+##### Task (c): Train the network on a different dataset
+- Set-up a new experiment file to detect among cars, pedestrians, and trucks on Udacity dataset.
+- Use the YOLOv2 model as before, but increment the number of epochs to 40.
+- Analyze the problems of the dataset as it is. Propose (and implement) solutions.
+##### Task (d): Implement a new network
+- We provide you a link to a Keras implementation of SSD. Other models will be highly valued.
+- Integrate the new model into the framework.
+- Evaluate the new model on TT100K and Udacity.
 
 ## Tests Realized
 
