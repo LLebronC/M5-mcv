@@ -292,10 +292,15 @@ In this experiment we use the basic configuration and see how it work from the s
 
 ![YOLO_e_10 plotttk](figures/TTK100_yolo_10.png?raw=true "YOLO 10 epoch")
 
+In the graphic we can see how the network learns fast, with few epochs also becasue the dataset is huge if we compare to other that we used.
+In train the recall basically reach the maximum and IOU 
+We can see below two samples of the output results, where they identified properly the traffic sign and the center, but still need to improve the adjustment of the bounding box.
+
 ![YOLO sample 1](figures/YOLO_sample1.png?raw=true "YOLO sample 1")
 ![YOLO sample 2](figures/YOLO_sample2.png?raw=true "YOLO sample 2")
 
 Other metric to compare with the nexts experiments are. fps: 19.81 and F1 score about 0.63.
+
 ##### TT100k_detection 20 epochs using YOLO
 The next experiment was if 10 epochs was enough to get a good result, so we increase the number of epoch to 20. 
 Forggeting validation, this experiment score: 0.60 iou , 20.1 fps, 0.44 recall, and around 0.30 of f1. If we see the graphics we can see that needs more epoch to converge but the time need to do it makes impossible to test this theory.
