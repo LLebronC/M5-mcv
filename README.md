@@ -17,7 +17,6 @@ The goal of this project is to study the use of deep learning to semantically se
   - Axel Barroso (axel.barroso@e-campus.uab.cat)
   - Hassan Ahmed
   
-## Week reviews
 <h2 id="WSum">Weekly summary</h2>
 
 <p><a href="#Week 2">Week 2: Object Recognition</a></p>
@@ -253,6 +252,14 @@ The final output for each image input of 300x300, consist in a detection with 87
 - Added the SSD model implementation from https://github.com/rykov8/ssd_keras, using the prior file and weight shared there. We needed to adapt the GT annotations to the input format of the SSD to calculate properly the loss.
 - Fixed the prediction functionality in configuration, now it works with detection models, YOLO, tiny-YOLO and SSD, the prediction is showed in the image set in a folder inside the experiment.
 - Added and adapted all the utilities function of SSD to be useful in the framework.
+
+## PRoblems found
+
+During the realization of this week 3 and 4, we had problems that make us waste a lot of time finding a solution and debugging the code, because is quite difficult to implement new networks and adapt to the Datasets and metrics.
+The YOLO model was provided ready to use, with metrics and loss functions, where the files involved were basically yolo.py and yolo_utils.py. But in order to add new metrics like F1-score or drawing the bounding boxes in an image output, it becomes difficult to implement because the code is not commented and you need to know properly the output of the network. In your case, we tried to implement F1-score using the metrics in yolo_utils.py but without success, we end using the script provided to test metrics. 
+Other part that was difficult was the drawing bounding boxes in images functionality. To implement this part, we adapted the prediction functionality in the configuration file and when the type is “detection” we use this prediction and save the results with the bounding boxes drawn. First, we needed to implement a generator queuer that iterates the batches and allow us to use this data and make predictions with our model. A second step of this process is after predict a batch of data, we need to process this network output to a final output where we have a bounding box per class and it’s drawable in a image. Fortunately this function are given in the SSD and YOLO models, you only need to adapt the number of classes and the bounding boxes annotation from the ground truth. The adaptation of the ground truth is a critical step, because each model is ready to be used with a certain bounding box and class definition vector, so we need to adapt the ground truth if we want to evaluate properly the model and calculate the loss. Even it doesn’t sound complicate, the reality is that adapt properly the ground truth is troublesome because you need to ensure that all work fine and the adaptation it’s perfect if you want that you model learn. A final step in the drawing function is use the a threshold to select with bounding boxes confidence for each class you select and you need to use non-maximum suppression to unify the bounding boxes of the prediction and have a final bounding box to draw in a image. At test, the drawing function work fine with YOLO but we have problems with the sizes in the SSD model.
+In other hand, the SSD implementation was difficult, because you have the model in github ready to use in a form that don’t fit properly with the framework and you need to understand the code provided there and the ouw code to see where to integrate the models and all the functionalities that affects to this new model. For example, in data_loader.py where the GT is adapted to YOLO, you need to create a new adaptation to SSD, or our prediction implementation, now need to have into account the peculiarities of the output of the SSD. Also, prepare a ss_utils, with the loss function of this model, call it properly in the model_factory and so on.
+All this problems, practically solved are to reflect that we needed to work a lot with the framework and we modified and adapted the code to solve them.
 
 ## Task summary
 ##### Task (a): Run the provided code
