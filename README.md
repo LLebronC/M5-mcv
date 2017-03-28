@@ -290,6 +290,9 @@ Use the preconfigured experiment file (tt100k_detection.py) to detect traffic si
 ##### TT100k_detection 10 epochs using YOLO
 In this experiment we use the basic configuration and see how it work from the start. First thing to notice is that the validation set works really bad, scoring a iou of 0.56 althouth this configuraction in test score 0.72, this happends with all the test done in TTK100_detection.
 
+![YOLO sample 1](figures/YOLO_sample1.png?raw=true "YOLO sample 1")
+![YOLO sample 2](figures/YOLO_sample2.png?raw=true "YOLO sample 2")
+
 Other metric to compare with the nexts experiments are. fps: 19.81 and F1 score about 0.63.
 ##### TT100k_detection 20 epochs using YOLO
 The next experiment was if 10 epochs was enough to get a good result, so we increase the number of epoch to 20. 
@@ -297,6 +300,9 @@ Forggeting validation, this experiment score: 0.60 iou , 20.1 fps, 0.44 recall, 
 
 ##### TT100k_detection 10 epochs using tiny-YOLO
 Other experiment using TT100k_detection was to use the tiny-YOLO and see who it perform. In test the scores was: 32.11 fps, 0.63 iou, 0.82 recall and 0.39 f1. This models is the faster and the lighter so it gains stability faster but it's also make very dificult to adapt to the problem so the measure of f1 is bad compare to the original experiment.
+
+![Tiny-YOLO sample 1](figures/TNYOLO_sample1.png?raw=true "Tiny-YOLO sample 1")
+![Tiny-YOLO sample 2](figures/TNYOLO_sample2.png?raw=true "Tiny-YOLO sample 2")
 
 ##### Udacity 40 epochs using YOLO
 The nexts experiments were using the Udacity dataset. As in the previous dataset we will take as a reference the YOLO model result.
@@ -337,6 +343,15 @@ Seems that there is some problems to our code when we try to plot the Bounding B
 ![SSD sample 1](figures/SSDTT_sample1.png?raw=true "SSD sample 1")
 ![SSD sample 2](figures/SSDTT_sample2.png?raw=true "SSD sample 2")
 ![SSD sample 3](figures/SSDTT_sample3.png?raw=true "SSD sample 3")
+
+##### Udacity 40 epochs
+
+![SSD plot](figures/SSDUdaciGraph.png?raw=true "SSD Experiment")
+
+Image samples
+
+![SSD sample 1](figures/SSDU_sample1.png?raw=true "SSD sample 1")
+![SSD sample 2](figures/SSDU_sample2.png?raw=true "SSD sample 2")
 
 
 <p align="right"><a href="#WSum">Back to summary</a></p>
