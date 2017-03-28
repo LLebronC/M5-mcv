@@ -288,12 +288,12 @@ Use the preconfigured experiment file (tt100k_detection.py) to detect traffic si
 
 ### YOLO Experiments
 ##### TT100k_detection 10 epochs using YOLO
-In this experiment we use the basic configuration and see how it work from the start. First thing to notice is that the validation set works really bad, scoring a iou of 0.56 althouth this configuraction in test score 0.72, this happends with all the test done in TTK100_detection.
+In this experiment we use the basic configuration and see how it work from the start. First thing to notice is that the validation set works worst if we compare it with the results obtained in test: avg_recall 0.96 and avg_iou 0.727, scoring only a iou of 0.56, this happends with all the test done in TTK100_detection. Then we analized the cause of this difference looking the validation images and comparing with train, in general all the pictures selected in validation are really blurred being really challenger for the model, also there are few classes missed in the train and other minor differences, instead the test is alike train being normal to score this high results.
 
 ![YOLO_e_10 plotttk](figures/TTK100_yolo_10.png?raw=true "YOLO 10 epoch")
 
 In the graphic we can see how the network learns fast, with few epochs also becasue the dataset is huge if we compare to other that we used.
-In train the recall basically reach the maximum and IOU 
+In train the recall basically reach the maximum and IOU and in test we achieve this result due to the similarity in the images.
 We can see below two samples of the output results, where they identified properly the traffic sign and the center, but still need to improve the adjustment of the bounding box.
 
 ![YOLO sample 1](figures/YOLO_sample1.png?raw=true "YOLO sample 1")
