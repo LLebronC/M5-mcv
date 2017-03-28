@@ -292,8 +292,11 @@ Other experiment using TT100k_detection was to use the tiny-YOLO and see who it 
 The nexts experiments were using the Udacity dataset. As in the previous dataset we will take as a reference the YOLO model result.
 
 In test it score: 19.8 fps, 0.69 recall, 0.57 iou and around 0.36 of f1.
+
 ![YOLO plot](figures/YOLOUgraphic40epochs.png?raw=true "YOLO Experiment")
+
 Image sample
+
 ![YOLO sample 1](figures/YOLOU_sample1.png?raw=true "YOLO sample 1")
 ![YOLO sample 2](figures/YOLOU_sample2.png?raw=true "YOLO sample 2")
 ![YOLO sample 3](figures/YOLOU_sample3.png?raw=true "YOLO sample 3")
