@@ -325,8 +325,8 @@ Image samples
 
 Seems that there is some problems to our code when we try to plot the Bounding Boxes, because the results using the script are really good, but the image plotted detects signals but don't fit properly the bounding box around it.
 ![SSD sample 1](figures/SSDTT_sample1.png?raw=true "SSD sample 1")
-![SSD sample 2](figures/SSDTT_sample1.png?raw=true "SSD sample 2")
-![SSD sample 3](figures/SSDTT_sample1.png?raw=true "SSD sample 3")
+![SSD sample 2](figures/SSDTT_sample2.png?raw=true "SSD sample 2")
+![SSD sample 3](figures/SSDTT_sample3.png?raw=true "SSD sample 3")
 
 
 <p align="right"><a href="#WSum">Back to summary</a></p>
