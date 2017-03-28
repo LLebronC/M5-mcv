@@ -286,6 +286,9 @@ Use the preconfigured experiment file (tt100k_detection.py) to detect traffic si
 
 ## Tests Realized
 
+The experiment realized uses a threshold of 0,6 for the confidence in each class and the optimizer adam with 1E-05 os learning rate.
+We used a new dataset called Udacity, that have 3 classes (pedestrians, cars and trucks) that it's already prepared like TT100K to do detection.
+
 ### YOLO Experiments
 ##### TT100k_detection 10 epochs using YOLO
 In this experiment we use the basic configuration and see how it work from the start. First thing to notice is that the validation set works worst if we compare it with the results obtained in test: avg_recall 0.96 and avg_iou 0.727, scoring only a iou of 0.56, this happends with all the test done in TTK100_detection. Then we analized the cause of this difference looking the validation images and comparing with train, in general all the pictures selected in validation are really blurred being really challenger for the model, also there are few classes missed in the train and other minor differences, instead the test is alike train being normal to score this high results.
@@ -313,17 +316,19 @@ figures/TTK100_tiny_yolo.png
 
 ![YOLO_tiny plotttk](figures/TTK100_tiny_yolo.png?raw=true "tiny-YOLO 10 epoch")
 
+The samples below shows the differences with the tiny YOLO respect to the YOLO, where we can see the bounding boxes aren't adapted yet in the same samples, with the same number of epochs, due the 
+
 ![Tiny-YOLO sample 1](figures/TNYOLO_sample1.png?raw=true "Tiny-YOLO sample 1")
 ![Tiny-YOLO sample 2](figures/TNYOLO_sample2.png?raw=true "Tiny-YOLO sample 2")
 
 ##### Udacity 40 epochs using YOLO
 The nexts experiments were using the Udacity dataset. As in the previous dataset we will take as a reference the YOLO model result.
 
-In test it score: 19.8 fps, 0.69 recall, 0.57 iou and around 0.36 of f1.
+In test it score: 19.8 fps, 0.69 recall, 0.57 iou and around 0.36 of f1. The result obtained here, if we compare with the images below are rare, because the images shows in general a proper detection of bounding boxes in the images, but the scores are bad, so probably there are some errors in the metrics.
 
 ![YOLO plot](figures/YOLOUgraphic40epochs.png?raw=true "YOLO Experiment")
 
-Image sample
+Image samples that show a quite good detection if we compare with the scores obtained.
 
 ![YOLO sample 1](figures/YOLOU_sample1.png?raw=true "YOLO sample 1")
 ![YOLO sample 2](figures/YOLOU_sample2.png?raw=true "YOLO sample 2")
@@ -341,7 +346,8 @@ In this new dataset we also train the tiny-YOLO. As in the previous set of exper
 
 ##### TT100k 20 epochs
 
-adam 0,00001, confidencethres = 0,6
+In this test, SSD in TT100K scores a really good results, higher than YOLOv2. We think that the approach of SSD for this dataset is better, because the traffic sign are really small and the SSD generate more windows at differents resolutions, being more multi-scale than YOLO. Also in test the frame rate is really high, beating again YOLO in this aspect also.
+
 Avg Precission = 0.945439038396
 Avg Recall     = 0.788267481027
 Avg F-score    = 0.859728957481
@@ -349,14 +355,20 @@ Average FPS: 98.67
 
 ![SSD plot](figures/SSDTT100kgraphic.png?raw=true "SSD Experiment")
 
-Image samples
+Seems that there is some problems to our code when we try to plot the Bounding Boxes, because the results using the script are really good, but the image plotted detects signals but don't fit properly the bounding box around it. We can see the bounding boxes problems below.
 
-Seems that there is some problems to our code when we try to plot the Bounding Boxes, because the results using the script are really good, but the image plotted detects signals but don't fit properly the bounding box around it.
 ![SSD sample 1](figures/SSDTT_sample1.png?raw=true "SSD sample 1")
 ![SSD sample 2](figures/SSDTT_sample2.png?raw=true "SSD sample 2")
 ![SSD sample 3](figures/SSDTT_sample3.png?raw=true "SSD sample 3")
 
 ##### Udacity 40 epochs
+
+Finally a last test with SSD on Udacity, where we obtain a really bad results, but a really high frame rate and the image samples, shows you what is happening. Seems that the dataset is bad balanced with the class truck and generates a lot of false positives in the images, dropping a lot the final scores.
+
+Avg Precission = 0.662301095447
+Avg Recall     = 0.295350784279
+Avg F-score    = 0.408522453953
+Average FPS: 111.89
 
 ![SSD plot](figures/SSDUdaciGraph.png?raw=true "SSD Experiment")
 
