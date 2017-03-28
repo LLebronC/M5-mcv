@@ -49,6 +49,9 @@ chunk_size = 128 # we are going to process all image files in chunks
 ok = 0.
 total_true = 0.
 total_pred = 0.
+total_p = 0.
+total_r = 0.
+iters = 0
 
 bbox_util = BBoxUtility(NUM_CLASSES-1, nms_thresh=nms_threshold) # -1 because the void class is added inside
 
@@ -135,3 +138,10 @@ for i,img_path in enumerate(imfiles):
         print('Recall     = '+str(r))
         f = 0. if (p+r) == 0 else (2*p*r/(p+r))
         print('F-score    = '+str(f))
+        total_p = total_p + p
+        total_r = total_r + r
+        iters = iters + 1
+print('Average measures per batch')        
+print('Avg Precission = '+str(total_p/iters))
+print('Avg Recall     = '+str(total_r/iters))
+print('Avg F-score    = '+str(2*(total_p/iters)*(total_r/iters)/((total_p/iters)+(total_r/iters))))

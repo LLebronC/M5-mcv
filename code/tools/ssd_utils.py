@@ -285,10 +285,13 @@ class BBoxUtility(object):
     #         label_name = voc_classes[label - 1]
             display_txt = '{:0.2f}, {}'.format(score, label)
             coords = (xmin, ymin), xmax-xmin+1, ymax-ymin+1
+            print coords
+            input ()
             color = colors[label]
             currentAxis.add_patch(plt.Rectangle(*coords, fill=False, edgecolor=color, linewidth=2))
             currentAxis.text(xmin, ymin, display_txt, bbox={'facecolor':color, 'alpha':0.5})    
         plt.savefig(out_name)
+        plt.close()
         '''
             left = int(round(top_xmin[i] * img.shape[1]))
             top = int(round(top_ymin[i] * img.shape[0]))
