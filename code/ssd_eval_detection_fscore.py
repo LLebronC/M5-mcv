@@ -52,6 +52,7 @@ total_pred = 0.
 total_p = 0.
 total_r = 0.
 iters = 0
+total_fps = 0.
 
 bbox_util = BBoxUtility(NUM_CLASSES-1, nms_thresh=nms_threshold) # -1 because the void class is added inside
 
@@ -67,7 +68,7 @@ for i,img_path in enumerate(imfiles):
         start_time = time.time()
         net_out = model.predict(inputs, batch_size=16, verbose=1)
         print ('{} images predicted in {:.5f} seconds. {:.5f} fps').format(len(inputs),time.time() - start_time,(len(inputs)/(time.time() - start_time)))
-        
+        total_fps = total_fps + len(inputs)/(time.time() - start_time)
         # predicted boxes
         results = bbox_util.detection_out(net_out)
         for i,img_path in enumerate(img_paths):
@@ -145,3 +146,4 @@ print('Average measures per batch')
 print('Avg Precission = '+str(total_p/iters))
 print('Avg Recall     = '+str(total_r/iters))
 print('Avg F-score    = '+str(2*(total_p/iters)*(total_r/iters)/((total_p/iters)+(total_r/iters))))
+print('Average FPS: {:.2f}').format(total_fps/iters)

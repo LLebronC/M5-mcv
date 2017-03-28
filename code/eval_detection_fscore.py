@@ -66,6 +66,10 @@ chunk_size = 128 # we are going to process all image files in chunks
 ok = 0.
 total_true = 0.
 total_pred = 0.
+total_p = 0.
+total_r = 0.
+iters = 0
+total_fps = 0.
 
 for i,img_path in enumerate(imfiles):
   
@@ -126,3 +130,9 @@ for i,img_path in enumerate(imfiles):
     print('Recall     = '+str(r))
     f = 0. if (p+r) == 0 else (2*p*r/(p+r))
     print('F-score    = '+str(f))
+    iters = iters + 1
+print('Average measures per batch')        
+print('Avg Precission = '+str(total_p/iters))
+print('Avg Recall     = '+str(total_r/iters))
+print('Avg F-score    = '+str(2*(total_p/iters)*(total_r/iters)/((total_p/iters)+(total_r/iters))))
+print('Average FPS: {:.2f}').format(total_fps/iters)
