@@ -290,6 +290,8 @@ Use the preconfigured experiment file (tt100k_detection.py) to detect traffic si
 ##### TT100k_detection 10 epochs using YOLO
 In this experiment we use the basic configuration and see how it work from the start. First thing to notice is that the validation set works really bad, scoring a iou of 0.56 althouth this configuraction in test score 0.72, this happends with all the test done in TTK100_detection.
 
+[YOLO_e_10 plotttk](figures/TTK100_yolo_10.png?raw=true "YOLO 10 epoch")
+
 ![YOLO sample 1](figures/YOLO_sample1.png?raw=true "YOLO sample 1")
 ![YOLO sample 2](figures/YOLO_sample2.png?raw=true "YOLO sample 2")
 
@@ -298,8 +300,13 @@ Other metric to compare with the nexts experiments are. fps: 19.81 and F1 score 
 The next experiment was if 10 epochs was enough to get a good result, so we increase the number of epoch to 20. 
 Forggeting validation, this experiment score: 0.60 iou , 20.1 fps, 0.44 recall, and around 0.30 of f1. If we see the graphics we can see that needs more epoch to converge but the time need to do it makes impossible to test this theory.
 
+[YOLO_e_20 plotttk](figures/TTK100_yolo_20.png?raw=true "YOLO 20 epoch")
+
 ##### TT100k_detection 10 epochs using tiny-YOLO
 Other experiment using TT100k_detection was to use the tiny-YOLO and see who it perform. In test the scores was: 32.11 fps, 0.63 iou, 0.82 recall and 0.39 f1. This models is the faster and the lighter so it gains stability faster but it's also make very dificult to adapt to the problem so the measure of f1 is bad compare to the original experiment.
+figures/TTK100_tiny_yolo.png
+
+[YOLO_tiny plotttk](figures/TTK100_tiny_yolo.png?raw=true "tiny-YOLO 10 epoch")
 
 ![Tiny-YOLO sample 1](figures/TNYOLO_sample1.png?raw=true "Tiny-YOLO sample 1")
 ![Tiny-YOLO sample 2](figures/TNYOLO_sample2.png?raw=true "Tiny-YOLO sample 2")
