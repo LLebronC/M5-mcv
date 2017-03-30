@@ -284,10 +284,8 @@ Use the preconfigured experiment file (tt100k_detection.py) to detect traffic si
 - Integrate the new model into the framework.
 - Evaluate the new model on TT100K and Udacity.
 ##### Task (e): Boost the performance of your network
-- One of the main problems with Tiny-YOLO is that the net cannot find small object in images. That is why, we implemented a novel method based on Tiny-YOLO. What we do is to take the input image and create two branches. The first branch will
-do a convolution as it is done in Tiny-YOLO. The second one is our contribution, we do an upsampling of the image and do the convolution, once we have done the convolution we do a maxpool in order to get the maximum activations. 
-It is then, when we take this two branches and we merge them. After this merge layer, the structure is the same that it was before in Tiny-YOLO. We called the new net Tiny-YOLT, You Only Look Twice. 
-In this way we want to solve the problem of missing detections for small objects. For running the experiment the config/Udacity_detection_YOLT.py is ready. We only do not train the net, since it could take days or even a week. What we have seen is that the net is learning. We have try to build this net as a proof of concept.
+One of the main problems with YOLO is that the net cannot find small object in images. That is why, we implemented a novel method based on Tiny-YOLO. What we do is to take the input image (input shape: (320,320,3)) and create two branches. The first branch will do a convolution (output shape: (320,320, 16)) as it is done in Tiny-YOLO. The second one is our contribution, we do an upsampling of the image(output shape: (640,640, 3)) and do the convolution (output shape: (640,640, 16)), once we have done the convolution we do a maxpool (output shape: (320,320, 16)). It is then, when we take this two branches and we merge them. After this merge layer (output shape: (320,320, 32)), the structure is the same that it was before in Tiny-YOLO. We called the new net Tiny-YOLT, You Only Look Twice. 
+By doing that we want to solve the problem of missing detections for small objects. For running the experiment the config/Udacity_detection_YOLT.py is ready. We do not train the net, since it could take days or even a week. What we have seen is that the net is learning. We have try to build this net as a proof of concept.
 
 
 ## Tests Realized
