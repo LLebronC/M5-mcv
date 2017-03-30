@@ -290,7 +290,7 @@ The experiment realized uses a threshold of 0,6 for the confidence in each class
 We used a new dataset called Udacity, that have 3 classes (pedestrians, cars and trucks) that it's already prepared like TT100K to do detection.
 
 ### YOLO Experiments
-##### TT100k_detection 10 epochs using YOLO [Weights](https://drive.google.com/open?id=0B_RS7KGCOO8RUkx4VldoTVJ4bmc)
+##### TT100k_detection 10 epochs using YOLO [[Weights](https://drive.google.com/open?id=0B_RS7KGCOO8RUkx4VldoTVJ4bmc)]
 In this experiment we use the basic configuration and see how it work from the start. First thing to notice is that the validation set works worst if we compare it with the results obtained in test: avg_recall 0.96 and avg_iou 0.727, scoring only a iou of 0.56, this happends with all the test done in TTK100_detection. Then we analized the cause of this difference looking the validation images and comparing with train, in general all the pictures selected in validation are really blurred being really challenger for the model, also there are few classes missed in the train and other minor differences, instead the test is alike train being normal to score this high results.
 
 ![YOLO_e_10 plotttk](figures/TTK100_yolo_10.png?raw=true "YOLO 10 epoch")
@@ -304,13 +304,13 @@ We can see below two samples of the output results, where they identified proper
 
 Other metric to compare with the nexts experiments are. fps: 19.81 and F1 score about 0.63.
 
-##### TT100k_detection 20 epochs using YOLO [Weights](https://drive.google.com/open?id=0B_RS7KGCOO8Rajk4cmNac3JBaDA)
+##### TT100k_detection 20 epochs using YOLO [[Weights](https://drive.google.com/open?id=0B_RS7KGCOO8Rajk4cmNac3JBaDA)]
 The next experiment was if 10 epochs was enough to get a good result, so we increase the number of epoch to 20. 
 Forggeting validation, this experiment score: 0.60 iou , 20.1 fps, 0.44 recall, and around 0.30 of f1. If we see the graphics we can see that needs more epoch to converge but the time need to do it makes impossible to test this theory.
 
 ![YOLO_e_20 plotttk](figures/TTK100_yolo_20.png?raw=true "YOLO 20 epoch")
 
-##### TT100k_detection 10 epochs using tiny-YOLO [Weights](https://drive.google.com/open?id=0B_RS7KGCOO8RaXJGX08zUGRwcmc)
+##### TT100k_detection 10 epochs using tiny-YOLO [[Weights](https://drive.google.com/open?id=0B_RS7KGCOO8RaXJGX08zUGRwcmc)]
 Other experiment using TT100k_detection was to use the tiny-YOLO and see who it perform. In test the scores was: 32.11 fps, 0.63 iou, 0.82 recall and 0.39 f1. This models is the faster and the lighter so it gains stability faster but it's also make very dificult to adapt to the problem so the measure of f1 is bad compare to the original experiment.
 figures/TTK100_tiny_yolo.png
 
@@ -321,7 +321,7 @@ The samples below shows the differences with the tiny YOLO respect to the YOLO, 
 ![Tiny-YOLO sample 1](figures/TNYOLO_sample1.png?raw=true "Tiny-YOLO sample 1")
 ![Tiny-YOLO sample 2](figures/TNYOLO_sample2.png?raw=true "Tiny-YOLO sample 2")
 
-##### Udacity 40 epochs using YOLO [Weights](https://drive.google.com/open?id=0B_RS7KGCOO8RR2FlYUFIR3J2eFk)
+##### Udacity 40 epochs using YOLO [[Weights](https://drive.google.com/open?id=0B_RS7KGCOO8RR2FlYUFIR3J2eFk)]
 The nexts experiments were using the Udacity dataset. As in the previous dataset we will take as a reference the YOLO model result.
 
 In test it score: 19.8 fps, 0.69 recall, 0.57 iou and around 0.36 of f1. The result obtained here, if we compare with the images below are rare, because the images shows in general a proper detection of bounding boxes in the images, but the scores are bad, so probably there are some errors in the metrics.
@@ -339,14 +339,14 @@ Unfortunately, data augmentation don’t improve the results and even decrease s
 
 ![YOLO plot](figures/YOLOUgraphic40epochs.png?raw=true "YOLO Experiment")
 
-##### Udacity 40 epochs using tiny-YOLO [Weights](https://drive.google.com/open?id=0B_RS7KGCOO8RVDZSMW5UWWU3MTQ)
+##### Udacity 40 epochs using tiny-YOLO [[Weights](https://drive.google.com/open?id=0B_RS7KGCOO8RVDZSMW5UWWU3MTQ)]
 In this new dataset we also train the tiny-YOLO. As in the previous set of experiments it scores the faster result with 31.31 fps but the other scores are worse. It gets a recall of 0.28, a iou of 0.4 and a f1 of 0.36.
 
 ![tiny-YOLO plot](figures/TinyUGraphic.png?raw=true "tiny-YOLO Experiment")
 
 ### SSD Experiments
 
-##### TT100k 20 epochs [Weights](https://drive.google.com/open?id=0B6eUlGGeZ9wAa21VTVMzT0pGSEk)
+##### TT100k 20 epochs [[Weights](https://drive.google.com/open?id=0B6eUlGGeZ9wAa21VTVMzT0pGSEk)]
 
 In this test, SSD in TT100K scores a really good results, higher than YOLOv2. We think that the approach of SSD for this dataset is better, because the traffic sign are really small and the SSD generate more windows at differents resolutions, being more multi-scale than YOLO. Also in test the frame rate is really high, beating again YOLO in this aspect also.
 
@@ -363,7 +363,7 @@ Seems that there is some problems to our code when we try to plot the Bounding B
 ![SSD sample 2](figures/SSDTT_sample2.png?raw=true "SSD sample 2")
 ![SSD sample 3](figures/SSDTT_sample3.png?raw=true "SSD sample 3")
 
-##### Udacity 40 epochs [Weights](https://drive.google.com/open?id=0B6eUlGGeZ9wAWkNlV2VCeEJEaW8)
+##### Udacity 40 epochs [[Weights](https://drive.google.com/open?id=0B6eUlGGeZ9wAWkNlV2VCeEJEaW8)]
 
 Finally a last test with SSD on Udacity, where we obtain a really bad results, but a really high frame rate and the image samples, shows you what is happening. Seems that the dataset is bad balanced with the class truck and generates a lot of false positives in the images, dropping a lot the final scores.
 
