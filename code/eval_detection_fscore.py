@@ -12,7 +12,7 @@ from tools.yolo_utils import *
 
 # Input parameters to select the Dataset and the model used
 dataset_name = 'Udacity' #set to TT100K_detection otherwise
-model_name = 'tiny_yolo' #set to yolo otherwise
+model_name = 'p' #set to yolo otherwise
 
 # Net output post-processing needs two parameters:
 detection_threshold = 0.6 # Min probablity for a prediction to be considered
@@ -39,13 +39,16 @@ NUM_PRIORS  = len(priors)
 NUM_CLASSES = len(classes)
 
 if model_name == 'tiny-yolo':
-    tiny_yolo = True
+    typeNet='Tiny'
+elif model_name == 'yolo':
+    typeNet='Regular'
 else:
-    tiny_yolo = False
+  typeNet='YOLT'
+    
 
 model = build_yolo(img_shape=input_shape,n_classes=NUM_CLASSES, n_priors=5,
                load_pretrained=False,freeze_layers_from='base_model',
-               tiny=tiny_yolo)
+               typeNet)
 
 model.load_weights(sys.argv[1])
 
@@ -84,7 +87,7 @@ for i,img_path in enumerate(imfiles):
     start_time = time.time()
     net_out = model.predict(inputs, batch_size=16, verbose=1)
     print ('{} images predicted in {:.5f} seconds. {:.5f} fps').format(len(inputs),time.time() - start_time,(len(inputs)/(time.time() - start_time)))
-
+    total_fps = total_fps + len(inputs)/(time.time() - start_time)
     # find correct detections (per image)
     for i,img_path in enumerate(img_paths):
         boxes_pred = yolo_postprocess_net_out(net_out[i], priors, classes, detection_threshold, nms_threshold)
@@ -130,6 +133,8 @@ for i,img_path in enumerate(imfiles):
     print('Recall     = '+str(r))
     f = 0. if (p+r) == 0 else (2*p*r/(p+r))
     print('F-score    = '+str(f))
+    total_p = total_p + p
+    total_r = total_r + r
     iters = iters + 1
 print('Average measures per batch')        
 print('Avg Precission = '+str(total_p/iters))

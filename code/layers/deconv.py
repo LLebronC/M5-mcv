@@ -29,6 +29,7 @@ class Deconvolution2D(Convolution2D):
         self.output_shape_ = self.get_output_shape_for_helper(input_shape, nb_filter,
                                                               dim_ordering, nb_row, nb_col,
                                                               border_mode, subsample)
+        
         super(Deconvolution2D, self).__init__(nb_filter, nb_row, nb_col,
                                               init=init, activation=activation,
                                               weights=weights, border_mode=border_mode,
@@ -50,6 +51,7 @@ class Deconvolution2D(Convolution2D):
             cols = input_shape[2]
         else:
             raise Exception('Invalid dim_ordering: ' + dim_ordering)
+        
 
         rows = conv_input_length(rows, nb_row,
                                  border_mode, subsample[0])
@@ -84,11 +86,18 @@ class Deconvolution2D(Convolution2D):
             return (input_shape[0], rows, cols, self.nb_filter)
 
     def call(self, x, mask=None):
+        print 'self.W', self.W
+        print 'self.W_shape', self.W_shape
+        print 'x', x
+        print 'output_shape_', self.output_shape_
+        print 'self.subsample', self.subsample
+        
         output = deconv2d(x, self.W, self.output_shape_,
                           strides=self.subsample,
                           border_mode=self.border_mode,
                           dim_ordering=self.dim_ordering,
                           filter_shape=self.W_shape)
+        print 'output', output
         if self.bias:
             if self.dim_ordering == 'th':
                 output += K.reshape(self.b, (1, self.nb_filter, 1, 1))

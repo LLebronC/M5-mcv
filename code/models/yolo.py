@@ -3,18 +3,19 @@ from keras import backend as K
 from keras.models import Model
 from keras.layers import Input
 from keras.layers import Convolution2D
+from keras.layers import UpSampling2D
 from keras.layers import MaxPooling2D
 from keras.layers import LeakyReLU
 from keras.layers import merge
 from keras.layers import Reshape
-from layers.yolo_layers import YOLOConvolution2D,Reorg,YOLODeconvolution2D, concat
+from layers.yolo_layers import YOLOConvolution2D,Reorg, concat
 from layers.deconv import Deconvolution2D
 
 import tensorflow as tf
 
 def build_yolo(img_shape=(3, 416, 416), n_classes=80, n_priors=5,
                load_pretrained=False,freeze_layers_from='base_model',
-               tiny=False):
+               typeNet='Regular', lookTwice = False):
 
     # YOLO model is only implemented for TF backend
     assert(K.backend() == 'tensorflow')
@@ -22,15 +23,23 @@ def build_yolo(img_shape=(3, 416, 416), n_classes=80, n_priors=5,
     model = []
 
     # Get base model
-    if not tiny:
+    if typeNet == 'Regular':
       model = YOLO(input_shape=img_shape, num_classes=n_classes, num_priors=n_priors)
       base_model_layers = [layer.name for layer in model.layers[0:42]]
-    else:
-      #model = TinyYOLO(input_shape=img_shape, num_classes=n_classes, num_priors=n_priors)
-      #model = TinyYOLO_Siamese(input_shape=img_shape, num_classes=n_classes, num_priors=n_priors)
-      model = TinyYOLO_doubleScale(input_shape=img_shape, num_classes=n_classes, num_priors=n_priors)
+      tiny = False
+    elif typeNet == 'Tiny':
+      if lookTwice:
+        model = TinyYOLT(input_shape=img_shape, num_classes=n_classes, num_priors=n_priors)
+        load_pretrained = False
+      else:
+        model = TinyYOLO(input_shape=img_shape, num_classes=n_classes, num_priors=n_priors)
       base_model_layers = [layer.name for layer in model.layers[0:21]]
-
+      tiny = True
+    elif typeNet == 'YOLT':
+      model = TinyYOLT(input_shape=img_shape, num_classes=n_classes, num_priors=n_priors)
+      base_model_layers = [layer.name for layer in model.layers[0:21]]
+      load_pretrained = False
+      
     if load_pretrained:
       # Rename last layer to not load pretrained weights
       model.layers[-1].name += '_new'
@@ -280,8 +289,8 @@ def create_base_network(input_dim, net, doubleScaling = False):
     
     
         
-def TinyYOLO_doubleScale(input_shape=(3,416,416),num_classes=80,num_priors=5):
-    """Tiny YOLO (doubleScale) architecture
+def TinyYOLT(input_shape=(3,416,416),num_classes=80,num_priors=5):
+    """Tiny TinyYOLT architecture
 
     # Arguments
         input_shape: Shape of the input image
@@ -293,24 +302,31 @@ def TinyYOLO_doubleScale(input_shape=(3,416,416),num_classes=80,num_priors=5):
     """
     K.set_image_dim_ordering('th')
 
+    
     input_tensor = Input(shape=input_shape)
     net = {}
     net['input'] = input_tensor
     
     # Scale 1                              
     net['input_scale1'] = (YOLOConvolution2D(16, 3, 3, border_mode='same',subsample=(1,1),
-                                      epsilon=0.000001))(net['input'])      
-    # Scale 2
-    # net['deconv'] = (YOLODeconvolution2D(3, 3, 3, batch_size = 16, border_mode='same',subsample=(1,1),
-      #                                 epsilon=0.000001))(net['input'])                         
+                                      epsilon=0.000001))(net['input'])    
+                                      
+    # Scale 2 
+    net['deconv'] = Deconvolution2D(3, 4, 4, net['input']._keras_shape, 'glorot_uniform',
+                                    'linear', border_mode='valid', subsample=(2, 2),
+                                    name='deconv')(net['input'])  
+    net['deconv'] = UpSampling2D(size=(2, 2))((net['input']))
+       
     net['conv1'] = (YOLOConvolution2D(16, 3, 3, border_mode='same',subsample=(1,1),
-                                        epsilon=0.000001))(net['input_scale1'])
+                                        epsilon=0.000001))(net['deconv'])
+                                        
     net['input_scale2'] = (MaxPooling2D(pool_size=(2, 2),border_mode='valid'))(net['conv1'])                                      
     
     # Merge scales    
-    #net['merge'] = (concat())([net['input_scale1'], net['input_scale2']])
+    # net['merge'] = (concat())([net['input_scale1'], net['input_scale2']])
+    net['merge'] = merge([net['input_scale1'], net['input_scale2']], mode = 'concat', name='merge', concat_axis=1)
     
-    net['relu1'] = (LeakyReLU(alpha=0.1))(net['input_scale2'])
+    net['relu1'] = (LeakyReLU(alpha=0.1))(net['merge'])
     net['pool1'] = (MaxPooling2D(pool_size=(2, 2),border_mode='valid'))(net['relu1'])
     net['conv2'] = (YOLOConvolution2D(32, 3, 3, border_mode='same',subsample=(1,1),
                                       epsilon=0.000001))(net['pool1'])

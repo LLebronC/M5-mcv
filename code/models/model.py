@@ -102,7 +102,7 @@ class One_Net_Model(Model):
     
                     # Get prediction for this minibatch
                     y_pred = self.model.predict(x_true)
-                    if self.cf.model_name == "yolo" or self.cf.model_name == "tiny-yolo":
+                    if self.cf.model_name == "yolo" or self.cf.model_name == "tiny-yolo" or self.cf.model_name == "yolt":
                         for i in range(len(y_pred)):
                             #Process the YOLO output to obtain final BBox per image                  
                             boxes = yolo_postprocess_net_out(y_pred[i], anchors, classes, thresh, nms_thresh)

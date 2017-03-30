@@ -51,7 +51,7 @@ class Model_Factory():
             loss = 'categorical_crossentropy'
             metrics = ['accuracy']
         elif cf.dataset.class_mode == 'detection':
-            if cf.model_name == 'tiny-yolo' or cf.model_name == 'yolo':
+            if cf.model_name == 'tiny-yolo' or cf.model_name == 'yolo' or cf.model_name == 'yolt':
                 in_shape = (cf.dataset.n_channels,
                             cf.target_size_train[0],
                             cf.target_size_train[1])
@@ -90,7 +90,7 @@ class Model_Factory():
         if cf.model_name in ['lenet', 'alexNet', 'vgg16', 'vgg19', 'resnet50',
                              'InceptionV3', 'fcn8', 'unet', 'segnet',
                              'segnet_basic', 'resnetFCN', 'yolo', 'resnet50Keras', 'ssd',
-                             'resnet18','resnet34','resnet50','resnet101','resnet152', 'densenet','tiny-yolo']:
+                             'resnet18','resnet34','resnet50','resnet101','resnet152', 'densenet','tiny-yolo', 'yolt']:
             if optimizer is None:
                 raise ValueError('optimizer can not be None')
 
@@ -109,13 +109,13 @@ class Model_Factory():
             raise ValueError('Unknown model name')
 
         # Output the model
-        print ('   Model: ' + cf.model_name)
         return model
 
     # Creates, compiles, plots and prints a Keras model. Optionally also loads its
     # weights.
     def make_one_net_model(self, cf, in_shape, loss, metrics, optimizer):
         # Create the *Keras* model
+        model_name = cf.model_name 
         if cf.model_name == 'fcn8':
             model = build_fcn8(in_shape, cf.dataset.n_classes, cf.weight_decay,
                                freeze_layers_from=cf.freeze_layers_from,
@@ -180,12 +180,23 @@ class Model_Factory():
             model = build_yolo(in_shape, cf.dataset.n_classes,
                                cf.dataset.n_priors,
                                load_pretrained=cf.load_imageNet,
-                               freeze_layers_from=cf.freeze_layers_from, tiny=False)
+                               freeze_layers_from=cf.freeze_layers_from, typeNet='Regular')
         elif cf.model_name == 'tiny-yolo':
+            if hasattr(cf, 'lookTwice'):
+              yolt = cf.lookTwice
+              if yolt:
+                model_name = 'Tiny-YOLT'
+            else:
+              yolt = False
             model = build_yolo(in_shape, cf.dataset.n_classes,
                                cf.dataset.n_priors,
                                load_pretrained=cf.load_imageNet,
-                               freeze_layers_from=cf.freeze_layers_from, tiny=True)
+                               freeze_layers_from=cf.freeze_layers_from, typeNet='Tiny', lookTwice = yolt)
+        elif cf.model_name == 'yolt':
+            model = build_yolo(in_shape, cf.dataset.n_classes,
+                               cf.dataset.n_priors,
+                               load_pretrained=cf.load_imageNet,
+                               freeze_layers_from=cf.freeze_layers_from, typeNet='YOLT')
         elif cf.model_name == 'ssd':
             model = Build_SSD(in_shape, cf.dataset.n_classes+1,
                               load_pretrained=cf.load_imageNet,
@@ -217,7 +228,7 @@ class Model_Factory():
             plot(model, to_file=os.path.join(cf.savepath, 'model.png'))
 
         # Output the model
-        print ('   Model: ' + cf.model_name)
+        print ('   Model: ' + model_name)
         # model is a keras model, Model is a class wrapper so that we can have
         # other models (like GANs) made of a pair of keras models, with their
         # own ways to train, test and predict

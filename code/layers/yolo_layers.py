@@ -189,6 +189,7 @@ class YOLOConvolution2D(Layer):
             return (input_shape[0], rows, cols, self.nb_filter)
 
     def call(self, x, mask=None):
+        print 'self.W Conv', self.W
         output = K.conv2d(x, self.W, strides=self.subsample,
                           border_mode=self.border_mode,
                           dim_ordering=self.dim_ordering,

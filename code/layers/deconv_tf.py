@@ -76,6 +76,7 @@ def deconv2d(x, kernel, output_shape, strides=(1, 1),
     # Raises
         ValueError: if `dim_ordering` is neither `tf` or `th`.
     """
+    
     if dim_ordering == 'default':
         dim_ordering = K.image_dim_ordering()
     if dim_ordering not in {'th', 'tf'}:
@@ -85,36 +86,58 @@ def deconv2d(x, kernel, output_shape, strides=(1, 1),
     strides = (1,) + strides + (1,)
 
     # Get output shape
-    shape_b = tf.shape(x)[0]
-    shape_h = output_shape[1]
-    shape_w = output_shape[2]
-    shape_c = output_shape[3]
-
+    if dim_ordering == 'th':
+      shape_b = tf.shape(x)[0]
+      shape_h = output_shape[2]
+      shape_w = output_shape[3]
+      shape_c = output_shape[1]
+    else:
+      shape_b = tf.shape(x)[0]
+      shape_h = output_shape[1]
+      shape_w = output_shape[2]
+      shape_c = output_shape[3]
+    
     # print('Output Shape: ' + str(output_shape))
     # print('Input Shape: ' + str(x.get_shape()))
 
     # Compute output height if none
     if shape_h is None:
-        shape_h = conv_input_length(tf.shape(x)[1], filter_shape[0],
-                                    border_mode, strides[1])
-
+        if dim_ordering == 'th':
+          shape_h = conv_input_length(tf.shape(x)[2], filter_shape[0],
+                                      border_mode, strides[1])
+        else:
+          shape_h = conv_input_length(tf.shape(x)[1], filter_shape[0],
+                                      border_mode, strides[1])
+        
     # Compute output width if none
     if shape_w is None:
-        shape_w = conv_input_length(tf.shape(x)[2], filter_shape[1],
-                                    border_mode, strides[2])
-
+        if dim_ordering == 'th':
+          shape_w = conv_input_length(tf.shape(x)[3], filter_shape[1],
+                                      border_mode, strides[2])
+        else:
+          shape_w = conv_input_length(tf.shape(x)[2], filter_shape[1],
+                                      border_mode, strides[2])
+        
     # Compose output shape without nones
     try:
         # Uses tf.pack, previous to tensorflow 1.0.0
-        output_shape = tf.pack([shape_b, shape_h, shape_w, shape_c])
+        if dim_ordering == 'th':
+          output_shape = tf.pack([shape_b, shape_c, shape_h, shape_w])
+        else:
+          output_shape = tf.pack([shape_b, shape_h, shape_w, shape_c])
     except AttributeError:
         # Uses tf.stack in favor of tf.pack, which is deprecated from tensorflow v1.0.0 onwards
-        output_shape = tf.stack([shape_b, shape_h, shape_w, shape_c])
-
+        if dim_ordering == 'th':
+          output_shape = tf.stack([shape_b, shape_c, shape_h, shape_w])
+        else:
+          output_shape = tf.stack([shape_b, shape_h, shape_w, shape_c])
     output_shape = _preprocess_deconv_output_shape(x, output_shape,
                                                    dim_ordering)
     kernel = _preprocess_conv2d_kernel(kernel, dim_ordering)
-    kernel = tf.transpose(kernel, (0, 1, 3, 2))
+    if dim_ordering == 'th':
+      kernel = tf.transpose(kernel, (0, 1, 2, 3))
+    else:
+      kernel = tf.transpose(kernel, (0, 1, 3, 2))
     padding = _preprocess_border_mode(border_mode)
 
     x = tf.nn.conv2d_transpose(x, kernel, output_shape, strides,

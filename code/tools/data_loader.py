@@ -1057,7 +1057,7 @@ class DirectoryIterator(Iterator):
                 '''priors = pickle.load(open('prior_boxes_ssd300.pkl', 'rb'))
                 bbox_util = BBoxUtility(self.nb_class, priors)'''
                 batch_y = self.bbox_util.ssd_build_gt_batch(batch_y)
-            elif  self.model_name == 'yolo' or self.model_name == 'tiny-yolo':
+            elif  self.model_name == 'yolo' or self.model_name == 'tiny-yolo' or self.model_name == 'yolt':
                 # TODO detection: check model, other networks may expect a different batch_y format and shape
                 # YOLOLoss expects a particular batch_y format and shape
                 batch_y = yolo_build_gt_batch(batch_y, self.image_shape, self.nb_class)

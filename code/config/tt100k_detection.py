@@ -1,6 +1,6 @@
 # Dataset
 problem_type                 = 'detection'     # ['classification' | 'detection' | 'segmentation']
-dataset_name                 = 'TT100K_detection' # Dataset name
+dataset_name                 = 'Udacity' # Dataset name
 dataset_name2                = None            # Second dataset name. None if not Domain Adaptation
 perc_mb2                     = None            # Percentage of data from the second dataset in each minibatch
 
@@ -8,14 +8,14 @@ perc_mb2                     = None            # Percentage of data from the sec
 model_name                   = 'yolo'          # Model to use: one of 'yolo' or 'tiny-yolo'
 freeze_layers_from           = None            # Freeze layers from 0 to this layer during training (Useful for finetunning) [None | 'base_model' | Layer_id]
 show_model                   = False           # Show the architecture layers
-load_imageNet                = True            # Load Imagenet weights and normalize following imagenet procedure
-load_pretrained              = False           # Load a pretrained model for doing finetuning
+load_imageNet                = False            # Load Imagenet weights and normalize following imagenet procedure
+load_pretrained              = True           # Load a pretrained model for doing finetuning
 weights_file                 = 'weights.hdf5'  # Training weight file name
 
 # Parameters
-train_model                  = True            # Train the model
-test_model                   = True            # Test the model
-pred_model                   = False            # Predict using the model
+train_model                  = False            # Train the model
+test_model                   = False            # Test the model
+pred_model                   = True            # Predict using the model
 
 # Debug
 debug                        = True           # Use only few images for debuging
