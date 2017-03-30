@@ -17,7 +17,6 @@ The goal of this project is to study the use of deep learning to semantically se
   - Axel Barroso (axel.barroso@e-campus.uab.cat)
   - Hassan Ahmed
   
-## Week reviews
 <h2 id="WSum">Weekly summary</h2>
 
 <p><a href="#Week 2">Week 2: Object Recognition</a></p>
@@ -254,6 +253,17 @@ The final output for each image input of 300x300, consist in a detection with 87
 - Fixed the prediction functionality in configuration, now it works with detection models, YOLO, tiny-YOLO and SSD, the prediction is showed in the image set in a folder inside the experiment.
 - Added and adapted all the utilities function of SSD to be useful in the framework.
 
+## Problems found
+
+During the realization of this week 3 and 4, we had problems that make us waste a lot of time finding a solution and debugging the code, because is quite difficult to implement new networks and adapt to the Datasets and metrics.
+The YOLO model was provided ready to use, with metrics and loss functions, where the files involved were basically yolo.py and yolo_utils.py. But in order to add new metrics like F1-score or drawing the bounding boxes in an image output, it becomes difficult to implement because the code is not commented and you need to know properly the output of the network. In your case, we tried to implement F1-score using the metrics in yolo_utils.py but without success, we end using the script provided to test metrics.
+
+Other part that was difficult was the drawing bounding boxes in images functionality. To implement this part, we adapted the prediction functionality in the configuration file and when the type is “detection” we use this prediction and save the results with the bounding boxes drawn. First, we needed to implement a generator queuer that iterates the batches and allow us to use this data and make predictions with our model. A second step of this process is after predict a batch of data, we need to process this network output to a final output where we have a bounding box per class and it’s drawable in a image. Fortunately this function are given in the SSD and YOLO models, you only need to adapt the number of classes and the bounding boxes annotation from the ground truth. The adaptation of the ground truth is a critical step, because each model is ready to be used with a certain bounding box and class definition vector, so we need to adapt the ground truth if we want to evaluate properly the model and calculate the loss. Even it doesn’t sound complicate, the reality is that adapt properly the ground truth is troublesome because you need to ensure that all work fine and the adaptation it’s perfect if you want that you model learn. A final step in the drawing function is use the a threshold to select with bounding boxes confidence for each class you select and you need to use non-maximum suppression to unify the bounding boxes of the prediction and have a final bounding box to draw in a image. At test, the drawing function work fine with YOLO but we have problems with the sizes in the SSD model.
+
+In other hand, the SSD implementation was difficult, because you have the model in github ready to use in a form that don’t fit properly with the framework and you need to understand the code provided there and the ouw code to see where to integrate the models and all the functionalities that affects to this new model. For example, in data_loader.py where the GT is adapted to YOLO, you need to create a new adaptation to SSD, or our prediction implementation, now need to have into account the peculiarities of the output of the SSD. Also, prepare a ss_utils, with the loss function of this model, call it properly in the model_factory and so on.
+
+All this problems, practically solved are to reflect that we needed to work a lot with the framework and we modified and adapted the code to solve them.
+
 ## Task summary
 ##### Task (a): Run the provided code
 Use the preconfigured experiment file (tt100k_detection.py) to detect traffic signs with the YOLOv2 model.
@@ -281,23 +291,100 @@ In this way we want to solve the problem of missing detections for small objects
 
 
 ## Tests Realized
-##### TT100k_detection 10 epochs using YOLO
-In this experiment we use the basic configuration and see how it work from the start. First thing to notice is that the validation set works really bad, scoring a iou of 0.56 althouth this configuraction in test score 0.72, this happends with all the test done in TTK100_detection.
+
+The experiment realized uses a threshold of 0,6 for the confidence in each class and the optimizer adam with 1E-05 os learning rate.
+We used a new dataset called Udacity, that have 3 classes (pedestrians, cars and trucks) that it's already prepared like TT100K to do detection.
+
+### YOLO Experiments
+##### TT100k_detection 10 epochs using YOLO [[Weights](https://drive.google.com/open?id=0B_RS7KGCOO8RUkx4VldoTVJ4bmc)]
+In this experiment we use the basic configuration and see how it work from the start. First thing to notice is that the validation set works worst if we compare it with the results obtained in test: avg_recall 0.96 and avg_iou 0.727, scoring only a iou of 0.56, this happends with all the test done in TTK100_detection. Then we analized the cause of this difference looking the validation images and comparing with train, in general all the pictures selected in validation are really blurred being really challenger for the model, also there are few classes missed in the train and other minor differences, instead the test is alike train being normal to score this high results.
+
+![YOLO_e_10 plotttk](figures/TTK100_yolo_10.png?raw=true "YOLO 10 epoch")
+
+In the graphic we can see how the network learns fast, with few epochs also becasue the dataset is huge if we compare to other that we used.
+In train the recall basically reach the maximum and IOU and in test we achieve this result due to the similarity in the images.
+We can see below two samples of the output results, where they identified properly the traffic sign and the center, but still need to improve the adjustment of the bounding box.
+
+![YOLO sample 1](figures/YOLO_sample1.png?raw=true "YOLO sample 1")
+![YOLO sample 2](figures/YOLO_sample2.png?raw=true "YOLO sample 2")
 
 Other metric to compare with the nexts experiments are. fps: 19.81 and F1 score about 0.63.
-##### TT100k_detection 20 epochs using YOLO
+
+##### TT100k_detection 20 epochs using YOLO [[Weights](https://drive.google.com/open?id=0B_RS7KGCOO8Rajk4cmNac3JBaDA)]
 The next experiment was if 10 epochs was enough to get a good result, so we increase the number of epoch to 20. 
 Forggeting validation, this experiment score: 0.60 iou , 20.1 fps, 0.44 recall, and around 0.30 of f1. If we see the graphics we can see that needs more epoch to converge but the time need to do it makes impossible to test this theory.
 
-##### TT100k_detection 10 epochs using tiny-YOLO
-Other experiment using TT100k_detection was to use the tiny-YOLO and see who it perform. In test the scores was: 32.11 fps, 0.63 iou, 0.82 recall and 0.39 f1. This models is the faster and the lighter so it gains stability faster but it's also make very dificult to adapt to the problem so the measure of f1 is bad compare to the original experiment.
+![YOLO_e_20 plotttk](figures/TTK100_yolo_20.png?raw=true "YOLO 20 epoch")
 
-##### Udacity 40 epochs using YOLO
+##### TT100k_detection 10 epochs using tiny-YOLO [[Weights](https://drive.google.com/open?id=0B_RS7KGCOO8RaXJGX08zUGRwcmc)]
+Other experiment using TT100k_detection was to use the tiny-YOLO and see who it perform. In test the scores was: 32.11 fps, 0.63 iou, 0.82 recall and 0.39 f1. This models is the faster and the lighter so it gains stability faster but it's also make very dificult to adapt to the problem so the measure of f1 is bad compare to the original experiment.
+figures/TTK100_tiny_yolo.png
+
+![YOLO_tiny plotttk](figures/TTK100_tiny_yolo.png?raw=true "tiny-YOLO 10 epoch")
+
+The samples below shows the differences with the tiny YOLO respect to the YOLO, where we can see the bounding boxes aren't adapted yet in the same samples, with the same number of epochs, due the 
+
+![Tiny-YOLO sample 1](figures/TNYOLO_sample1.png?raw=true "Tiny-YOLO sample 1")
+![Tiny-YOLO sample 2](figures/TNYOLO_sample2.png?raw=true "Tiny-YOLO sample 2")
+
+##### Udacity 40 epochs using YOLO [[Weights](https://drive.google.com/open?id=0B_RS7KGCOO8RR2FlYUFIR3J2eFk)]
 The nexts experiments were using the Udacity dataset. As in the previous dataset we will take as a reference the YOLO model result.
 
-In test it score: 19.8 fps, 0.69 recall, 0.57 iou and around 0.36 of f1.
-##### Udacity 40 epochs using tiny-YOLO
+In test it score: 19.8 fps, 0.69 recall, 0.57 iou and around 0.36 of f1. The result obtained here, if we compare with the images below are rare, because the images shows in general a proper detection of bounding boxes in the images, but the scores are bad, so probably there are some errors in the metrics.
+
+![YOLO plot](figures/YOLOUgraphic40epochs.png?raw=true "YOLO Experiment")
+
+Image samples that show a quite good detection if we compare with the scores obtained.
+
+![YOLO sample 1](figures/YOLOU_sample1.png?raw=true "YOLO sample 1")
+![YOLO sample 2](figures/YOLOU_sample2.png?raw=true "YOLO sample 2")
+![YOLO sample 3](figures/YOLOU_sample3.png?raw=true "YOLO sample 3")
+
+##### Trying data augmentation Udacity 40 epochs YOLO
+Unfortunately, data augmentation don’t improve the results and even decrease slightly the results obtained, because the system is sensible to the bounding box ground truth, even if we modify it with the transformation on the image, we introduce problems, like bounding box at borders of the image with shifts, or if we try to rotate or warp the bounding box can be modified wrongly.
+
+![YOLO plot](figures/YOLOUgraphic40epochs.png?raw=true "YOLO Experiment")
+
+##### Udacity 40 epochs using tiny-YOLO [[Weights](https://drive.google.com/open?id=0B_RS7KGCOO8RVDZSMW5UWWU3MTQ)]
 In this new dataset we also train the tiny-YOLO. As in the previous set of experiments it scores the faster result with 31.31 fps but the other scores are worse. It gets a recall of 0.28, a iou of 0.4 and a f1 of 0.36.
+
+![tiny-YOLO plot](figures/TinyUGraphic.png?raw=true "tiny-YOLO Experiment")
+
+### SSD Experiments
+
+##### TT100k 20 epochs [[Weights](https://drive.google.com/open?id=0B6eUlGGeZ9wAa21VTVMzT0pGSEk)]
+
+In this test, SSD in TT100K scores a really good results, higher than YOLOv2. We think that the approach of SSD for this dataset is better, because the traffic sign are really small and the SSD generate more windows at differents resolutions, being more multi-scale than YOLO. Also in test the frame rate is really high, beating again YOLO in this aspect also.
+
+Avg Precission = 0.945439038396
+Avg Recall     = 0.788267481027
+Avg F-score    = 0.859728957481
+Average FPS: 98.67
+
+![SSD plot](figures/SSDTT100kgraphic.png?raw=true "SSD Experiment")
+
+Seems that there is some problems to our code when we try to plot the Bounding Boxes, because the results using the script are really good, but the image plotted detects signals but don't fit properly the bounding box around it. We can see the bounding boxes problems below.
+
+![SSD sample 1](figures/SSDTT_sample1.png?raw=true "SSD sample 1")
+![SSD sample 2](figures/SSDTT_sample2.png?raw=true "SSD sample 2")
+![SSD sample 3](figures/SSDTT_sample3.png?raw=true "SSD sample 3")
+
+##### Udacity 40 epochs [[Weights](https://drive.google.com/open?id=0B6eUlGGeZ9wAWkNlV2VCeEJEaW8)]
+
+Finally a last test with SSD on Udacity, where we obtain a really bad results, but a really high frame rate and the image samples, shows you what is happening. Seems that the dataset is bad balanced with the class truck and generates a lot of false positives in the images, dropping a lot the final scores.
+
+Avg Precission = 0.662301095447
+Avg Recall     = 0.295350784279
+Avg F-score    = 0.408522453953
+Average FPS: 111.89
+
+![SSD plot](figures/SSDUdaciGraph.png?raw=true "SSD Experiment")
+
+Image samples
+
+![SSD sample 1](figures/SSDU_sample1.png?raw=true "SSD sample 1")
+![SSD sample 2](figures/SSDU_sample2.png?raw=true "SSD sample 2")
+
 
 <p align="right"><a href="#WSum">Back to summary</a></p>
   
