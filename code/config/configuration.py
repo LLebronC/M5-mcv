@@ -10,7 +10,8 @@ import pickle
 class Configuration():
     def __init__(self, config_path, exp_name,
                        dataset_path, shared_dataset_path,
-                       experiments_path, shared_experiments_path):
+                       experiments_path, shared_experiments_path,
+                       usr_path):
 
         self.config_path = config_path
         self.exp_name = exp_name
@@ -18,6 +19,7 @@ class Configuration():
         self.shared_dataset_path = shared_dataset_path
         self.experiments_path = experiments_path
         self.shared_experiments_path = shared_experiments_path
+        self.usr_path = usr_path
 
     def load(self):
         config_path = self.config_path
@@ -43,6 +45,7 @@ class Configuration():
         print 'cf.savepath', cf.savepath
         if not os.path.exists(cf.savepath):
             os.makedirs(cf.savepath)
+        cf.usr_path = self.usr_path
 
         # Copy config file
         shutil.copyfile(config_path, os.path.join(cf.savepath, "config.py"))
