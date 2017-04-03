@@ -5,7 +5,7 @@ dataset_name2                = None            # Second dataset name. None if no
 perc_mb2                     = None            # Percentage of data from the second dataset in each minibatch
 
 # Model
-model_name                   = 'fcn8'          # Model to use ['fcn8' | 'lenet' | 'alexNet' | 'vgg16' |  'vgg19' | 'resnet50' | 'InceptionV3']
+model_name                   = 'resnetFCN'          # Model to use ['fcn8' | 'lenet' | 'alexNet' | 'vgg16' |  'vgg19' | 'resnet50' | 'InceptionV3']
 freeze_layers_from           = None            # Freeze layers from 0 to this layer during training (Useful for finetunning) [None | 'base_model' | Layer_id]
 show_model                   = False           # Show the architecture layers
 load_imageNet                = False           # Load Imagenet weights and normalize following imagenet procedure
@@ -44,10 +44,10 @@ seed_valid                   = 1924            # Random seed for the validation 
 seed_test                    = 1924            # Random seed for the testing shuffle
 
 # Training parameters
-optimizer                    = 'rmsprop'       # Optimizer
+optimizer                    = 'adam'       # Optimizer
 learning_rate                = 0.0001          # Training learning rate
 weight_decay                 = 0.              # Weight decay or L2 parameter norm penalty
-n_epochs                     = 1000            # Number of epochs during training
+n_epochs                     = 100            # Number of epochs during training
 
 # Callback save results
 save_results_enabled         = False           # Enable the Callback
@@ -58,7 +58,7 @@ save_results_batch_size      = 5               # Size of the batch
 earlyStopping_enabled        = True            # Enable the Callback
 earlyStopping_monitor        = 'val_jaccard'   # Metric to monitor
 earlyStopping_mode           = 'max'           # Mode ['max' | 'min']
-earlyStopping_patience       = 100             # Max patience for the early stopping
+earlyStopping_patience       = 10             # Max patience for the early stopping
 earlyStopping_verbose        = 0               # Verbosity of the early stopping
 
 # Callback model check point

@@ -14,8 +14,8 @@ from keras.layers import Reshape
 from keras.layers import ZeroPadding2D
 from keras.models import Model
 
-from ssd_layers import Normalize
-from ssd_layers import PriorBox
+from layers.ssd_layers import Normalize
+from layers.ssd_layers import PriorBox
 
 
 def Build_SSD(img_shape=(300,300,3), n_classes=80,

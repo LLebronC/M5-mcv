@@ -20,9 +20,9 @@ from models.yolo import build_yolo
 
 # Segmentation models
 from models.fcn8 import build_fcn8
-#from models.unet import build_unet
-#from models.segnet import build_segnet
-#from models.resnetFCN import build_resnetFCN
+from models.unet import build_unet
+from models.segnet import build_segnet
+from models.resnetFCN import build_resnetFCN
 #from models.densenetFCN import build_densenetFCN
 
 # Adversarial models
@@ -88,7 +88,7 @@ class Model_Factory():
     # Creates a Model object (not a Keras model)
     def make(self, cf, optimizer=None):
         if cf.model_name in ['lenet', 'alexNet', 'vgg16', 'vgg19', 'resnet50',
-                             'InceptionV3', 'fcn8', 'unet', 'segnet',
+                             'InceptionV3', 'fcn8', 'unet', 'segnet', 'segnet_vgg',
                              'segnet_basic', 'resnetFCN', 'yolo', 'resnet50Keras', 'ssd',
                              'resnet18','resnet34','resnet50','resnet101','resnet152', 'densenet','tiny-yolo', 'yolt']:
             if optimizer is None:

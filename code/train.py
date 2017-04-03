@@ -16,14 +16,17 @@ from models.model_factory import Model_Factory
 
 
 # Train the network
-def process(cf):
+def process(configuration):
+    # Load configuration
+    cf = configuration.load()
+
     # Enable log file
     sys.stdout = Logger(cf.log_file)
     print (' ---> Init experiment: ' + cf.exp_name + ' <---')
 
     # Create the data generators
     train_gen, valid_gen, test_gen = Dataset_Generators().make(cf)
-    
+
     # Create the optimizer
     print ('\n > Creating optimizer...')
     optimizer = Optimizer_Factory().make(cf)
@@ -36,21 +39,31 @@ def process(cf):
     print ('\n > Creating callbacks...')
     cb = Callbacks_Factory().make(cf, valid_gen)
 
-    if cf.train_model:
-        # Train the model
-        model.train(train_gen, valid_gen, cb)
+    try:
+        if cf.train_model:
+            # Train the model
+            model.train(train_gen, valid_gen, cb)
 
-    if cf.test_model:
-        # Compute validation metrics
-        model.test(valid_gen)
-        # Compute test metrics
-        model.test(test_gen)
+        if cf.test_model:
+            # Compute validation metrics
+            model.test(valid_gen)
+            # Compute test metrics
+            model.test(test_gen)
 
-    if cf.pred_model:
-        # Compute validation metrics
-        model.predict(valid_gen, tag='pred')
-        # Compute test metrics
-        model.predict(test_gen, tag='pred')
+        if cf.pred_model:
+            # Compute validation metrics
+            model.predict(valid_gen, tag='pred')
+            # Compute test metrics
+            model.predict(test_gen, tag='pred')
+
+    except KeyboardInterrupt:
+        # In case of early stopping, transfer the local files
+        do_copy = raw_input('\033[93m KeyboardInterrupt \nDo you want to transfer files to {} ? ([y]/n) \033[0m'
+                            .format(cf.final_savepath))
+        if do_copy in ['', 'y']:
+            # Copy result to shared directory
+            configuration.copy_to_shared()
+        raise
 
     # Finish
     print (' ---> Finish experiment: ' + cf.exp_name + ' <---')
@@ -83,9 +96,9 @@ def main():
     parser.add_argument('-e', '--exp_name', type=str,
                         default=None, help='Name of the experiment')
     parser.add_argument('-s', '--shared_path', type=str,
-                        default='/home/master/master', help='Name of the experiment')
+                        default='/data', help='Shared path')
     parser.add_argument('-l', '--local_path', type=str,
-                        default='/home/master/master', help='Name of the experiment')
+                        default='/datatmp', help='Local path')
 
     arguments = parser.parse_args()
 
@@ -110,10 +123,9 @@ def main():
                                   dataset_path, shared_dataset_path,
                                   experiments_path, shared_experiments_path,
                                   usr_path)
-    cf = configuration.load()
 
     # Train /test/predict with the network, depending on the configuration
-    process(cf)
+    process(configuration)
 
     # Copy result to shared directory
     configuration.copy_to_shared()
