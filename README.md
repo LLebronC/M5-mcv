@@ -391,9 +391,33 @@ Image samples
 
 ## abstract
 
+## Task summary
+Task (a): Run the provided code and use the preconfigured experiment file (camvid_segmentation.py) to segment objects with the FCN8 model.
+- Analyze the dataset.
+- Evaluate on train, val and test sets.
+Task (b): Read two papers
+- Fully convolutional networks for semantic segmentation (Long et al. CVPR, 2015)
+- Another paper of free choice.
+Task (c): Train the network on a different dataset
+- Set-up a new experiment file to image semantic segmentation on another dataset (Cityscapes, KITTI, Synthia, ...)
+- Use the FCN8 model as before.
+Task (d): Implement a new network
+- Select one network from the state of the art (SegnetVGG, DeepLab, ResnetFCN, ...).
+- Integrate the new model into the framework.
+- Evaluate the new model on CamVid. Train from scratch and/or fine-tune.
+Task (e): Boost the performance of your network
+- meta-parameters tuning
+- data augmentation
+
+## Models
+
+## Code changes and additions
+
+## Hints 
+
 ## Datasets
 
-### Camvid [http://mi.eng.cam.ac.uk/research/projects/VideoRec/CamVid/]
+### [CamVid](http://mi.eng.cam.ac.uk/research/projects/VideoRec/CamVid/)
 
 The CamVid dataset is a sequence inside an urban scenario composed by 368, 102 and 234 images for train, validation and test respectively. The image size is 480x360 and is composed by 11 classes:
         0: 'sky',
@@ -407,9 +431,13 @@ The CamVid dataset is a sequence inside an urban scenario composed by 368, 102 a
         8: 'car',
         9: 'pedestrian',
         10: 'bicyclist',
-        11: 'void' 
+        11: 'void'
+        
+#### Analysing CamVid Dataset
 
-### Cityscapes [https://www.cityscapes-dataset.com/]
+We analyze the dataset as a part of the task a) to explain the composition of the train, validation and test images and the possible reason to the scores obtained in the experiments. We can see how the train images contain basically two sequences, one with a cloudy day that changes the illumination conditions in the image and another one with a sunny day, the train sequences aren’t correlative, have jumps and it’s more like a random image selection. The validation instead, it’s a pure sequence frame by frame with a sunny day. Finally the test it’s like the train, random image from sequences, one with a cloudy day and another sunny. In the experiments we saw a huge difference between train, validation and test. The validation is a bad sample to simulate the test, because is a sequence with the same illuminance conditions, even if the model scores well in the validation, when you try the test dataset the scores drops. So basically this dataset have a problem, needs more train data and a random sampling for the validation part.
+
+### [Cityscapes](https://www.cityscapes-dataset.com/)
 
 the Cityscapes dataset is a high resolution sequence of an urban environment composed by 2975, 500 and 1525 images for train, validation and test respectively. The image size is 2048x1024 and is composed by 20 classes:
 0: 'road', #7
@@ -433,7 +461,7 @@ the Cityscapes dataset is a high resolution sequence of an urban environment com
         18: 'bicycle', #33
         19: 'void' #34
 
-### Synthia rand cityscapes [http://synthia-dataset.net/]
+### [Synthia rand cityscapes](http://synthia-dataset.net/)
 
 This Dataset is provided from the virtual environment Synthia, consisting of a random sequences with a lot of elements in the image. The dataset consist in 7521, 471 and 941 images for train, validation and test respectively. The image size is 1280x760 and is composed by 20 classes:
 0:  'road',
