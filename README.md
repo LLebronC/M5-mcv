@@ -697,6 +697,46 @@ The graphs shows how the model generalize better and the score for validation im
 
 ![resnetFCNsample2](figures/resnetFCNsample2.png?raw=true "resnetFCNsample2")
 
+### synthia rand cityscapes
+
+We perform a single test using Fcn8 to check this dataset, because is virtual and it should be easy to obtain good scores. As always, we follow the routine of the first experiments using a resize for the input, being the original 1280x760 and reduce it to 480x360.
+
+![synthiaFcn8 plot](figures/synthiaFcn8.png?raw=true "synthiaFcn8 Experiment")
+
+we can see how without much effort or epochs, with the Fcn8 reach 0.7 in validation jaccard, that is quite better than the scores obtained in the others datasets with a try like this. Also we can see how close are the results between test and validation, because a virtual environment lacks of variability in texture and illumination components that we can find in real world, making more easy to train a model. The results on test are the next:
+
+    acc: 0.946268825155
+    loss: 0.151556634354
+    0 (     road      ): Jacc:  93.63
+    1 (   sidewalk    ): Jacc:  92.15
+    2 (   building    ): Jacc:  94.50
+    3 (     wall      ): Jacc:  74.96
+    4 (     fence     ): Jacc:  67.47
+    5 (     pole      ): Jacc:  54.87
+    6 ( traffic light ): Jacc:  49.58
+    7 ( traffic sign  ): Jacc:  37.81
+    8 (  vegetation   ): Jacc:  82.55
+    9 (    terrain    ): Jacc:    nan
+   10 (      sky      ): Jacc:  96.12
+   11 (    person     ): Jacc:  70.15
+   12 (     rider     ): Jacc:  51.80
+   13 (      car      ): Jacc:  87.29
+   14 (     truck     ): Jacc:    nan
+   15 (      bus      ): Jacc:  88.62
+   16 (     train     ): Jacc:    nan
+   17 (  motorcycle   ): Jacc:  59.30
+   18 (    bicycle    ): Jacc:  28.38
+   Jaccard mean: 0.70573321248
+
+We can see that they are really close to the ones obtained in validation, there are some classes missed also, that probably don’t appear in the test images.
+
+##### Visualization samples
+
+Finally a visualization of the results for this dataset is showed in this section. We show in the first image the result in epoch 1, another in epoch 10 and the last one in epoch 30.
+
+![fcn8synthiaSample1](figures/fcn8synthiaSample1.png?raw=true "fcn8synthiaSample1 Experiment")
+![fcn8synthiaSample2](figures/fcn8synthiaSample2.png?raw=true "fcn8synthiaSample2 Experiment")
+![fcn8synthiaSample3](figures/synthiaFcn8.png?raw=true "fcn8synthiaSample3 Experiment")
 
 <p align="right"><a href="#WSum">Back to summary</a></p>
 
