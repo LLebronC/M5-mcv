@@ -420,18 +420,18 @@ Image samples
 ### [CamVid](http://mi.eng.cam.ac.uk/research/projects/VideoRec/CamVid/)
 
 The CamVid dataset is a sequence inside an urban scenario composed by 368, 102 and 234 images for train, validation and test respectively. The image size is 480x360 and is composed by 11 classes:
-        0: 'sky',
-        1: 'building',
-        2: 'column_pole',
-        3: 'road',
-        4: 'sidewalk',
-        5: 'tree',
-        6: 'sign',
-        7: 'fence',
-        8: 'car',
-        9: 'pedestrian',
-        10: 'bicyclist',
-        11: 'void'
+- 0: 'sky',
+- 1: 'building',
+- 2: 'column_pole',
+- 3: 'road',
+- 4: 'sidewalk',
+- 5: 'tree',
+- 6: 'sign',
+- 7: 'fence',
+- 8: 'car',
+- 9: 'pedestrian',
+- 10: 'bicyclist',
+- 11: 'void'
         
 #### Analysing CamVid Dataset
 
@@ -440,50 +440,50 @@ We analyze the dataset as a part of the task a) to explain the composition of th
 ### [Cityscapes](https://www.cityscapes-dataset.com/)
 
 the Cityscapes dataset is a high resolution sequence of an urban environment composed by 2975, 500 and 1525 images for train, validation and test respectively. The image size is 2048x1024 and is composed by 20 classes:
-0: 'road', #7
-        1: 'sidewalk', #8
-        2: 'building', #11
-        3: 'wall', #12
-        4: 'fence', #13
-        5: 'pole', #17
-        6: 'traffic light', #19
-        7: 'traffic sign', #20
-        8: 'vegetation', #21
-        9: 'terrain', #22
-        10: 'sky', #23
-        11: 'person', #24
-        12: 'rider', #25
-        13: 'car', #26
-        14: 'truck', #27
-        15: 'bus', #28
-        16: 'train', #31
-        17: 'motorcycle', #32
-        18: 'bicycle', #33
-        19: 'void' #34
+- 0: 'road', #7
+- 1: 'sidewalk', #8
+- 2: 'building', #11
+- 3: 'wall', #12
+- 4: 'fence', #13
+- 5: 'pole', #17
+- 6: 'traffic light', #19
+- 7: 'traffic sign', #20
+- 8: 'vegetation', #21
+- 9: 'terrain', #22
+- 10: 'sky', #23
+- 11: 'person', #24
+- 12: 'rider', #25
+- 13: 'car', #26
+- 14: 'truck', #27
+- 15: 'bus', #28
+- 16: 'train', #31
+- 17: 'motorcycle', #32
+- 18: 'bicycle', #33
+- 19: 'void' #34
 
 ### [Synthia rand cityscapes](http://synthia-dataset.net/)
 
 This Dataset is provided from the virtual environment Synthia, consisting of a random sequences with a lot of elements in the image. The dataset consist in 7521, 471 and 941 images for train, validation and test respectively. The image size is 1280x760 and is composed by 20 classes:
-0:  'road',
-        1:  'sidewalk',
-        2:  'building',
-        3:  'wall',
-        4:  'fence',
-        5:  'pole',
-        6:  'traffic light',
-        7:  'traffic sign',
-        8:  'vegetation',
-        9:  'terrain',
-        10: 'sky',
-        11: 'person',
-        12: 'rider',
-        13: 'car',
-        14: 'truck',
-        15: 'bus',
-        16: 'train',
-        17: 'motorcycle',
-        18: 'bicycle',
-        19: 'void'
+- 0:  'road',
+- 1:  'sidewalk',
+- 2:  'building',
+- 3:  'wall',
+- 4:  'fence',
+- 5:  'pole',
+- 6:  'traffic light',
+- 7:  'traffic sign',
+- 8:  'vegetation',
+- 9:  'terrain',
+- 10: 'sky',
+- 11: 'person',
+- 12: 'rider',
+- 13: 'car',
+- 14: 'truck',
+- 15: 'bus',
+- 16: 'train',
+- 17: 'motorcycle',
+- 18: 'bicycle',
+- 19: 'void'
 
 ## Metrics
 
