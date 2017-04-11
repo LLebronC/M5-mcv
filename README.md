@@ -556,6 +556,7 @@ Clearly lower than the fcn8 in all classes.
 
 #### ResnetFCN
 
+The ResnetFCN uses more parameters because is wider than the other models, we need to be careful with the batch size reducing it between 2 and 4, depending of the input sizes.
 A first test similar to the previous models, using pretrained weights, 100 epochs, scheduler in poly mode.
 
 ![ResnetFCN plot](figures/resnetFCNCamvid.png?raw=true "ResnetFCN Experiment")
@@ -634,6 +635,50 @@ We have a function that print the results of the segmentation in each epoch, tak
 ![Epoch 300](figures/resnetFCNEpoch0_sample4.png?raw=true "Epoch 300 ResnetFCN")
 
 We can see how the model at the beginning is a mess, but in the epoch 50 have a close result and the next epochs shows how this result is refined adjusting better to small objects.
+
+### Cityscapes
+
+We experiment with the Cityscapes dataset, using the Fcn8 and ResnetFCN. How they didn’t provide ground truth for the test dataset, we only have the score obtained for validation. But this dataset have more images for train and the validation in more appropriate for evaluate the model than the CamVid used.
+
+#### Fcn8
+
+We tried a simple test with Fcn8, like the one with CamVid, but rescaling the images that are really high to 512x256, using the same configuration, no data augmentation and weight pretrained the scores obtained are the next ones.
+
+![Fcn8 plot](figures/fcn8Cityscapes.png?raw=true "Fcn8 Experiment")
+
+We can see that the model learns, the accuracy grows easily for the train data and also the jaccard grows sufficient, but in validation we can see a huge gap, where the model is not generalizing well. Basically because we don’t use data augmentation and the data to train is reduced in a quarter the original size, losing a lot of information that can be relevant.
+
+##### Visualization samples
+
+![fcn8CityscpSamples1](figures/fcn8CityscpSamples1.png?raw=true "fcn8CityscpSamples1")
+![fcn8CityscpSamples2](figures/fcn8CityscpSamples2.png?raw=true "fcn8CityscpSamples2")
+![fcn8CityscpSamples3](figures/fcn8CityscpSamples3.png?raw=true "fcn8CityscpSamples3")
+
+Some results obtained during the train of the Fcn8. first sample for the first epochs, next after 10 and the last one around the 40th epoch.
+
+
+#### ResnetFCN
+
+We tried two configurations in ResnetFCN, one like the first experiments without nothing special and maintaining the resize of 512x256 to compare with the Fcn8. The results are the next.
+
+![ResnetFCN plot](figures/resnetFcnCityscapes.png?raw=true "ResnetFCN Experiment")
+
+The main difference with the Fcn8 model is that this model overfit too much and from the epoch 20 and above starts to increase the validation error, clear sign of overfitting, because the train still learning and the jaccard reach high scores.
+
+Another test is performed, this time using a resize to a half of the original image 1024x512 and we perform crops in the train of 512x512, we need to reduce the batch size to 2, if we want to fit in memory the train process. Using data augmentation and preprocessing the input like the best result obtained for CamVid, we obtain the next results in two consecutives runs.
+
+![ResnetFCN plot](figures/resnetFCNCityescapes2.png?raw=true "ResnetFCN Experiment")
+
+![ResnetFCN plot](figures/resnetFCNCityescapes2.png?raw=true "ResnetFCN Experiment")
+
+The graphs shows how the model generalize better and the score for validation improves a lot, when we use data augmentation and a proper input processing with sizes and crops. The model have margin to learn and improve, but the epochs are really time consuming.
+
+##### Visualization samples
+
+![resnetFCNsample1](figures/resnetFCNsample1.png?raw=true "resnetFCNsample1")
+
+![resnetFCNsample2](figures/resnetFCNsample2.png?raw=true "resnetFCNsample2")
+
 
 <p align="right"><a href="#WSum">Back to summary</a></p>
 
