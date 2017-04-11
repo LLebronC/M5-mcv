@@ -517,7 +517,7 @@ In this section we analyze the different experiments performed in each dataset u
 
 We tested in this tiny dataset our differents models implemented Fcn8, segnet and ResnetFCN.With the ResnetFCN we tried some hyperparameters optimization to improve the results.
 
-#### Fcn8
+#### Fcn8 [[weights best result](https://drive.google.com/open?id=0B6eUlGGeZ9wARVNVTEQ4TXE2cDg)]
 
 A first default test using the Fcn8, with pretrained weights, 100 epochs, the scheduler active in poly mode and no more options.
 
@@ -526,7 +526,7 @@ A first default test using the Fcn8, with pretrained weights, 100 epochs, the sc
 This first attempt shows how the model learns fast and the accuracy grows in few epochs easily, the jaccard metric is difficult to increase due the high threshold because we want the overlap between the ground truth really similar. We score a 0.64 in the mean validation jaccard metric and the early stopping finished the experiment around the epoch 50.
 The test results are the next:
 
-acc: 0.879246986697
+      acc: 0.879246986697
       loss: 0.463525073028
     0 (      sky      ): Jacc:  90.02
     1 (   building    ): Jacc:  78.43
@@ -543,7 +543,7 @@ acc: 0.879246986697
 
 The final Jaccard mean in test is lower than the validation, this can be explained due the low number of train images, are insufficient to learn properly all the element to segment in the image. This problem is reflected with the classes with low jaccard score like poles, signs, fences, pedestrian and cyclists, because there are small elements in the image, more difficult to learn and where you need more data to learn properly them. Nevertheless, the extensive classes like road, sky, building, etc. They score high jaccard values because there are presents in all the images and are more easy to learn for the model.
 
-#### Segnet
+#### Segnet [[weights best result](https://drive.google.com/open?id=0B6eUlGGeZ9wAa1RHZnN6XzZhT0E)]
 
 For the segnet model we don’t have pretrained weight, so we tried to perform some hyperparameter optimization to improve the final scores. We made a first step using 200 epochs, scheduler in linear mode.
 
@@ -573,7 +573,7 @@ the test results are the next:
 
 Clearly lower than the fcn8 in all classes.
 
-#### ResnetFCN
+#### ResnetFCN [[weights best result](https://drive.google.com/open?id=0B6eUlGGeZ9wAZW82TE9CRFhIZ3c)]
 
 The ResnetFCN uses more parameters because is wider than the other models, we need to be careful with the batch size reducing it between 2 and 4, depending of the input sizes.
 A first test similar to the previous models, using pretrained weights, 100 epochs, scheduler in poly mode.
@@ -659,7 +659,7 @@ We can see how the model at the beginning is a mess, but in the epoch 50 have a 
 
 We experiment with the Cityscapes dataset, using the Fcn8 and ResnetFCN. How they didn’t provide ground truth for the test dataset, we only have the score obtained for validation. But this dataset have more images for train and the validation in more appropriate for evaluate the model than the CamVid used.
 
-#### Fcn8
+#### Fcn8 [[weights best result](https://drive.google.com/open?id=0B6eUlGGeZ9wAbVZEZHpFQV9RTVU)]
 
 We tried a simple test with Fcn8, like the one with CamVid, but rescaling the images that are really high to 512x256, using the same configuration, no data augmentation and weight pretrained the scores obtained are the next ones.
 
@@ -676,7 +676,7 @@ We can see that the model learns, the accuracy grows easily for the train data a
 Some results obtained during the train of the Fcn8. first sample for the first epochs, next after 10 and the last one around the 40th epoch.
 
 
-#### ResnetFCN
+#### ResnetFCN [[weights best result](https://drive.google.com/open?id=0B6eUlGGeZ9wAamI4MTJKZUQ0U2M)]
 
 We tried two configurations in ResnetFCN, one like the first experiments without nothing special and maintaining the resize of 512x256 to compare with the Fcn8. The results are the next.
 
@@ -698,7 +698,7 @@ The graphs shows how the model generalize better and the score for validation im
 
 ![resnetFCNsample2](figures/resnetFCNsample2.png?raw=true "resnetFCNsample2")
 
-### Synthia Rand Cityscapes
+### Synthia Rand Cityscapes [[weights best result](https://drive.google.com/open?id=0B6eUlGGeZ9wAZXZVRnlBYjVqZUk)]
 
 We perform a single test using Fcn8 to check this dataset, because is virtual and it should be easy to obtain good scores. As always, we follow the routine of the first experiments using a resize for the input, being the original 1280x760 and reduce it to 480x360.
 
