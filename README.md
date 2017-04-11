@@ -21,6 +21,7 @@ The goal of this project is to study the use of deep learning to semantically se
 
 <p><a href="#Week 2">Week 2: Object Recognition</a></p>
 <p><a href="#Week 4">Week 4: Object Detection</a></p>
+<p><a href="#Week 6">Week 6: Object Segmentation</a></p>
 
 <h1 id="Week 2">Week 2: Object Recognition</h1>
 
@@ -385,7 +386,214 @@ Image samples
 
 
 <p align="right"><a href="#WSum">Back to summary</a></p>
-  
+
+<h1 id="Week 6">Week 6: Object Segmentation</h1>
+
+## abstract
+
+## Datasets
+
+### Camvid [http://mi.eng.cam.ac.uk/research/projects/VideoRec/CamVid/]
+
+The CamVid dataset is a sequence inside an urban scenario composed by 368, 102 and 234 images for train, validation and test respectively. The image size is 480x360 and is composed by 11 classes:
+        0: 'sky',
+        1: 'building',
+        2: 'column_pole',
+        3: 'road',
+        4: 'sidewalk',
+        5: 'tree',
+        6: 'sign',
+        7: 'fence',
+        8: 'car',
+        9: 'pedestrian',
+        10: 'bicyclist',
+        11: 'void' 
+
+### Cityscapes [https://www.cityscapes-dataset.com/]
+
+the Cityscapes dataset is a high resolution sequence of an urban environment composed by 2975, 500 and 1525 images for train, validation and test respectively. The image size is 2048x1024 and is composed by 20 classes:
+0: 'road', #7
+        1: 'sidewalk', #8
+        2: 'building', #11
+        3: 'wall', #12
+        4: 'fence', #13
+        5: 'pole', #17
+        6: 'traffic light', #19
+        7: 'traffic sign', #20
+        8: 'vegetation', #21
+        9: 'terrain', #22
+        10: 'sky', #23
+        11: 'person', #24
+        12: 'rider', #25
+        13: 'car', #26
+        14: 'truck', #27
+        15: 'bus', #28
+        16: 'train', #31
+        17: 'motorcycle', #32
+        18: 'bicycle', #33
+        19: 'void' #34
+
+### Synthia rand cityscapes [http://synthia-dataset.net/]
+
+This Dataset is provided from the virtual environment Synthia, consisting of a random sequences with a lot of elements in the image. The dataset consist in 7521, 471 and 941 images for train, validation and test respectively. The image size is 1280x760 and is composed by 20 classes:
+0:  'road',
+        1:  'sidewalk',
+        2:  'building',
+        3:  'wall',
+        4:  'fence',
+        5:  'pole',
+        6:  'traffic light',
+        7:  'traffic sign',
+        8:  'vegetation',
+        9:  'terrain',
+        10: 'sky',
+        11: 'person',
+        12: 'rider',
+        13: 'car',
+        14: 'truck',
+        15: 'bus',
+        16: 'train',
+        17: 'motorcycle',
+        18: 'bicycle',
+        19: 'void'
+
+## Metrics
+
+accuracy - Evaluating pixel by pixel of the pixel class predicted versus the pixel clas from the ground truth.
+jaccard - intersection over union between all the pixel from a class of the predicted model versus the ground truth.
+
+## Experiments
+
+In this section we analyze the different experiments performed in each dataset using our models implemented. All the experiments use adam optimizer with a learning rate of 0,0001.
+
+### CamVid
+
+We tested in this tiny dataset our differents models implemented Fcn8, segnet and ResnetFCN.With the ResnetFCN we tried some hyperparameters optimization to improve the results.
+
+#### Fcn8
+
+A first default test using the Fcn8, with pretrained weights, 100 epochs, the scheduler active in poly mode and no more options.
+
+![Fcn8 plot](figures/fcn8Camvid.png?raw=true "Fcn8 Experiment")
+
+This first attempt shows how the model learns fast and the accuracy grows in few epochs easily, the jaccard metric is difficult to increase due the high threshold because we want the overlap between the ground truth really similar. We score a 0.64 in the mean validation jaccard metric and the early stopping finished the experiment around the epoch 50.
+The test results are the next:
+
+acc: 0.879246986697
+      loss: 0.463525073028
+    0 (      sky      ): Jacc:  90.02
+    1 (   building    ): Jacc:  78.43
+    2 (  column_pole  ): Jacc:  13.89
+    3 (     road      ): Jacc:  89.42
+    4 (   sidewalk    ): Jacc:  67.27
+    5 (     tree      ): Jacc:  73.02
+    6 (     sign      ): Jacc:  30.88
+    7 (     fence     ): Jacc:  30.56
+    8 (      car      ): Jacc:  74.30
+    9 (  pedestrian   ): Jacc:  36.01
+       10 (   byciclist   ): Jacc:  37.86
+       Jaccard mean: 0.565144366976
+
+The final Jaccard mean in test is lower than the validation, this can be explained due the low number of train images, are insufficient to learn properly all the element to segment in the image. This problem is reflected with the classes with low jaccard score like poles, signs, fences, pedestrian and cyclists, because there are small elements in the image, more difficult to learn and where you need more data to learn properly them. Nevertheless, the extensive classes like road, sky, building, etc. They score high jaccard values because there are presents in all the images and are more easy to learn for the model.
+
+#### Segnet
+
+For the segnet model we don’t have pretrained weight, so we tried to perform some hyperparameter optimization to improve the final scores. We made a first step using 200 epochs, scheduler in linear mode.
+
+![segnet plot](figures/segnetCamvid1.png?raw=true "segnet Experiment")
+
+We can see how this model uses all the epochs to improve, may be because we don’t have pretrained weights it’s more difficult to learn if we compare with the previously fcn8 experiment. Also we can see the learning phase is quite irregular between epochs, more noticeable in validation with a lot of spikes, ending with a validation jaccard of 0.6, a bit less than fcn8.
+With another step using data augmentation, only zooms and horizontal flips we can increase the score slightly:
+
+![segnet plot](figures/segnetCamvid2.png?raw=true "segnet Experiment")
+
+In 100 epochs more we increase the validation accuracy to near 0.64. If we compare directly with the results obtained in fcn8, for this model we needed 8 times more epochs to reach the same validation metrics, but have more margin to improve, because the training scores are crealy lower than the fcn8 mode, but without a pretrained model becomes a more difficult.
+the test results are the next:
+      acc: 0.846697468041
+      loss: 0.481149245124
+    0 (      sky      ): Jacc:  87.76
+    1 (   building    ): Jacc:  71.66
+    2 (  column_pole  ): Jacc:  15.65
+    3 (     road      ): Jacc:  86.74
+    4 (   sidewalk    ): Jacc:  61.62
+    5 (     tree      ): Jacc:  65.76
+    6 (     sign      ): Jacc:  19.10
+    7 (     fence     ): Jacc:  18.52
+    8 (      car      ): Jacc:  63.85
+    9 (  pedestrian   ): Jacc:  30.65
+       10 (   byciclist   ): Jacc:  31.96
+       Jaccard mean: 0.502967009151
+
+Clearly lower than the fcn8 in all classes.
+
+#### ResnetFCN
+
+A first test similar to the previous models, using pretrained weights, 100 epochs, scheduler in poly mode.
+
+![ResnetFCN plot](figures/resnetFCNCamvid.png?raw=true "ResnetFCN Experiment")
+
+We can compare the results directly with the Fcn8. This model learns fast, also adapts the train easily and have overfitting, they adapt a lot the jaccard measure and the gap between validation in huge. This have sense because is a resnet, resnet have redundancies and adapts the train really good. In general is better in all the aspects and the early stopping also finished around epoch 50. But what happen with test:
+acc: 0.866687767545
+      loss: 0.561303280754
+    0 (      sky      ): Jacc:  89.92
+    1 (   building    ): Jacc:  74.41
+    2 (  column_pole  ): Jacc:  17.56
+    3 (     road      ): Jacc:  91.13
+    4 (   sidewalk    ): Jacc:  72.55
+    5 (     tree      ): Jacc:  63.14
+    6 (     sign      ): Jacc:  22.64
+    7 (     fence     ): Jacc:   8.83
+    8 (      car      ): Jacc:  70.45
+    9 (  pedestrian   ): Jacc:  28.10
+       10 (   byciclist   ): Jacc:  30.69
+       Jaccard mean: 0.517666915173
+
+We can see that in test is worst than Fcn8. Some classes have similar scores, road are better but someone like fences are worst. But theoretically, this model should be better. Basically the problem is the input preprocess, we don’t follow the one used for the pretrained model and this affect negatively. We tried a new approach using this new preprocessing for the mean and std that can be found inside the data_loader.py. Also we tried some other techniques, like use crops of the train instead of all the image, to improve the time performance and data augmentation with zoom and horizontal flips. We changed the scheduler to linear mode and run 300 epochs. The results are the next:
+
+![ResnetFCN plot](figures/resnetFCNCamvid2.png?raw=true "ResnetFCN Experiment")
+
+We can see how this time, using data augmentation and the proper preprocessing, the model learning and improve during all the epochs programed. The accuracy is adapted really fast and the jaccard scores improves along epochs. Thanks to the data augmentation, now the gap between validation and train is lower, so our model generalize better, reaching a 0.78 validation jaccard, a huge increment comparing with the other models. The test result are the next:
+      acc: 0.908216732644
+      loss: 0.372034771608
+    0 (      sky      ): Jacc:  91.19
+    1 (   building    ): Jacc:  81.88
+    2 (  column_pole  ): Jacc:  32.25
+    3 (     road      ): Jacc:  94.06
+    4 (   sidewalk    ): Jacc:  79.34
+    5 (     tree      ): Jacc:  74.04
+    6 (     sign      ): Jacc:  38.98
+    7 (     fence     ): Jacc:  25.55
+    8 (      car      ): Jacc:  86.24
+    9 (  pedestrian   ): Jacc:  56.63
+       10 (   byciclist   ): Jacc:  60.85
+       Jaccard mean: 0.655464245047
+
+We obtain a huge increment in test also, but still really low compared to validation. Having problems with small elements.
+
+A final experiment using this last one to try to improve more the scores, was made using all the input size instead of crops, without the preprocessing input said before and the same data augmentation. The results are interesting:
+
+![ResnetFCN plot](figures/resnetFCNCamvid3.png?raw=true "ResnetFCN Experiment")
+
+There is not a notorious improvement, but we can see how smooth our model becomes, where the variation in validation is really low between epochs, having a model really stable. But the model overfit the train more than improve the validation. The test results are the next:
+acc: 0.914634088595
+      loss: 0.352595471326
+    0 (      sky      ): Jacc:  91.40
+    1 (   building    ): Jacc:  82.65
+    2 (  column_pole  ): Jacc:  34.50
+    3 (     road      ): Jacc:  94.98
+    4 (   sidewalk    ): Jacc:  83.30
+    5 (     tree      ): Jacc:  75.38
+    6 (     sign      ): Jacc:  42.61
+    7 (     fence     ): Jacc:  32.84
+    8 (      car      ): Jacc:  84.13
+    9 (  pedestrian   ): Jacc:  59.29
+       10 (   byciclist   ): Jacc:  64.70
+       Jaccard mean: 0.677972789013
+
+We can see in test an improvement, respect the previous experiment, making more meaningful the changes for this test.
+
+<p align="right"><a href="#WSum">Back to summary</a></p>
+
 ## Reference
 Simonyan, K., & Zisserman, A. (2014). Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556. [Summary](Summaries/VGG.md)
 
