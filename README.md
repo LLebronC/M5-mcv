@@ -391,6 +391,8 @@ Image samples
 
 ## abstract
 
+The aim of this week 6 is perform object segmentation. We will study the differents state of art models for image segmentation like FCN, segnet and resnetFCN. We will analyze them, integrate them in our framework to train it using our datasets ready for segmentation. This datasets are the CamVid and Cityscapes. We will run experiments to evaluate the differents models implemented in this datasets and evaluate their performance, also applying some techniques to improve the final scores.
+
 ## Task summary
 #### Task (a): Run the provided code and use the preconfigured experiment file (camvid_segmentation.py) to segment objects with the FCN8 model.
 - Analyze the dataset.
@@ -411,9 +413,25 @@ Image samples
 
 ## Models
 
+#### FCN8 
+The idea behind the fully convolutional layer is use a convolutional network that performs the classification problem properly, in our case we use VGG. Then in this convolutional network is modified the last layer corresponding to classification by a structure of layers that performs convolution 1x1 to predict the scores of the classification, followed by a deconvolution layer to bilinearly upsample the coarse outputs to pixel-dense outputs. The model 8 (Fcn8) is created using the pooling in the block 3 and 4 of the VGG to fusing information with the convolution 1x1 and de deconvolution step, having a final 8x8 pixel stride net.
+
+#### Segnet
+
+#### ResnetFCN 
+For the ResnetFCN, the idea is similar to FCN but with some differences. Our implementation uses a Resnet of 38 layers as a classifier. The final part is replaced by special convolutions with dilations to perform a final deconvolution to obtain the final segmentation. We follow the next [paper](https://arxiv.org/pdf/1611.10080.pdf)
+
 ## Code changes and additions
 
+- Added the models resnetFCN and segnet with the pertinent modifications in other files to make them work. This includes a minor modification for the preposes input when we use the ImageNet preprocessing for the resnetFCN to adapt to the pretrained weights obtained.
+- Added new control to separate the segmentation and detection modules in the prediction phase.
+- Added a scheduler planifier that control the learning rate function during an experiment, they include the possibility to adjust the learning rate decay linear, polynomial or by steps.
+
 ## Hints 
+
+- In segmentation we want to conserve all the information possible of an input image, because can be relevant information for train the model and changes the scale of items, we also have to change in the test images, with the ground truth rescale and information loss that can mess the final scores. Is a good practice, try to not resize the input and instead use crops in train to fit our batch size in memory. With crops selected randomly of each input image, our model will learn from parts of the image at full resolution and all the information. The problem where we do this is that we will need more epochs to train properly the model, because each crop don’t represent the image and depend of the original size and the crop size, so we need to take as many crops as possible from the images to reach as much as we can of the original image information.
+
+- Data augmentation is a great idea in segmentation, but with the options that have sense in order to don’t modify the meaning of the image or the ground truth. This means that some transformations like shifts, affines or vertical flips can be really troublesome for the model. In fact we tested the horizontal flips and zoom factors and it helps a lot to improve the generalization power of our model.
 
 ## Datasets
 
