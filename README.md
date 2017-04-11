@@ -697,7 +697,7 @@ The graphs shows how the model generalize better and the score for validation im
 
 ![resnetFCNsample2](figures/resnetFCNsample2.png?raw=true "resnetFCNsample2")
 
-### synthia rand cityscapes
+### Synthia Rand Cityscapes
 
 We perform a single test using Fcn8 to check this dataset, because is virtual and it should be easy to obtain good scores. As always, we follow the routine of the first experiments using a resize for the input, being the original 1280x760 and reduce it to 480x360.
 
@@ -736,7 +736,7 @@ Finally a visualization of the results for this dataset is showed in this sectio
 
 ![fcn8synthiaSample1](figures/fcn8synthiaSample1.png?raw=true "fcn8synthiaSample1 Experiment")
 ![fcn8synthiaSample2](figures/fcn8synthiaSample2.png?raw=true "fcn8synthiaSample2 Experiment")
-![fcn8synthiaSample3](figures/synthiaFcn8.png?raw=true "fcn8synthiaSample3 Experiment")
+![fcn8synthiaSample3](figures/fcn8synthiaSample3.png?raw=true "fcn8synthiaSample3 Experiment")
 
 <p align="right"><a href="#WSum">Back to summary</a></p>
 
