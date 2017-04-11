@@ -717,16 +717,16 @@ we can see how without much effort or epochs, with the Fcn8 reach 0.7 in validat
     7 ( traffic sign  ): Jacc:  37.81
     8 (  vegetation   ): Jacc:  82.55
     9 (    terrain    ): Jacc:    nan
-   10 (      sky      ): Jacc:  96.12
-   11 (    person     ): Jacc:  70.15
-   12 (     rider     ): Jacc:  51.80
-   13 (      car      ): Jacc:  87.29
-   14 (     truck     ): Jacc:    nan
-   15 (      bus      ): Jacc:  88.62
-   16 (     train     ): Jacc:    nan
-   17 (  motorcycle   ): Jacc:  59.30
-   18 (    bicycle    ): Jacc:  28.38
-   Jaccard mean: 0.70573321248
+    10 (      sky      ): Jacc:  96.12
+    11 (    person     ): Jacc:  70.15
+    12 (     rider     ): Jacc:  51.80
+    13 (      car      ): Jacc:  87.29
+    14 (     truck     ): Jacc:    nan
+    15 (      bus      ): Jacc:  88.62
+    16 (     train     ): Jacc:    nan
+    17 (  motorcycle   ): Jacc:  59.30
+    18 (    bicycle    ): Jacc:  28.38
+    Jaccard mean: 0.70573321248
 
 We can see that they are really close to the ones obtained in validation, there are some classes missed also, that probably don’t appear in the test images.
 
