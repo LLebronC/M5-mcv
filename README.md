@@ -556,8 +556,9 @@ With another step using data augmentation, only zooms and horizontal flips we ca
 
 In 100 epochs more we increase the validation accuracy to near 0.64. If we compare directly with the results obtained in fcn8, for this model we needed 8 times more epochs to reach the same validation metrics, but have more margin to improve, because the training scores are crealy lower than the fcn8 mode, but without a pretrained model becomes a more difficult.
 the test results are the next:
-      acc: 0.846697468041
-      loss: 0.481149245124
+
+    acc: 0.846697468041
+    loss: 0.481149245124
     0 (      sky      ): Jacc:  87.76
     1 (   building    ): Jacc:  71.66
     2 (  column_pole  ): Jacc:  15.65
@@ -568,8 +569,8 @@ the test results are the next:
     7 (     fence     ): Jacc:  18.52
     8 (      car      ): Jacc:  63.85
     9 (  pedestrian   ): Jacc:  30.65
-       10 (   byciclist   ): Jacc:  31.96
-       Jaccard mean: 0.502967009151
+    10 (   byciclist   ): Jacc:  31.96
+    Jaccard mean: 0.502967009151
 
 Clearly lower than the fcn8 in all classes.
 
@@ -581,8 +582,9 @@ A first test similar to the previous models, using pretrained weights, 100 epoch
 ![ResnetFCN plot](figures/resnetFCNCamvid.png?raw=true "ResnetFCN Experiment")
 
 We can compare the results directly with the Fcn8. This model learns fast, also adapts the train easily and have overfitting, they adapt a lot the jaccard measure and the gap between validation in huge. This have sense because is a resnet, resnet have redundancies and adapts the train really good. In general is better in all the aspects and the early stopping also finished around epoch 50. But what happen with test:
-acc: 0.866687767545
-      loss: 0.561303280754
+
+    acc: 0.866687767545
+    loss: 0.561303280754
     0 (      sky      ): Jacc:  89.92
     1 (   building    ): Jacc:  74.41
     2 (  column_pole  ): Jacc:  17.56
@@ -593,16 +595,17 @@ acc: 0.866687767545
     7 (     fence     ): Jacc:   8.83
     8 (      car      ): Jacc:  70.45
     9 (  pedestrian   ): Jacc:  28.10
-       10 (   byciclist   ): Jacc:  30.69
-       Jaccard mean: 0.517666915173
+    10 (   byciclist   ): Jacc:  30.69
+    Jaccard mean: 0.517666915173
 
 We can see that in test is worst than Fcn8. Some classes have similar scores, road are better but someone like fences are worst. But theoretically, this model should be better. Basically the problem is the input preprocess, we don’t follow the one used for the pretrained model and this affect negatively. We tried a new approach using this new preprocessing for the mean and std that can be found inside the data_loader.py. Also we tried some other techniques, like use crops of the train instead of all the image, to improve the time performance and data augmentation with zoom and horizontal flips. We changed the scheduler to linear mode and run 300 epochs. The results are the next:
 
 ![ResnetFCN plot](figures/resnetFCNCamvid2.png?raw=true "ResnetFCN Experiment")
 
 We can see how this time, using data augmentation and the proper preprocessing, the model learning and improve during all the epochs programed. The accuracy is adapted really fast and the jaccard scores improves along epochs. Thanks to the data augmentation, now the gap between validation and train is lower, so our model generalize better, reaching a 0.78 validation jaccard, a huge increment comparing with the other models. The test result are the next:
-      acc: 0.908216732644
-      loss: 0.372034771608
+
+    acc: 0.908216732644
+    loss: 0.372034771608
     0 (      sky      ): Jacc:  91.19
     1 (   building    ): Jacc:  81.88
     2 (  column_pole  ): Jacc:  32.25
@@ -613,8 +616,8 @@ We can see how this time, using data augmentation and the proper preprocessing, 
     7 (     fence     ): Jacc:  25.55
     8 (      car      ): Jacc:  86.24
     9 (  pedestrian   ): Jacc:  56.63
-       10 (   byciclist   ): Jacc:  60.85
-       Jaccard mean: 0.655464245047
+    10 (   byciclist   ): Jacc:  60.85
+    Jaccard mean: 0.655464245047
 
 We obtain a huge increment in test also, but still really low compared to validation. Having problems with small elements.
 
@@ -623,8 +626,9 @@ A final experiment using this last one to try to improve more the scores, was ma
 ![ResnetFCN plot](figures/resnetFCNCamvid3.png?raw=true "ResnetFCN Experiment")
 
 There is not a notorious improvement, but we can see how smooth our model becomes, where the variation in validation is really low between epochs, having a model really stable. But the model overfit the train more than improve the validation. The test results are the next:
-acc: 0.914634088595
-      loss: 0.352595471326
+
+    acc: 0.914634088595
+    loss: 0.352595471326
     0 (      sky      ): Jacc:  91.40
     1 (   building    ): Jacc:  82.65
     2 (  column_pole  ): Jacc:  34.50
@@ -635,8 +639,8 @@ acc: 0.914634088595
     7 (     fence     ): Jacc:  32.84
     8 (      car      ): Jacc:  84.13
     9 (  pedestrian   ): Jacc:  59.29
-       10 (   byciclist   ): Jacc:  64.70
-       Jaccard mean: 0.677972789013
+    10 (   byciclist   ): Jacc:  64.70
+    Jaccard mean: 0.677972789013
 
 We can see in test an improvement, respect the previous experiment, making more meaningful the changes for this test.
 
