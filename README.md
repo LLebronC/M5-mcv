@@ -669,7 +669,7 @@ Another test is performed, this time using a resize to a half of the original im
 
 ![ResnetFCN plot](figures/resnetFCNCityescapes2.png?raw=true "ResnetFCN Experiment")
 
-![ResnetFCN plot](figures/resnetFCNCityescapes2.png?raw=true "ResnetFCN Experiment")
+![ResnetFCN plot](figures/resnetFCNCityescapes3.png?raw=true "ResnetFCN Experiment")
 
 The graphs shows how the model generalize better and the score for validation improves a lot, when we use data augmentation and a proper input processing with sizes and crops. The model have margin to learn and improve, but the epochs are really time consuming.
 
