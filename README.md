@@ -620,6 +620,20 @@ acc: 0.914634088595
 
 We can see in test an improvement, respect the previous experiment, making more meaningful the changes for this test.
 
+##### Result Visualization
+
+We have a function that print the results of the segmentation in each epoch, taking random samples from the validation and storing in disk. The image shows 4 images, at left we have the original image, next the ground truth overlapping the original image, next our detection and finally at right our detection overlapping the original image. Also at the bottom we have a legend with the colours associated to the classes.
+
+![Epoch 1](figures/resnetFCNEpoch0_sample1.png?raw=true "Epoch 1 ResnetFCM")
+
+![Epoch 50](figures/resnetFCNEpoch0_sample2.png?raw=true "Epoch 50 ResnetFCM")
+
+![Epoch 100](figures/resnetFCNEpoch0_sample3.png?raw=true "Epoch 100 ResnetFCM")
+
+![Epoch 300](figures/resnetFCNEpoch0_sample4.png?raw=true "Epoch 300 ResnetFCM")
+
+We can see how the model at the beginning is a mess, but in the epoch 50 have a close result and the next epochs shows how this result is refined adjusting better to small objects.
+
 <p align="right"><a href="#WSum">Back to summary</a></p>
 
 ## Reference
