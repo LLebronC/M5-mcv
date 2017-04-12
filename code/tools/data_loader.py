@@ -330,7 +330,7 @@ class ImageDataGenerator(object):
             batch_size2=batch_size2, model_name=self.model_name)
 
     def standardize(self, x, y=None):
-        if self.imageNet:
+        '''if self.imageNet:
             if self.dim_ordering == 'th':
                 # 'RGB'->'BGR'
                 x = x[::-1, :, :]
@@ -345,6 +345,28 @@ class ImageDataGenerator(object):
                 x[:, :, 0] -= 103.939
                 x[:, :, 1] -= 116.779
                 x[:, :, 2] -= 123.68
+            return x'''
+            
+        if self.imageNet:
+            if self.dim_ordering == 'th':
+                # 'RGB'->'BGR'
+                x = x[::-1, :, :]
+                # Zero-center by mean pixel
+                x[0, :, :] -= 103.939
+                x[1, :, :] -= 116.779
+                x[2, :, :] -= 123.68
+            else:
+                # 'RGB'->'BGR'
+                x = x[:, :, ::-1]
+                x *= 1/255.
+                # Zero-center by mean pixel
+                x[:, :, 0] -= 0.485
+                x[:, :, 1] -= 0.456
+                x[:, :, 2] -= 0.406
+                # STD
+                x[:, :, 0] /= 0.229
+                x[:, :, 1] /= 0.224
+                x[:, :, 2] /= 0.225
             return x
 
         # x is a single image, so it doesn't have image number at index 0

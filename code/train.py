@@ -96,9 +96,9 @@ def main():
     parser.add_argument('-e', '--exp_name', type=str,
                         default=None, help='Name of the experiment')
     parser.add_argument('-s', '--shared_path', type=str,
-                        default='/data', help='Shared path')
+                        default='/home/master/master', help='Shared path')
     parser.add_argument('-l', '--local_path', type=str,
-                        default='/datatmp', help='Local path')
+                        default='/home/master/master', help='Local path')
 
     arguments = parser.parse_args()
 

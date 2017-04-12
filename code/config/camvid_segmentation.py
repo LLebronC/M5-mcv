@@ -5,16 +5,16 @@ dataset_name2                = None            # Second dataset name. None if no
 perc_mb2                     = None            # Percentage of data from the second dataset in each minibatch
 
 # Model
-model_name                   = 'resnetFCN'          # Model to use ['fcn8' | 'lenet' | 'alexNet' | 'vgg16' |  'vgg19' | 'resnet50' | 'InceptionV3']
+model_name                   = 'segnet_basic'          # Model to use ['fcn8' | 'lenet' | 'alexNet' | 'vgg16' |  'vgg19' | 'resnet50' | 'InceptionV3']
 freeze_layers_from           = None            # Freeze layers from 0 to this layer during training (Useful for finetunning) [None | 'base_model' | Layer_id]
 show_model                   = False           # Show the architecture layers
 load_imageNet                = False           # Load Imagenet weights and normalize following imagenet procedure
-load_pretrained              = False           # Load a pretrained model for doing finetuning
+load_pretrained              = True           # Load a pretrained model for doing finetuning
 weights_file                 = 'weights.hdf5'  # Training weight file name
 
 # Parameters
-train_model                  = True            # Train the model
-test_model                   = False           # Test the model
+train_model                  = False            # Train the model
+test_model                   = True           # Test the model
 pred_model                   = False           # Predict using the model
 
 # Debug
@@ -25,15 +25,15 @@ debug_images_test            = 30              # N images for testing in debug m
 debug_n_epochs               = 2               # N of training epochs in debug mode
 
 # Batch sizes
-batch_size_train             = 5               # Batch size during training
-batch_size_valid             = 10              # Batch size during validation
-batch_size_test              = 10              # Batch size during testing
-crop_size_train              = (224, 224)      # Crop size during training (Height, Width) or None
+batch_size_train             = 10               # Batch size during training
+batch_size_valid             = 30              # Batch size during validation
+batch_size_test              = 30              # Batch size during testing
+crop_size_train              = None      # Crop size during training (Height, Width) or None
 crop_size_valid              = None            # Crop size during validation
 crop_size_test               = None            # Crop size during testing
-resize_train                 = (270, 480)      # Resize the image during training (Height, Width) or None
-resize_valid                 = (270, 480)      # Resize the image during validation
-resize_test                  = (270, 480)      # Resize the image during testing
+resize_train                 = None      # Resize the image during training (Height, Width) or None
+resize_valid                 = None      # Resize the image during validation
+resize_test                  = None      # Resize the image during testing
 
 # Data shuffle
 shuffle_train                = True            # Whether to shuffle the training data
@@ -47,7 +47,7 @@ seed_test                    = 1924            # Random seed for the testing shu
 optimizer                    = 'adam'       # Optimizer
 learning_rate                = 0.0001          # Training learning rate
 weight_decay                 = 0.              # Weight decay or L2 parameter norm penalty
-n_epochs                     = 100            # Number of epochs during training
+n_epochs                     = 200            # Number of epochs during training
 
 # Callback save results
 save_results_enabled         = False           # Enable the Callback
@@ -58,7 +58,7 @@ save_results_batch_size      = 5               # Size of the batch
 earlyStopping_enabled        = True            # Enable the Callback
 earlyStopping_monitor        = 'val_jaccard'   # Metric to monitor
 earlyStopping_mode           = 'max'           # Mode ['max' | 'min']
-earlyStopping_patience       = 10             # Max patience for the early stopping
+earlyStopping_patience       = 50             # Max patience for the early stopping
 earlyStopping_verbose        = 0               # Verbosity of the early stopping
 
 # Callback model check point
@@ -81,7 +81,7 @@ lrDecayScheduler_rate        = 2               # Decay rate (new_lr = lr / decay
 # Callback learning rate scheduler
 LRScheduler_enabled          = True             # Enable the Callback
 LRScheduler_batch_epoch      = 'batch'          # Schedule the LR each 'batch' or 'epoch'
-LRScheduler_type             = 'poly'         # Type of scheduler ['linear' | 'step' | 'square' | 'sqrt' | 'poly']
+LRScheduler_type             = 'linear'         # Type of scheduler ['linear' | 'step' | 'square' | 'sqrt' | 'poly']
 LRScheduler_M                = 75000            # Number of iterations/epochs expected until convergence
 LRScheduler_decay            = 0.1              # Decay for 'step' method
 LRScheduler_S                = 10000            # Step for the 'step' method
@@ -96,7 +96,7 @@ TensorBoard_logs_folder      = None             #
 
 # Data augmentation for training and normalization
 norm_imageNet_preprocess           = False  # Normalize following imagenet procedure
-norm_fit_dataset                   = True   # If True it recompute std and mean from images. Either it uses the std and mean set at the dataset config file
+norm_fit_dataset                   = False   # If True it recompute std and mean from images. Either it uses the std and mean set at the dataset config file
 norm_rescale                       = 1/255. # Scalar to divide and set range 0-1
 norm_featurewise_center            = False   # Substract mean - dataset
 norm_featurewise_std_normalization = False   # Divide std - dataset
@@ -111,11 +111,11 @@ da_rotation_range                  = 0      # Rnd rotation degrees 0-180
 da_width_shift_range               = 0.0    # Rnd horizontal shift
 da_height_shift_range              = 0.0    # Rnd vertical shift
 da_shear_range                     = 0.0    # Shear in radians
-da_zoom_range                      = 0.0    # Zoom
+da_zoom_range                      = 0.2    # Zoom
 da_channel_shift_range             = 0.     # Channecf.l shifts
 da_fill_mode                       = 'constant'  # Fill mode
 da_cval                            = 0.     # Void image value
-da_horizontal_flip                 = False  # Rnd horizontal flip
+da_horizontal_flip                 = True  # Rnd horizontal flip
 da_vertical_flip                   = False  # Rnd vertical flip
 da_spline_warp                     = False  # Enable elastic deformation
 da_warp_sigma                      = 10     # Elastic deformation sigma

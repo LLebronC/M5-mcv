@@ -23,7 +23,7 @@ from models.fcn8 import build_fcn8
 from models.unet import build_unet
 from models.segnet import build_segnet
 from models.resnetFCN import build_resnetFCN
-#from models.densenetFCN import build_densenetFCN
+from models.densenet_fc import DenseNetFCN
 
 # Adversarial models
 #from models.adversarial_semseg import Adversarial_Semseg
@@ -87,7 +87,7 @@ class Model_Factory():
 
     # Creates a Model object (not a Keras model)
     def make(self, cf, optimizer=None):
-        if cf.model_name in ['lenet', 'alexNet', 'vgg16', 'vgg19', 'resnet50',
+        if cf.model_name in ['lenet', 'alexNet', 'vgg16', 'vgg19', 'resnet50', 'densenet_fc',
                              'InceptionV3', 'fcn8', 'unet', 'segnet', 'segnet_vgg',
                              'segnet_basic', 'resnetFCN', 'yolo', 'resnet50Keras', 'ssd',
                              'resnet18','resnet34','resnet50','resnet101','resnet152', 'densenet','tiny-yolo', 'yolt']:
@@ -140,6 +140,10 @@ class Model_Factory():
             model = build_densenetFCN(in_shape, cf.dataset.n_classes, cf.weight_decay,
                                       freeze_layers_from=cf.freeze_layers_from,
                                       path_weights=None)
+        elif cf.model_name == 'densenet_fc':
+            model = DenseNetFCN((224, 224, 3), nb_dense_block=5, growth_rate=16,
+                                nb_layers_per_block=4, upsampling_type='upsampling', 
+                                classes=cf.dataset.n_classes)
         elif cf.model_name == 'lenet':
             model = build_lenet(in_shape, cf.dataset.n_classes, cf.weight_decay)
         elif cf.model_name == 'alexNet':
